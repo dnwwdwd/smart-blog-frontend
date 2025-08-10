@@ -1,0 +1,163 @@
+/* 文章列表 */
+.article-list {
+    background: #fff;
+    border-radius: 12px;
+    border: 1px solid #e8e8e8;
+    padding: 24px;
+}
+
+.article-list .ant-list-item {
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    padding: 24px !important;
+    margin-bottom: 32px !important;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.article-list .ant-list-item .ant-list-item-meta {
+    align-items: flex-start;
+}
+
+.article-list .ant-list-item .ant-list-item-meta-avatar {
+    margin-right: 24px;
+}
+
+.article-list .ant-list-item .ant-list-item-meta-avatar img {
+    border-radius: 8px;
+}
+
+.article-list .ant-list-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0 !important;
+}
+
+.article-list .ant-list-item:hover {
+    background: #fafafa;
+    transform: translateY(-2px);
+}
+
+/* Fix for overlapping issue */
+.article-list .ant-list-item .ant-list-item-meta-content {
+    flex: 1;
+}
+
+.article-list .ant-list-item .ant-list-item-meta-title {
+    margin-bottom: 12px;
+}
+
+/* Ensure proper spacing between elements */
+.article-excerpt {
+    margin-bottom: 16px !important;
+}
+
+.article-meta {
+    margin-bottom: 16px !important;
+}
+
+.article-tags {
+    margin-top: 16px;
+}
+
+/* 动画效果 */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.article-list .ant-list-item {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.article-list .ant-list-item:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.article-list .ant-list-item:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.article-list .ant-list-item:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+.article-list .ant-list-item:nth-child(4) {
+    animation-delay: 0.4s;
+}
+
+.article-list .ant-list-item:nth-child(5) {
+    animation-delay: 0.5s;
+}
+
+.article-list .ant-list-item:nth-child(6) {
+    animation-delay: 0.6s;
+}
+
+@media (max-width: 768px) {
+    .articles-page {
+        padding: 16px 0;
+    }
+
+     .container {
+        padding: 0 12px;
+    }
+
+    /* 移动端单列布局 */
+    .grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .articles-header {
+         margin-bottom: 16px;
+        
+    }
+
+    .article-list {
+        padding: 16px;
+    }
+
+    .article-list .ant-list-item {
+        padding: 16px 0 !important;
+        margin-bottom: 16px !important;
+    }
+
+    .article-list .ant-list-item .ant-list-item-extra {
+        margin-left: 0;
+        margin-top: 12px;
+    }
+
+    .article-list .ant-list-item .ant-list-item-meta-avatar {
+        margin-right: 16px;
+    }
+
+    .article-title {
+        font-size: 16px !important;
+    }
+
+    .meta-item {
+        font-size: 12px;
+    }
+
+    .article-excerpt {
+        font-size: 14px;
+    }
+
+    .article-meta {
+        margin-bottom: 12px !important;
+    }
+
+    .pagination-wrapper {
+        padding: 16px;
+    }
+
+    .pagination-wrapper .ant-pagination {
+        font-size: 12px;
+    }
+
+}

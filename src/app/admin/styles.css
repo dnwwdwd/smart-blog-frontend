@@ -1,0 +1,269 @@
+/* 管理后台仪表盘样式 */
+.admin-dashboard {
+  padding: 24px;
+  background: #f5f5f5;
+  min-height: 100vh;
+}
+
+.dashboard-title {
+  margin-bottom: 24px;
+  color: #1a1a1a;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+/* 统计卡片行 */
+.stats-row {
+  margin-bottom: 24px;
+}
+
+.stats-row .ant-card {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.stats-row .ant-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+.growth-positive {
+  color: #52c41a;
+  font-size: 12px;
+  margin-left: 8px;
+}
+
+.growth-negative {
+  color: #ff4d4f;
+  font-size: 12px;
+  margin-left: 8px;
+}
+
+/* 图表区域 */
+.charts-row {
+  margin-bottom: 24px;
+}
+
+.chart-card {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  min-height: 400px;
+}
+
+.chart-card .ant-card-body {
+  padding: 24px;
+}
+
+.table-card {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.table-card .ant-table {
+  font-size: 14px;
+}
+
+.table-card .ant-table-thead > tr > th {
+  background: #fafafa;
+  font-weight: 600;
+}
+
+/* 系统状态区域 */
+.status-row {
+  margin-bottom: 24px;
+}
+
+.status-card {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.status-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding: 8px 0;
+}
+
+.status-item:last-child {
+  margin-bottom: 0;
+}
+
+.status-item span {
+  font-weight: 500;
+  color: #666;
+  min-width: 100px;
+}
+
+.status-item .ant-progress {
+  flex: 1;
+  margin-left: 16px;
+}
+
+/* 快速操作 */
+.quick-actions {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.action-card {
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 1px solid #f0f0f0;
+}
+
+.action-card:hover {
+  border-color: #1890ff;
+  box-shadow: 0 2px 8px rgba(24, 144, 255, 0.2);
+}
+
+.action-icon {
+  font-size: 24px;
+  color: #1890ff;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.action-card div {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+}
+
+/* 响应式设计 */
+@media (max-width: 1200px) {
+  .chart-card {
+    min-height: 350px;
+  }
+}
+
+@media (max-width: 992px) {
+  .dashboard-title {
+    font-size: 22px;
+    margin-bottom: 20px;
+  }
+  
+  .chart-card {
+    min-height: 300px;
+  }
+  
+  .chart-card .ant-card-body {
+    padding: 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-title {
+    font-size: 20px;
+    margin-bottom: 16px;
+  }
+  
+  .stats-row,
+  .charts-row,
+  .status-row {
+    margin-bottom: 16px;
+  }
+  
+  .chart-card {
+    min-height: 250px;
+  }
+  
+  .chart-card .ant-card-body {
+    padding: 12px;
+  }
+  
+  .status-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .status-item .ant-progress {
+    margin-left: 0;
+    width: 100%;
+  }
+}
+
+@media (max-width: 576px) {
+  .dashboard-title {
+    font-size: 18px;
+  }
+  
+  .action-icon {
+    font-size: 20px;
+  }
+  
+  .action-card div {
+    font-size: 12px;
+  }
+  
+  .table-card .ant-table {
+    font-size: 12px;
+  }
+}
+
+/* 暗色主题适配 */
+@media (prefers-color-scheme: dark) {
+  .dashboard-title {
+    color: #fff;
+  }
+  
+  .stats-row .ant-card,
+  .chart-card,
+  .table-card,
+  .status-card,
+  .quick-actions {
+    background: #1f1f1f;
+    border-color: #303030;
+  }
+  
+  .action-card {
+    background: #262626;
+    border-color: #404040;
+  }
+  
+  .action-card:hover {
+    border-color: #1890ff;
+  }
+  
+  .action-card div {
+    color: #fff;
+  }
+  
+  .status-item span {
+    color: #ccc;
+  }
+}
+
+/* 动画效果 */
+.stats-row .ant-card,
+.chart-card,
+.table-card,
+.status-card,
+.quick-actions {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 统计数字动画 */
+.ant-statistic-content-value {
+  font-weight: 600;
+}
+
+.ant-statistic-content-prefix {
+  margin-right: 8px;
+  color: #1890ff;
+}

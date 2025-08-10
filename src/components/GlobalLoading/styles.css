@@ -1,0 +1,114 @@
+/* 全局加载样式 */
+.global-loading-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.global-loading-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  text-align: center;
+}
+
+.loading-logo {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(10px);
+  animation: pulse 2s infinite;
+}
+
+.logo-image {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+}
+
+.loading-text {
+  color: white;
+  font-size: 16px;
+  font-weight: 500;
+  opacity: 0.9;
+}
+
+/* 加载动画 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+}
+
+/* Ant Design Spin 样式覆盖 */
+.global-loading-container .ant-spin {
+  color: white;
+}
+
+.global-loading-container .ant-spin-dot-item {
+  background-color: white;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .loading-logo {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .logo-image {
+    width: 35px;
+    height: 35px;
+  }
+  
+  .loading-text {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .global-loading-content {
+    gap: 16px;
+  }
+  
+  .loading-logo {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .logo-image {
+    width: 30px;
+    height: 30px;
+  }
+  
+  .loading-text {
+    font-size: 12px;
+  }
+}

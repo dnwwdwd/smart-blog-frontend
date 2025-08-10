@@ -1,0 +1,171 @@
+/* 前台导航栏样式 */
+.front-navigation {
+  background: #fff;
+  border-bottom: 1px solid #f0f0f0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.nav-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+}
+
+/* Logo区域 */
+.nav-logo {
+  flex-shrink: 0;
+}
+
+.nav-logo a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.logo-text {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1890ff;
+  background: linear-gradient(135deg, #1890ff 0%, #722ed1 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* 桌面端菜单区域 */
+.desktop-menu {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  margin: 0 40px;
+}
+
+.nav-menu {
+  border-bottom: none !important;
+  background: transparent !important;
+}
+
+.nav-menu .ant-menu-item {
+  border-radius: 6px;
+  margin: 0 4px;
+  font-weight: 500;
+  border-bottom: none !important;
+}
+
+.nav-menu .ant-menu-item:hover {
+  background: #f0f8ff;
+  color: #1890ff;
+  border-bottom: none !important;
+}
+
+.nav-menu .ant-menu-item-selected {
+  background: #e6f7ff;
+  color: #1890ff;
+  border-bottom: none !important;
+}
+
+.nav-menu .ant-menu-item::after {
+  display: none !important;
+}
+
+.nav-menu .ant-menu-item-selected::after {
+  display: none !important;
+}
+
+/* 操作区域 */
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-shrink: 0;
+}
+
+.search-container {
+  display: flex;
+  align-items: center;
+}
+
+.search-input {
+  width: 240px;
+  border-radius: 20px;
+}
+
+.user-button {
+  font-weight: 500;
+}
+
+.user-button:hover {
+  background: #f0f8ff;
+  color: #1890ff;
+}
+
+/* 移动端菜单按钮 */
+.mobile-menu-button {
+  display: none;
+}
+
+/* 移动端抽屉样式 */
+.mobile-menu-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.mobile-nav-menu {
+  flex: 1;
+  border-right: none;
+}
+
+.mobile-actions {
+  padding: 20px 0;
+  border-top: 1px solid #f0f0f0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.mobile-search {
+  border-radius: 20px;
+}
+
+.mobile-login {
+  border-radius: 20px;
+  height: 40px;
+}
+
+/* 响应式设计 - 基础样式 */
+@media (max-width: 992px) {
+  .nav-container {
+    padding: 0 16px;
+  }
+  
+  .desktop-menu {
+    margin: 0 20px;
+  }
+  
+  .search-input {
+    width: 200px;
+  }
+}
+
+@media (max-width: 768px) {
+  .nav-container {
+    padding: 0 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-container {
+    padding: 0 12px;
+  }
+  
+  .logo-text {
+    font-size: 18px;
+  }
+}

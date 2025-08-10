@@ -1,0 +1,159 @@
+/* 代码块样式 */
+.code-block-container {
+  position: relative;
+  margin: 16px 0;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #f6f8fa;
+  border: 1px solid #e1e4e8;
+}
+
+.code-block-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 16px;
+  background: #f1f3f4;
+  border-bottom: 1px solid #e1e4e8;
+  font-size: 12px;
+}
+
+.code-language {
+  color: #586069;
+  font-weight: 500;
+  text-transform: uppercase;
+  font-family: 'SFMono-Regular', 'Consolas', 'Liberation Mono', 'Menlo', monospace;
+}
+
+.copy-button {
+  color: #586069;
+  transition: all 0.2s ease;
+  font-size: 12px;
+  height: 24px;
+  padding: 0 8px;
+}
+
+.copy-button:hover {
+  color: #0366d6;
+  background: rgba(3, 102, 214, 0.1);
+}
+
+.copy-button.copied {
+  color: #28a745;
+}
+
+.copy-button.copied:hover {
+  color: #28a745;
+  background: rgba(40, 167, 69, 0.1);
+}
+
+.code-block-content {
+  margin: 0;
+  padding: 16px;
+  background: #f6f8fa;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', 'Consolas', 'Liberation Mono', 'Menlo', monospace;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.code-block-content code {
+  background: transparent;
+  padding: 0;
+  border: none;
+  font-family: inherit;
+  font-size: inherit;
+  color: #24292e;
+}
+
+/* 滚动条样式 */
+.code-block-content::-webkit-scrollbar {
+  height: 8px;
+}
+
+.code-block-content::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.code-block-content::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+.code-block-content::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* 暗色主题 */
+@media (prefers-color-scheme: dark) {
+  .code-block-container {
+    background: #161b22;
+    border-color: #30363d;
+  }
+  
+  .code-block-header {
+    background: #21262d;
+    border-bottom-color: #30363d;
+  }
+  
+  .code-language {
+    color: #8b949e;
+  }
+  
+  .copy-button {
+    color: #8b949e;
+  }
+  
+  .copy-button:hover {
+    color: #58a6ff;
+    background: rgba(88, 166, 255, 0.1);
+  }
+  
+  .code-block-content {
+    background: #161b22;
+  }
+  
+  .code-block-content code {
+    color: #e6edf3;
+  }
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .code-block-header {
+    padding: 6px 12px;
+  }
+  
+  .code-block-content {
+    padding: 12px;
+    font-size: 13px;
+  }
+  
+  .copy-button {
+    font-size: 11px;
+    height: 20px;
+    padding: 0 6px;
+  }
+}
+
+@media (max-width: 480px) {
+  .code-block-header {
+    padding: 4px 8px;
+  }
+  
+  .code-block-content {
+    padding: 8px;
+    font-size: 12px;
+  }
+  
+  .code-language {
+    font-size: 10px;
+  }
+  
+  .copy-button {
+    font-size: 10px;
+    height: 18px;
+    padding: 0 4px;
+  }
+}

@@ -4,11 +4,87 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5bbedd87-77e4-4b9e-8dcb-f82810a3040f" name="更改" comment="" />
+    <list default="true" id="5bbedd87-77e4-4b9e-8dcb-f82810a3040f" name="更改" comment="">
+      <change afterPath="$PROJECT_DIR$/config/menu.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/openapi.config.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/assets/logo.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/about/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/about/styles.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/admin/articles/create/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/admin/articles/create/styles.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/admin/articles/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/admin/articles/styles.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/admin/columns/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/admin/columns/styles.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/admin/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/admin/settings/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/admin/settings/styles.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/admin/styles.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/admin/tags/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/admin/tags/styles.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/article/[articleId]/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/article/[articleId]/styles.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/articles/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/articles/styles.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/column/[columnId]/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/column/[columnId]/styles.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/columns/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/columns/styles.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/tag/[tagId]/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/tag/[tagId]/styles.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/tags/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/tags/styles.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/ArticleList/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/ArticleList/styles.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/CodeBlock/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/CodeBlock/styles.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/ColumnCard/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/ColumnCard/styles.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/CommentSection/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/CommentSection/styles.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/FrontNavigation/ClientWrapper.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/FrontNavigation/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/FrontNavigation/styles.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/GlobalLoading/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/GlobalLoading/styles.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/NoSSR/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/NoSSR/styles.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/RelatedArticles/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/RelatedArticles/styles.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/RewardModal/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/RewardModal/styles.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/Sidebar/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/Sidebar/styles.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/TableOfContents/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/TableOfContents/styles.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/TagCard/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/TagCard/styles.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/layouts/AdminLayout/index.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/layouts/AdminLayout/styles.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/layouts/BasicLayout/Foot/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/layouts/BasicLayout/components/SearchInput/index.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/layouts/BasicLayout/components/SearchInput/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/layouts/BasicLayout/index.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/layouts/BasicLayout/index.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/layouts/BasicLayout/styles.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/libs/request.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/utils/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/MarsCodeWorkspaceAppSettings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/MarsCodeWorkspaceAppSettings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/next.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/next.config.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/globals.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/globals.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/page.tsx" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 2
@@ -18,18 +94,63 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/hejiajun/Documents/study/projects/smart-blog/smart-blog-frontend&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "/Users/hejiajun/Documents/study/projects/smart-blog/smart-blog-frontend/public/assets",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "npm.dev.executor": "Run",
+    "npm.openapi.executor": "Run",
+    "prettierjs.PrettierConfiguration.Package": "/Users/hejiajun/Documents/study/projects/smart-blog/smart-blog-frontend/node_modules/prettier",
+    "settings.editor.selected.configurable": "settings.javascript.prettier",
+    "ts.external.directory.path": "/Users/hejiajun/Documents/study/projects/smart-blog/smart-blog-frontend/node_modules/typescript/lib",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/public/assets" />
+      <recent name="$PROJECT_DIR$/src/layouts/BasicLayout" />
+      <recent name="$PROJECT_DIR$/config" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/src/layouts/BasicLayout/components" />
+    </key>
+  </component>
+  <component name="RunManager" selected="npm.openapi">
+    <configuration name="dev" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="dev" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="openapi" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="openapi" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="npm.openapi" />
+        <item itemvalue="npm.dev" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -46,7 +167,8 @@
       <option name="presentableId" value="Default" />
       <updated>1754719174455</updated>
       <workItem from="1754719175711" duration="1844000" />
-      <workItem from="1754721031736" duration="609000" />
+      <workItem from="1754721031736" duration="730000" />
+      <workItem from="1754722232122" duration="32331000" />
     </task>
     <servers />
   </component>

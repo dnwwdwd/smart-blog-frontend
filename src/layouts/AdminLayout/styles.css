@@ -1,0 +1,192 @@
+/* 管理后台布局样式 */
+
+/* 管理后台布局 */
+.admin-layout {
+  min-height: 100vh;
+}
+
+.admin-content {
+  padding: 24px;
+  min-height: calc(100vh - 64px);
+  margin: 0;
+}
+
+/* 侧边导航 */
+.side-navigation {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 1001;
+  background: white !important;
+}
+
+.side-navigation .ant-layout-sider-children {
+  background: white !important;
+}
+
+.side-navigation .ant-layout-sider-trigger {
+  background: white !important;
+  border-top: 1px solid #f0f0f0;
+}
+
+.side-menu {
+  background: white !important;
+  border-right: none !important;
+}
+
+.admin-logo {
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1px;
+  background: white !important;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.admin-logo .logo {
+  height: 28px;
+  width: 28px;
+  margin-right: 8px;
+}
+
+.admin-title {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.side-menu .ant-menu-item a {
+  text-decoration: none;
+}
+
+/* 顶部栏 */
+.admin-header {
+  background: #fff;
+  padding: 0 16px;
+  border-bottom: 1px solid #f0f0f0;
+  display: flex;
+  align-items: center;
+  height: 64px;
+}
+
+.admin-header-mobile {
+  background: #fff;
+  padding: 0 16px;
+  border-bottom: 1px solid #f0f0f0;
+  display: flex;
+  align-items: center;
+  height: 64px;
+}
+
+.trigger {
+  font-size: 18px;
+  line-height: 64px;
+  padding: 0 24px;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.trigger:hover {
+  color: #1890ff;
+}
+
+.mobile-trigger {
+  font-size: 18px;
+  margin-right: 16px;
+}
+
+.mobile-title {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+/* 移动端抽屉 */
+.mobile-drawer .ant-drawer-body {
+  padding: 0;
+}
+
+.mobile-drawer .ant-menu {
+  border-right: none;
+}
+
+.mobile-drawer .ant-menu-item a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* 管理后台内容区域适配 */
+.admin-layout .ant-layout {
+  margin-left: 0;
+  transition: margin-left 0.2s;
+}
+
+.admin-layout .ant-layout-sider-collapsed + .ant-layout {
+  margin-left: 0;
+}
+
+/* 修复侧边栏与内容区域的空白问题 */
+.admin-layout .ant-layout-content {
+  margin: 0;
+  padding: 0;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .admin-content {
+    padding: 16px;
+    margin-left: 0;
+  }
+  
+  .admin-layout .ant-layout {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-content {
+    padding: 12px;
+  }
+}
+
+/* Bootstrap响应式类 */
+@media (min-width: 992px) {
+  .d-none {
+    display: none !important;
+  }
+  
+  .d-lg-block {
+    display: block !important;
+  }
+  
+  .d-lg-flex {
+    display: flex !important;
+  }
+  
+  .d-lg-none {
+    display: none !important;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .d-lg-none {
+    display: block !important;
+  }
+  
+  .d-none {
+    display: block !important;
+  }
+  
+  .d-lg-block {
+    display: none !important;
+  }
+  
+  .d-lg-flex {
+    display: none !important;
+  }
+}
+
+/* 动画效果 */
+.side-navigation {
+  transition: all 0.3s ease;
+}

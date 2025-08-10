@@ -1,0 +1,366 @@
+/* 友链卡片主容器 */
+.friend-link-card {
+  position: relative;
+  width: 100%;
+  max-width: 280px;
+  height: 320px;
+  margin: 0 auto;
+  cursor: pointer;
+  border-radius: 16px;
+  background: linear-gradient(135deg, 
+    rgba(255, 255, 255, 0.9) 0%, 
+    rgba(248, 250, 255, 0.8) 50%, 
+    rgba(240, 245, 255, 0.9) 100%);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    0 4px 16px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease-out, box-shadow 0.3s ease-out, opacity 0.3s ease-out;
+  animation: gentle-float 8s ease-in-out infinite;
+  overflow: hidden;
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+/* 悬停效果 */
+.friend-link-card:hover {
+  transform: translate3d(0, -12px, 0) scale(1.03);
+  box-shadow: 
+    0 20px 60px rgba(0, 0, 0, 0.15),
+    0 8px 32px rgba(0, 0, 0, 0.1);
+  animation-play-state: paused;
+}
+
+.friend-link-card:hover::before {
+  opacity: 1;
+}
+
+/* 悬停光晕效果 */
+.friend-link-card::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, 
+    rgba(102, 126, 234, 0.3), 
+    rgba(118, 75, 162, 0.3), 
+    rgba(255, 182, 193, 0.3),
+    rgba(102, 126, 234, 0.3));
+  border-radius: 18px;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  filter: blur(8px);
+}
+
+/* 特殊卡片金色效果 */
+.friend-link-card.special {
+  background: linear-gradient(135deg, 
+    rgba(255, 248, 220, 0.95) 0%, 
+    rgba(255, 239, 153, 0.9) 50%, 
+    rgba(255, 215, 0, 0.1) 100%);
+  border: 2px solid rgba(255, 215, 0, 0.4);
+  animation: special-glow 3s ease-in-out infinite alternate;
+}
+
+.friend-link-card.special::before {
+  background: linear-gradient(45deg, 
+    rgba(255, 215, 0, 0.6), 
+    rgba(255, 239, 153, 0.6), 
+    rgba(255, 248, 220, 0.6),
+    rgba(255, 215, 0, 0.6));
+  opacity: 0.7;
+}
+
+/* 状态标签 */
+.status-label {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: linear-gradient(45deg, #667eea, #764ba2);
+  color: white;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  z-index: 2;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+  animation: label-pulse 3s ease-in-out infinite;
+}
+
+/* 右上角图标 */
+.corner-icon {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 24px;
+  height: 24px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffd700;
+  font-size: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease-out, background-color 0.3s ease-out, color 0.3s ease-out;
+  z-index: 2;
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+.corner-icon:hover {
+  transform: translateZ(0) scale(1.2) rotate(180deg);
+  background: #ffd700;
+  color: white;
+}
+
+/* 头像区域 */
+.avatar-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 30px 20px 20px;
+  position: relative;
+}
+
+.avatar-container {
+  position: relative;
+  transition: transform 0.3s ease-out;
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+.friend-avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 16px;
+  object-fit: cover;
+  border: 3px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 
+    0 8px 24px rgba(0, 0, 0, 0.15),
+    0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+.friend-link-card:hover .avatar-container {
+  transform: translate3d(0, -8px, 0) scale(1.05);
+}
+
+.friend-link-card:hover .friend-avatar {
+  transform: translateZ(0) rotate(3deg);
+  box-shadow: 
+    0 12px 32px rgba(0, 0, 0, 0.2),
+    0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* 内容区域 */
+.card-content {
+  padding: 0 20px 20px;
+  text-align: center;
+}
+
+.friend-name {
+  font-size: 18px;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 8px;
+  line-height: 1.2;
+  transition: color 0.3s ease;
+}
+
+.friend-link-card:hover .friend-name {
+  color: #667eea;
+}
+
+.friend-description {
+  font-size: 13px;
+  color: #666;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 0;
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+}
+
+.friend-link-card:hover .friend-description {
+  opacity: 1;
+}
+
+/* 社交图标区域 */
+.social-icons {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  z-index: 2;
+}
+
+.social-icon {
+  width: 28px;
+  height: 28px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+  font-size: 14px;
+  cursor: pointer;
+  transition: transform 0.3s ease-out, background-color 0.3s ease-out, color 0.3s ease-out, box-shadow 0.3s ease-out;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+.social-icon:hover {
+  transform: translate3d(0, -3px, 0) scale(1.1);
+  background: #667eea;
+  color: white;
+  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.3);
+}
+
+.social-icon:nth-child(1):hover {
+  background: #1890ff;
+}
+
+.social-icon:nth-child(2):hover {
+  background: #52c41a;
+}
+
+.social-icon:nth-child(3):hover {
+  background: #f5222d;
+}
+
+.friend-link-card .ant-card-body {
+  padding: 20px;
+}
+
+.friend-link-card .ant-card-meta-title {
+  margin-bottom: 0;
+}
+
+.friend-link-card .ant-card-meta-description {
+  margin-top: 8px;
+}
+
+/* 动画效果 */
+@keyframes gentle-float {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  25% {
+    transform: translate3d(0, -4px, 0) rotate(0.5deg);
+  }
+  50% {
+    transform: translate3d(0, -2px, 0) rotate(0deg);
+  }
+  75% {
+    transform: translate3d(0, -3px, 0) rotate(-0.5deg);
+  }
+}
+
+@keyframes special-glow {
+  0% {
+    box-shadow: 
+      0 8px 32px rgba(255, 215, 0, 0.2),
+      0 4px 16px rgba(255, 215, 0, 0.1);
+  }
+  100% {
+    box-shadow: 
+      0 12px 48px rgba(255, 215, 0, 0.4),
+      0 6px 24px rgba(255, 215, 0, 0.2);
+  }
+}
+
+@keyframes label-pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.9;
+  }
+}
+
+@keyframes badge-pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .friend-link-card {
+    max-width: 240px;
+    height: 280px;
+  }
+  
+  .friend-avatar {
+    width: 64px;
+    height: 64px;
+  }
+  
+  .friend-name {
+    font-size: 16px;
+  }
+  
+  .friend-description {
+    font-size: 12px;
+  }
+  
+  .social-icon {
+    width: 24px;
+    height: 24px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .friend-link-card {
+    max-width: 200px;
+    height: 260px;
+  }
+  
+  .avatar-section {
+    padding: 20px 15px 15px;
+  }
+  
+  .friend-avatar {
+    width: 56px;
+    height: 56px;
+  }
+  
+  .friend-name {
+    font-size: 14px;
+  }
+  
+  .friend-description {
+    font-size: 11px;
+  }
+  
+  .card-content {
+    padding: 0 15px 15px;
+  }
+  
+  .social-icon {
+    width: 22px;
+    height: 22px;
+    font-size: 11px;
+  }
+}

@@ -1,0 +1,386 @@
+.article-create {
+  min-height: 100vh;
+  background: #f5f5f5;
+}
+
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  background: #fff;
+  border-bottom: 1px solid #f0f0f0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.toolbar-left {
+  display: flex;
+  align-items: center;
+}
+
+.toolbar-right {
+  display: flex;
+  align-items: center;
+}
+
+/* 主编辑区域 */
+.main-editor {
+  padding: 24px;
+  height: calc(100vh - 120px);
+  overflow: hidden;
+}
+
+/* ByteMD 编辑器样式 */
+.bytemd-editor {
+  height: calc(100% - 60px);
+  border: 1px solid #d9d9d9;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.bytemd-editor .bytemd {
+  height: 100%;
+}
+
+.bytemd-editor .bytemd-toolbar {
+  border-bottom: 1px solid #d9d9d9;
+  background: #fafafa;
+}
+
+.bytemd-editor .bytemd-body {
+  height: calc(100% - 40px);
+}
+
+.bytemd-editor .bytemd-editor,
+.bytemd-editor .bytemd-preview {
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.bytemd-editor .bytemd-editor .CodeMirror {
+  height: 100%;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+}
+
+.bytemd-editor .bytemd-preview {
+  padding: 16px;
+  background: #fff;
+}
+
+.title-input {
+  margin-bottom: 0;
+}
+
+.title-field {
+  border: none;
+  box-shadow: none;
+  font-size: 28px;
+  font-weight: 600;
+  padding: 12px 0;
+  background: transparent;
+}
+
+.title-field:focus {
+  border: none;
+  box-shadow: none;
+  outline: none;
+}
+
+.title-field::placeholder {
+  color: #bfbfbf;
+  font-weight: normal;
+}
+
+/* ByteMD 编辑器额外样式 */
+.bytemd-editor .bytemd-preview h1,
+.bytemd-editor .bytemd-preview h2,
+.bytemd-editor .bytemd-preview h3,
+.bytemd-editor .bytemd-preview h4,
+.bytemd-editor .bytemd-preview h5,
+.bytemd-editor .bytemd-preview h6 {
+  margin: 1.5em 0 0.5em 0;
+  font-weight: 600;
+}
+
+.bytemd-editor .bytemd-preview h1 {
+  font-size: 2em;
+  border-bottom: 1px solid #eaecef;
+  padding-bottom: 0.3em;
+}
+
+.bytemd-editor .bytemd-preview h2 {
+  font-size: 1.5em;
+  border-bottom: 1px solid #eaecef;
+  padding-bottom: 0.3em;
+}
+
+.bytemd-editor .bytemd-preview p {
+  margin: 0 0 1em 0;
+}
+
+.bytemd-editor .bytemd-preview ul,
+.bytemd-editor .bytemd-preview ol {
+  padding-left: 1.5em;
+  margin: 1em 0;
+}
+
+.bytemd-editor .bytemd-preview blockquote {
+  border-left: 4px solid #dfe2e5;
+  padding: 0 1em;
+  color: #6a737d;
+  margin: 1em 0;
+}
+
+.bytemd-editor .bytemd-preview code {
+  background: #f6f8fa;
+  padding: 0.2em 0.4em;
+  border-radius: 3px;
+  font-size: 85%;
+}
+
+.bytemd-editor .bytemd-preview pre {
+  background: #f6f8fa;
+  padding: 1em;
+  border-radius: 6px;
+  overflow-x: auto;
+  margin: 1em 0;
+}
+
+.bytemd-editor .bytemd-preview pre code {
+  background: transparent;
+  padding: 0;
+}
+
+.tiptap-editor .ProseMirror li {
+  margin: 0.25em 0;
+}
+
+.tiptap-editor .ProseMirror strong {
+  font-weight: 600;
+}
+
+.tiptap-editor .ProseMirror em {
+  font-style: italic;
+}
+
+
+
+/* 预览样式 */
+.article-preview {
+  padding: 24px 0;
+}
+
+.preview-title {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: #262626;
+  line-height: 1.3;
+}
+
+.preview-meta {
+  margin-bottom: 24px;
+}
+
+.preview-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.preview-content {
+  font-size: 16px;
+  line-height: 1.8;
+  color: #595959;
+}
+
+.preview-content p {
+  margin-bottom: 16px;
+}
+
+.preview-content p:last-child {
+  margin-bottom: 0;
+}
+
+/* 响应式设计 */
+@media (max-width: 1200px) {
+  .main-editor {
+    padding: 16px;
+  }
+  
+  .rich-editor .ql-editor {
+    min-height: 300px;
+  }
+}
+
+@media (max-width: 768px) {
+  .toolbar {
+    padding: 12px 16px;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .toolbar-left,
+  .toolbar-right {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .main-editor {
+    padding: 12px;
+    height: auto;
+  }
+  
+  .main-editor .ant-row {
+    flex-direction: column;
+  }
+  
+  .main-editor .ant-col {
+    width: 100% !important;
+    margin-bottom: 16px;
+  }
+  
+  .preview-panel,
+  .editor-panel {
+    height: 400px;
+  }
+  
+  .title-field {
+    font-size: 24px;
+  }
+  
+  .tiptap-editor .ProseMirror {
+    min-height: 250px;
+    font-size: 14px;
+    padding: 12px;
+  }
+  
+  .preview-title {
+    font-size: 24px;
+  }
+  
+  .preview-content {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .toolbar {
+    padding: 8px 12px;
+  }
+  
+  .toolbar-right .ant-btn {
+    padding: 4px 8px;
+    font-size: 12px;
+  }
+  
+  .main-editor {
+    padding: 8px;
+  }
+  
+  .preview-panel,
+  .editor-panel {
+    height: 350px;
+  }
+  
+  .title-field {
+    font-size: 20px;
+  }
+  
+  .tiptap-editor .ProseMirror {
+    min-height: 200px;
+    font-size: 14px;
+    padding: 12px;
+  }
+  
+  .editor-toolbar {
+    padding: 6px;
+    gap: 2px;
+  }
+  
+  .editor-toolbar .ant-btn {
+    font-size: 12px;
+    padding: 2px 6px;
+  }
+  
+  .preview-title {
+    font-size: 20px;
+  }
+}
+
+/* 设置表单样式 */
+.ant-form-item-label > label {
+  font-weight: 600;
+}
+
+.ant-select-dropdown .ant-select-item-option-content .ant-tag {
+  margin: 0;
+}
+
+/* 自定义标签输入区域 */
+.ant-select-dropdown .ant-divider {
+  margin: 8px 0;
+}
+
+.ant-select-dropdown .ant-space {
+  width: 100%;
+}
+
+.ant-select-dropdown .ant-space .ant-input {
+  flex: 1;
+}
+
+/* 工具栏按钮样式 */
+.toolbar .ant-btn {
+  border-radius: 6px;
+}
+
+.toolbar .ant-btn-primary {
+  background: #1890ff;
+  border-color: #1890ff;
+}
+
+.toolbar .ant-btn-primary:hover {
+  background: #40a9ff;
+  border-color: #40a9ff;
+}
+
+/* 编辑器卡片样式 */
+.editor-card .ant-card-body {
+  padding: 32px;
+}
+
+/* 加载状态 */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+/* 字数统计样式 */
+.ant-input-show-count-suffix {
+  color: #8c8c8c;
+}
+
+/* Switch 组件样式 */
+.ant-switch {
+  margin-right: 8px;
+}
+
+/* 表单项间距 */
+.ant-form-item {
+  margin-bottom: 24px;
+}
+
+.ant-form-item:last-child {
+  margin-bottom: 0;
+}

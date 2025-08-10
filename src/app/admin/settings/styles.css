@@ -1,0 +1,266 @@
+.system-settings {
+  padding: 24px;
+  background: #f5f5f5;
+  min-height: 100vh;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.page-header h1 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: #262626;
+}
+
+.settings-form {
+  margin-top: 24px;
+}
+
+.tab-content {
+  padding: 24px 0;
+  max-width: 600px;
+}
+
+/* 上传组件样式 */
+.upload-tip {
+  margin-top: 8px;
+  color: #8c8c8c;
+  font-size: 12px;
+}
+
+.ant-upload-select-picture-card {
+  width: 120px;
+  height: 120px;
+}
+
+.ant-upload-list-picture-card .ant-upload-list-item {
+  width: 120px;
+  height: 120px;
+}
+
+/* 表单项样式 */
+.ant-form-item {
+  margin-bottom: 24px;
+}
+
+.ant-form-item-label > label {
+  font-weight: 600;
+  color: #262626;
+}
+
+.ant-form-item-label > label.ant-form-item-required:not(.ant-form-item-required-mark-optional)::before {
+  color: #ff4d4f;
+}
+
+/* 开关组件样式 */
+.ant-form-item .ant-switch {
+  margin-right: 8px;
+}
+
+/* 标签页样式 */
+.ant-tabs-tab {
+  font-weight: 500;
+}
+
+.ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: #1890ff;
+  font-weight: 600;
+}
+
+/* 统计设置提示 */
+.analytics-tip {
+  background: #f6ffed;
+  border: 1px solid #b7eb8f;
+  border-radius: 6px;
+  padding: 16px;
+  margin-top: 16px;
+}
+
+.analytics-tip p {
+  margin: 0;
+  color: #52c41a;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.analytics-tip p:not(:last-child) {
+  margin-bottom: 8px;
+}
+
+/* 输入框样式 */
+.ant-input,
+.ant-input-number,
+.ant-select-selector {
+  border-radius: 6px;
+}
+
+.ant-input:focus,
+.ant-input-focused,
+.ant-input-number:focus,
+.ant-input-number-focused,
+.ant-select-focused .ant-select-selector {
+  border-color: #1890ff;
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+}
+
+/* 文本域样式 */
+.ant-input {
+  transition: all 0.3s;
+}
+
+.ant-input:hover {
+  border-color: #40a9ff;
+}
+
+/* 按钮样式 */
+.ant-btn {
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+.ant-btn-primary {
+  background: #1890ff;
+  border-color: #1890ff;
+}
+
+.ant-btn-primary:hover {
+  background: #40a9ff;
+  border-color: #40a9ff;
+}
+
+/* 卡片样式 */
+.ant-card {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.ant-card-body {
+  padding: 32px;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .system-settings {
+    padding: 16px;
+  }
+  
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  
+  .page-header h1 {
+    font-size: 20px;
+  }
+  
+  .tab-content {
+    max-width: 100%;
+    padding: 16px 0;
+  }
+  
+  .ant-card-body {
+    padding: 24px 16px;
+  }
+  
+  .ant-tabs-tab {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .system-settings {
+    padding: 12px;
+  }
+  
+  .ant-card-body {
+    padding: 16px 12px;
+  }
+  
+  .page-header {
+    margin-bottom: 16px;
+  }
+  
+  .tab-content {
+    padding: 12px 0;
+  }
+}
+
+/* 加载状态 */
+.ant-btn-loading {
+  pointer-events: none;
+}
+
+/* 字数统计样式 */
+.ant-input-show-count-suffix {
+  color: #8c8c8c;
+}
+
+/* 表单验证样式 */
+.ant-form-item-has-error .ant-input,
+.ant-form-item-has-error .ant-input-number,
+.ant-form-item-has-error .ant-select-selector {
+  border-color: #ff4d4f;
+}
+
+.ant-form-item-has-error .ant-input:focus,
+.ant-form-item-has-error .ant-input-focused,
+.ant-form-item-has-error .ant-input-number:focus,
+.ant-form-item-has-error .ant-input-number-focused,
+.ant-form-item-has-error .ant-select-focused .ant-select-selector {
+  border-color: #ff4d4f;
+  box-shadow: 0 0 0 2px rgba(255, 77, 79, 0.2);
+}
+
+/* 成功状态样式 */
+.ant-form-item-has-success .ant-input,
+.ant-form-item-has-success .ant-input-number,
+.ant-form-item-has-success .ant-select-selector {
+  border-color: #52c41a;
+}
+
+/* 禁用状态样式 */
+.ant-input[disabled],
+.ant-input-number[disabled],
+.ant-select-disabled .ant-select-selector {
+  background-color: #f5f5f5;
+  border-color: #d9d9d9;
+  color: #00000040;
+  cursor: not-allowed;
+}
+
+/* 上传列表样式 */
+.ant-upload-list-picture-card .ant-upload-list-item-info::before {
+  left: 0;
+  top: 0;
+}
+
+.ant-upload-list-picture-card .ant-upload-list-item-actions {
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* 数字输入框样式 */
+.ant-input-number {
+  width: 100%;
+}
+
+/* 选择器样式 */
+.ant-select {
+  width: 100%;
+}
+
+/* 开关标签样式 */
+.ant-form-item .ant-switch + span {
+  margin-left: 8px;
+  color: #595959;
+}
