@@ -1,14 +1,18 @@
 "use client";
-import React from 'react';
-import { Button, Card } from 'antd';
-import { ArrowLeftOutlined, QrcodeOutlined, StarOutlined } from '@ant-design/icons';
-import { useRouter, useParams } from 'next/navigation';
-import './styles.css';
+import React from "react";
+import { Button, Card } from "antd";
+import {
+  ArrowLeftOutlined,
+  QrcodeOutlined,
+  StarOutlined,
+} from "@ant-design/icons";
+import { useRouter, useParams } from "next/navigation";
+import "./styles.css";
 
 interface ContactCard {
   id: string;
   platform: string;
-  username: string;
+  nickname: string;
   icon: string;
   color: string;
 }
@@ -21,44 +25,46 @@ const LinkDetailPage: React.FC = () => {
   // 模拟数据
   const linkData = {
     id: linkId,
-    name: '白鲸_Cofcat',
-    description: '你好，我叫白鲸，你也可以叫我Macon，我是一只猫猫，还是一个程序员。',
-    avatar: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=200&h=200&fit=crop&crop=face',
+    name: "白鲸_Cofcat",
+    description:
+      "你好，我叫白鲸，你也可以叫我Macon，我是一只猫猫，还是一个程序员。",
+    userAvatar:
+      "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=200&h=200&fit=crop&crop=face",
     contacts: [
       {
-        id: '1',
-        platform: 'QQ',
-        username: '123456789',
-        icon: '💬',
-        color: '#1890ff'
+        id: "1",
+        platform: "QQ",
+        nickname: "123456789",
+        icon: "💬",
+        color: "#1890ff",
       },
       {
-        id: '2',
-        platform: '抖音',
-        username: '@cofcat_dev',
-        icon: '🎵',
-        color: '#ff4757'
-      }
-    ] as ContactCard[]
+        id: "2",
+        platform: "抖音",
+        nickname: "@cofcat_dev",
+        icon: "🎵",
+        color: "#ff4757",
+      },
+    ] as ContactCard[],
   };
 
   const handleBack = () => {
-    router.push('/links');
+    router.push("/links");
   };
 
   const handleQRCode = () => {
     // 显示二维码逻辑
-    console.log('显示二维码');
+    console.log("显示二维码");
   };
 
   const handleContact = (contact: ContactCard) => {
     // 处理联系方式点击
-    console.log('联系:', contact.platform);
+    console.log("联系:", contact.platform);
   };
 
   const handleFavorite = (contactId: string) => {
     // 处理收藏
-    console.log('收藏:', contactId);
+    console.log("收藏:", contactId);
   };
 
   return (
@@ -66,17 +72,18 @@ const LinkDetailPage: React.FC = () => {
       {/* 背景装饰 */}
       <div className="bg-decoration bg-decoration-left"></div>
       <div className="bg-decoration bg-decoration-right"></div>
-      
-      <div className="detail-container">
 
+      <div className="detail-container">
         {/* 用户信息区域 */}
         <div className="user-info">
-          <div className="user-avatar">
-            <img src={linkData.avatar} alt={linkData.name} />
+          <div className="user-userAvatar">
+            <img src={linkData.userAvatar} alt={linkData.name} />
           </div>
           <h1 className="user-name">
-            {linkData.name.split('_')[0]}
-            <span className="name-highlight">_{linkData.name.split('_')[1]}</span>
+            {linkData.name.split("_")[0]}
+            <span className="name-highlight">
+              _{linkData.name.split("_")[1]}
+            </span>
             <StarOutlined className="name-star" />
           </h1>
           <p className="user-description">{linkData.description}</p>
@@ -87,23 +94,26 @@ const LinkDetailPage: React.FC = () => {
           {linkData.contacts.map((contact) => (
             <Card key={contact.id} className="contact-card">
               <div className="card-header">
-                <div className="platform-icon" style={{ backgroundColor: contact.color }}>
+                <div
+                  className="platform-icon"
+                  style={{ backgroundColor: contact.color }}
+                >
                   {contact.icon}
                 </div>
-                <Button 
+                <Button
                   className="favorite-button"
                   icon={<StarOutlined />}
                   type="text"
                   onClick={() => handleFavorite(contact.id)}
                 />
               </div>
-              
+
               <div className="card-content">
                 <h3 className="platform-name">{contact.platform}</h3>
-                <p className="platform-username">{contact.username}</p>
+                <p className="platform-nickname">{contact.nickname}</p>
               </div>
-              
-              <Button 
+
+              <Button
                 className="contact-button"
                 type="primary"
                 block

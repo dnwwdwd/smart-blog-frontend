@@ -8,7 +8,7 @@ import Link from "next/link";
 import Title from "antd/es/typography/Title";
 import Paragraph from "antd/es/typography/Paragraph";
 import "./styles.css";
-import { formatDateTime } from "@/utils";
+import { formatDate } from "@/utils";
 import Article = API.Article;
 
 interface ArticleListProps {
@@ -125,7 +125,7 @@ function ArticleItem({ article }: { article: Article }) {
               <Space size="small">
                 <CalendarOutlined style={{ color: "#999" }} />
                 <span style={{ color: "#999" }}>
-                  {formatDateTime(new Date(article.publishedTime))}
+                  {formatDate(article.publishedTime)}
                 </span>
               </Space>
             </div>

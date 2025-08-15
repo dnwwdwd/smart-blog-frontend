@@ -5,33 +5,24 @@
 }
 
 .container {
-  max-width: 1200px;
+  max-width: 80%;
   margin: 0 auto;
   padding: 0 24px;
 }
 
-/* 网格布局 */
-.grid {
+/* 页面布局 */
+.page-layout {
   display: grid;
-  gap: 1.5rem;
+  gap: 2rem;
+  grid-template-columns: 1fr 300px;
 }
 
-.grid-cols-1 {
-  grid-template-columns: repeat(1, minmax(0, 1fr));
+.main-content {
+  min-width: 0;
 }
 
-@media (min-width: 1024px) {
-  .lg\:grid-cols-4 {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-  
-  .lg\:col-span-3 {
-    grid-column: span 3 / span 3;
-  }
-  
-  .lg\:col-span-1 {
-    grid-column: span 1 / span 1;
-  }
+.sidebar-content {
+  width: 300px;
 }
 
 .gap-6 {
@@ -55,10 +46,10 @@
   margin-bottom: 8px;
 }
 
-/* 瀑布流布局 */
+/* 专栏网格布局 */
 .columns-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 24px;
   align-items: start;
 }
@@ -165,29 +156,57 @@
 }
 
 /* 响应式设计 */
-@media (max-width: 1024px) {
+/* 大屏幕 (PC端) - 3列 */
+@media (min-width: 1200px) {
   .columns-grid {
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 20px;
-  }
-  
-  .lg\:grid-cols-4 {
-    grid-template-columns: 1fr;
-  }
-  
-  .lg\:col-span-3,
-  .lg\:col-span-1 {
-    grid-column: span 1;
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
+/* 中等屏幕 (平板) - 2列 */
+@media (max-width: 1199px) and (min-width: 769px) {
+  .container {
+    max-width: 90%;
+  }
+  
+  .page-layout {
+    grid-template-columns: 1fr 280px;
+    gap: 1.5rem;
+  }
+  
+  .sidebar-content {
+    width: 280px;
+  }
+  
+  .columns-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+}
+
+/* 小屏幕 (手机) - 1列 */
 @media (max-width: 768px) {
   .columns-page {
     padding: 16px 0;
   }
   
   .container {
+    max-width: 95%;
     padding: 0 16px;
+  }
+  
+  .page-layout {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .sidebar-content {
+    width: 100%;
+    order: 2;
+  }
+  
+  .main-content {
+    order: 1;
   }
   
   .columns-grid {
@@ -256,27 +275,35 @@
 .column-card:nth-child(5) { animation-delay: 0.5s; }
 .column-card:nth-child(6) { animation-delay: 0.6s; }
 
-/* 瀑布流效果优化 */
+/* 网格布局优化 */
 @supports (display: grid) {
   .columns-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     grid-auto-rows: max-content;
-    gap: 24px;
   }
 }
 
-/* 兼容旧浏览器的瀑布流 */
+/* 兼容旧浏览器 */
 @supports not (display: grid) {
   .columns-grid {
-    column-count: auto;
-    column-width: 320px;
-    column-gap: 24px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
   }
   
   .column-card {
-    display: inline-block;
-    width: 100%;
+    flex: 1 1 calc(33.333% - 16px);
     margin-bottom: 24px;
+  }
+  
+  @media (max-width: 1199px) and (min-width: 769px) {
+    .column-card {
+      flex: 1 1 calc(50% - 12px);
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .column-card {
+      flex: 1 1 100%;
+    }
   }
 }

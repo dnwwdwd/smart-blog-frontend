@@ -27,7 +27,12 @@ myAxios.interceptors.response.use(
     // 处理响应数据
     const { data } = response;
     if (data.code !== 0) {
-      message.error(data.message);
+      // 只在客户端环境中显示错误消息
+      if (typeof window !== "undefined") {
+        message.error(data.message);
+      } else {
+        console.log("API Error:", data.message);
+      }
     }
     return data;
   },

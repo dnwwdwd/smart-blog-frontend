@@ -1,103 +1,177 @@
-.tag-card {
-  height: 100%;
-  transition: all 0.3s ease;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  position: relative;
-}
-
-.tag-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-}
-
-.tag-content {
-  position: relative;
-}
-
-.tag-header {
+/* 标签容器 - 自然流式布局 */
+.tag-container {
   display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 16px;
-}
-
-.tag-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
+  flex-wrap: wrap;
   justify-content: center;
-  font-size: 20px;
-  color: white;
-  flex-shrink: 0;
+  gap: 8px 12px;
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  line-height: 1.6;
 }
 
-.tag-name {
-  margin: 0 !important;
-  color: #1a1a1a;
+/* 当标签数量较少时，保持居中对齐 */
+.tag-container:has(.tag-card:nth-child(-n+10)) {
+  justify-content: center;
+}
+
+/* 当标签数量较多时，使用自然流式布局 */
+.tag-container:has(.tag-card:nth-child(n+11)) {
+  justify-content: flex-start;
+}
+
+/* 标签卡片 - 圆角矩形设计 */
+.tag-card {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 16px;
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  min-height: 36px;
+  margin: 2px 0;
+}
+
+/* 为不同位置的标签添加随机偏移效果 */
+.tag-card:nth-child(3n+1) {
+  margin-top: 4px;
+}
+
+.tag-card:nth-child(5n+2) {
+  margin-bottom: 6px;
+}
+
+.tag-card:nth-child(7n+3) {
+  margin-top: 6px;
+  margin-bottom: 2px;
+}
+
+.tag-card:nth-child(11n+4) {
+  margin-bottom: 8px;
+}
+
+.tag-card:nth-child(13n+5) {
+  margin-top: 8px;
+}
+
+/* 悬停效果 - 上浮和加深阴影 */
+.tag-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  background: #e9ecef;
+  text-decoration: none;
+  color: inherit;
+}
+
+/* 选中状态 - 高亮背景 */
+.tag-card:active,
+.tag-card.selected {
+  background: #e8d5ff;
+  border-color: #9c88ff;
+  color: #5a3d9a;
+}
+
+/* # 号样式 */
+.tag-hash {
+  color: #6c757d;
   font-weight: 600;
-  flex: 1;
-}
-
-.tag-description {
-  color: #666;
-  margin-bottom: 16px !important;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  line-height: 1.5;
+  margin-right: 4px;
   font-size: 14px;
 }
 
-.tag-stats {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 13px;
-  color: #888;
+/* 标签名称 */
+.tag-name {
+  color: #343a40;
+  font-weight: 500;
+  font-size: 14px;
+  margin-right: 8px;
+  white-space: nowrap;
 }
 
-.stat-item {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.tag-badge {
-  position: absolute;
-  top: -8px;
-  right: -8px;
+/* 数量显示 */
+.tag-count {
+  color: #6c757d;
+  font-size: 12px;
+  font-weight: 400;
+  background: #dee2e6;
+  padding: 2px 6px;
+  border-radius: 10px;
+  min-width: 20px;
+  text-align: center;
 }
 
 /* 响应式设计 */
 @media (max-width: 768px) {
-  .tag-header {
-    gap: 8px;
-    margin-bottom: 12px;
+  .tag-container {
+    padding: 16px;
+    gap: 10px;
   }
   
-  .tag-icon {
-    width: 32px;
-    height: 32px;
-    font-size: 16px;
+  .tag-card {
+    padding: 6px 12px;
+    min-height: 32px;
   }
   
-  .tag-name {
-    font-size: 16px !important;
-  }
-  
-  .tag-description {
+  .tag-hash {
     font-size: 13px;
   }
   
-  .tag-stats {
-    flex-direction: column;
-    align-items: flex-start;
+  .tag-name {
+    font-size: 13px;
+  }
+  
+  .tag-count {
+    font-size: 11px;
+    padding: 1px 5px;
+  }
+}
+
+@media (max-width: 480px) {
+  .tag-container {
+    padding: 12px;
     gap: 8px;
+  }
+  
+  .tag-card {
+    padding: 5px 10px;
+    min-height: 28px;
+  }
+  
+  .tag-hash {
     font-size: 12px;
   }
+  
+  .tag-name {
+    font-size: 12px;
+    margin-right: 6px;
+  }
+  
+  .tag-count {
+    font-size: 10px;
+    padding: 1px 4px;
+  }
+}
+
+/* 链接样式重置 */
+a .tag-card {
+  color: inherit;
+  text-decoration: none;
+}
+
+a:hover .tag-card {
+  color: inherit;
+  text-decoration: none;
+}
+
+a:visited .tag-card {
+  color: inherit;
+}
+
+a:active .tag-card {
+  color: inherit;
 }
