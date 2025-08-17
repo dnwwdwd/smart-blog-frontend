@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import {Avatar, Card, Col, Progress, Row, Tag, Timeline} from 'antd';
+import {Avatar, Card, Col, Progress, Row, Tag, Timeline, Button, Space, Statistic} from 'antd';
 import {
   BookOutlined,
   CalendarOutlined,
@@ -11,27 +11,46 @@ import {
   MailOutlined,
   TrophyOutlined,
   TwitterOutlined,
-  UserOutlined
+  UserOutlined,
+  FileTextOutlined,
+  EyeOutlined,
+  TagsOutlined,
+  HeartOutlined,
+  RocketOutlined
 } from '@ant-design/icons';
 import Title from 'antd/es/typography/Title';
 import Paragraph from 'antd/es/typography/Paragraph';
 import Text from 'antd/es/typography/Text';
+import Link from 'next/link';
+import Sidebar from '@/components/Sidebar/page';
 import './styles.css';
 
 const personalInfo = {
   name: '张洪Heo',
-  title: '全栈开发工程师',
+  title: '全栈开发工程师 & 技术博主',
   avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face',
   location: '北京, 中国',
   email: 'zhanghong@example.com',
   github: 'https://github.com/zhanghong',
   linkedin: 'https://linkedin.com/in/zhanghong',
   twitter: 'https://twitter.com/zhanghong',
-  bio: '热爱技术的全栈开发工程师，专注于现代Web开发技术栈。拥有5年以上的开发经验，擅长React、Node.js、TypeScript等技术。喜欢分享技术知识，致力于推动开源社区发展。',
+  bio: '热爱技术的全栈开发工程师，专注于现代Web开发技术栈。通过这个智能博客平台分享技术见解，记录学习历程。拥有5年以上的开发经验，擅长React、Node.js、TypeScript等技术。致力于推动开源社区发展，帮助更多开发者成长。',
   yearsOfExperience: 5,
   projectsCompleted: 50,
   articlesWritten: 120,
-  githubStars: 2500
+  githubStars: 2500,
+  blogViews: 500000,
+  followers: 1200
+};
+
+// 博客统计数据
+const blogStats = {
+  totalArticles: 156,
+  totalColumns: 12,
+  totalTags: 45,
+  totalViews: 500000,
+  monthlyViews: 25000,
+  followers: 1200
 };
 
 const timeline = [
@@ -91,103 +110,112 @@ export default function AboutPage() {
   return (
     <div className="about-page">
       <div className="container">
-        {/* 个人信息卡片 */}
-        <Card className="profile-card">
-          <div className="profile-header">
-            <Avatar 
-              size={120} 
-              src={personalInfo.avatar}
-              icon={<UserOutlined />}
-              className="profile-avatar"
-            />
-            <div className="profile-info">
-              <Title level={2} className="profile-name">
-                {personalInfo.name}
+        <Row gutter={[24, 24]}>
+          {/* 主要内容区域 */}
+          <Col xs={24} lg={16}>
+            {/* 个人信息卡片 */}
+            <Card className="profile-card">
+              <div className="profile-header">
+                <Avatar 
+                  size={120} 
+                  src={personalInfo.avatar}
+                  icon={<UserOutlined />}
+                  className="profile-avatar"
+                />
+                <div className="profile-info">
+                  <Title level={2} className="profile-name">
+                    {personalInfo.name}
+                  </Title>
+                  <Text className="profile-title">
+                    {personalInfo.title}
+                  </Text>
+                  <Paragraph className="profile-bio">
+                    {personalInfo.bio}
+                  </Paragraph>
+                  
+                  <div className="profile-contact">
+                    <div className="contact-item">
+                      <EnvironmentOutlined />
+                      <span>{personalInfo.location}</span>
+                    </div>
+                    <div className="contact-item">
+                      <MailOutlined />
+                      <span>{personalInfo.email}</span>
+                    </div>
+                  </div>
+                  
+                  <div className="social-links">
+                    <a href={personalInfo.github} target="_blank" rel="noopener noreferrer">
+                      <GithubOutlined />
+                    </a>
+                    <a href={personalInfo.linkedin} target="_blank" rel="noopener noreferrer">
+                      <LinkedinOutlined />
+                    </a>
+                    <a href={personalInfo.twitter} target="_blank" rel="noopener noreferrer">
+                      <TwitterOutlined />
+                    </a>
+                  </div>
+                  
+                  <div className="profile-actions">
+                    <Space>
+                      <Link href="/articles">
+                        <Button type="primary" icon={<FileTextOutlined />}>
+                          查看文章
+                        </Button>
+                      </Link>
+                      <Link href="/columns">
+                        <Button icon={<BookOutlined />}>
+                          浏览专栏
+                        </Button>
+                      </Link>
+                    </Space>
+                  </div>
+                </div>
+              </div>
+            </Card>
+            
+            {/* 博客统计 */}
+            <Card className="blog-stats-card">
+              <Title level={3} className="section-title">
+                📊 博客数据统计
               </Title>
-              <Text className="profile-title">
-                {personalInfo.title}
-              </Text>
-              <Paragraph className="profile-bio">
-                {personalInfo.bio}
-              </Paragraph>
-              
-              <div className="profile-contact">
-                <div className="contact-item">
-                  <EnvironmentOutlined />
-                  <span>{personalInfo.location}</span>
-                </div>
-                <div className="contact-item">
-                  <MailOutlined />
-                  <span>{personalInfo.email}</span>
-                </div>
-              </div>
-              
-              <div className="social-links">
-                <a href={personalInfo.github} target="_blank" rel="noopener noreferrer">
-                  <GithubOutlined />
-                </a>
-                <a href={personalInfo.linkedin} target="_blank" rel="noopener noreferrer">
-                  <LinkedinOutlined />
-                </a>
-                <a href={personalInfo.twitter} target="_blank" rel="noopener noreferrer">
-                  <TwitterOutlined />
-                </a>
-              </div>
-            </div>
-          </div>
-        </Card>
-        
-        {/* 统计数据 */}
-        <Row gutter={[16, 16]} className="stats-section">
-          <Col xs={12} sm={6}>
-            <Card className="stat-card">
-              <div className="stat-content">
-                <CalendarOutlined className="stat-icon" />
-                <div className="stat-info">
-                  <div className="stat-number">{personalInfo.yearsOfExperience}+</div>
-                  <div className="stat-label">年经验</div>
-                </div>
-              </div>
+              <Row gutter={[16, 16]}>
+                <Col xs={12} sm={6}>
+                  <Statistic
+                    title="文章总数"
+                    value={blogStats.totalArticles}
+                    prefix={<FileTextOutlined />}
+                    valueStyle={{ color: '#1890ff' }}
+                  />
+                </Col>
+                <Col xs={12} sm={6}>
+                  <Statistic
+                    title="专栏数量"
+                    value={blogStats.totalColumns}
+                    prefix={<BookOutlined />}
+                    valueStyle={{ color: '#52c41a' }}
+                  />
+                </Col>
+                <Col xs={12} sm={6}>
+                  <Statistic
+                    title="标签数量"
+                    value={blogStats.totalTags}
+                    prefix={<TagsOutlined />}
+                    valueStyle={{ color: '#faad14' }}
+                  />
+                </Col>
+                <Col xs={12} sm={6}>
+                  <Statistic
+                    title="总浏览量"
+                    value={blogStats.totalViews}
+                    prefix={<EyeOutlined />}
+                    valueStyle={{ color: '#f5222d' }}
+                  />
+                </Col>
+              </Row>
             </Card>
-          </Col>
-          <Col xs={12} sm={6}>
-            <Card className="stat-card">
-              <div className="stat-content">
-                <CodeOutlined className="stat-icon" />
-                <div className="stat-info">
-                  <div className="stat-number">{personalInfo.projectsCompleted}+</div>
-                  <div className="stat-label">项目完成</div>
-                </div>
-              </div>
-            </Card>
-          </Col>
-          <Col xs={12} sm={6}>
-            <Card className="stat-card">
-              <div className="stat-content">
-                <BookOutlined className="stat-icon" />
-                <div className="stat-info">
-                  <div className="stat-number">{personalInfo.articlesWritten}+</div>
-                  <div className="stat-label">技术文章</div>
-                </div>
-              </div>
-            </Card>
-          </Col>
-          <Col xs={12} sm={6}>
-            <Card className="stat-card">
-              <div className="stat-content">
-                <TrophyOutlined className="stat-icon" />
-                <div className="stat-info">
-                  <div className="stat-number">{personalInfo.githubStars}+</div>
-                  <div className="stat-label">GitHub Stars</div>
-                </div>
-              </div>
-            </Card>
-          </Col>
-        </Row>
-        
-        <Row gutter={[24, 24]} className="content-section">
-          {/* 个人历程 */}
-          <Col xs={24} lg={12}>
+            
+            {/* 个人历程 */}
             <Card className="timeline-card">
               <Title level={3} className="section-title">
                 📚 个人历程
@@ -211,10 +239,8 @@ export default function AboutPage() {
                 }))}
               />
             </Card>
-          </Col>
-          
-          {/* 技能水平 */}
-          <Col xs={24} lg={12}>
+            
+            {/* 技能水平 */}
             <Card className="skills-card">
               <Title level={3} className="section-title">
                 💻 技能水平
@@ -236,22 +262,27 @@ export default function AboutPage() {
                 ))}
               </div>
             </Card>
+            
+            {/* 成就与荣誉 */}
+            <Card className="achievements-card">
+              <Title level={3} className="section-title">
+                🏆 成就与荣誉
+              </Title>
+              <div className="achievements-list">
+                {achievements.map((achievement, index) => (
+                  <Tag key={index} className="achievement-tag">
+                    {achievement}
+                  </Tag>
+                ))}
+              </div>
+            </Card>
+          </Col>
+          
+          {/* 侧边栏 */}
+          <Col xs={24} lg={8}>
+            <Sidebar />
           </Col>
         </Row>
-        
-        {/* 成就与荣誉 */}
-        <Card className="achievements-card">
-          <Title level={3} className="section-title">
-            🏆 成就与荣誉
-          </Title>
-          <div className="achievements-list">
-            {achievements.map((achievement, index) => (
-              <Tag key={index} className="achievement-tag">
-                {achievement}
-              </Tag>
-            ))}
-          </div>
-        </Card>
       </div>
     </div>
   );

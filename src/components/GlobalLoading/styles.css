@@ -1,11 +1,11 @@
-/* 全局加载样式 */
-.global-loading-container {
+.global-loading-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -13,40 +13,113 @@
   animation: fadeIn 0.3s ease-in-out;
 }
 
-.global-loading-content {
+.global-loading-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 24px;
   text-align: center;
+  max-width: 400px;
+  padding: 40px 20px;
 }
 
-.loading-logo {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.1);
+/* 网站图标样式 */
+.loading-icon {
+  margin-bottom: 24px;
+}
+
+.icon-animation {
+  animation: iconFloat 3s ease-in-out infinite;
+}
+
+.site-icon {
+  width: 64px;
+  height: 64px;
+  filter: drop-shadow(0 4px 12px rgba(24, 144, 255, 0.2));
+}
+
+.icon-circle {
+  animation: iconRotate 4s linear infinite;
+  transform-origin: center;
+}
+
+.icon-lines {
+  animation: iconPulse 2s ease-in-out infinite;
+}
+
+.icon-dot {
+  animation: iconBounce 1.5s ease-in-out infinite;
+}
+
+/* 网站标题样式 */
+.loading-title {
+  font-size: 28px;
+  font-weight: 600;
+  color: #262626;
+  margin: 0 0 32px 0;
+  letter-spacing: 0.5px;
+  animation: titleGlow 2s ease-in-out infinite alternate;
+}
+
+/* 加载动画样式 */
+.loading-animation {
+  margin-bottom: 32px;
+}
+
+.loading-dots {
   display: flex;
-  align-items: center;
+  gap: 8px;
   justify-content: center;
-  backdrop-filter: blur(10px);
-  animation: pulse 2s infinite;
 }
 
-.logo-image {
-  width: 50px;
-  height: 50px;
-  object-fit: contain;
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #1890ff;
+  animation: dotBounce 1.4s ease-in-out infinite both;
 }
 
-.loading-text {
-  color: white;
-  font-size: 16px;
+.dot-1 {
+  animation-delay: -0.32s;
+}
+
+.dot-2 {
+  animation-delay: -0.16s;
+}
+
+.dot-3 {
+  animation-delay: 0s;
+}
+
+/* 进度条样式 */
+.loading-progress {
+  width: 100%;
+  max-width: 300px;
+}
+
+.progress-bar {
+  margin-bottom: 12px;
+}
+
+.progress-bar .ant-progress-bg {
+  transition: width 0.3s ease;
+  border-radius: 3px;
+  box-shadow: 0 0 8px rgba(24, 144, 255, 0.3);
+}
+
+.progress-bar .ant-progress-outer {
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-text {
+  font-size: 14px;
+  color: #8c8c8c;
   font-weight: 500;
-  opacity: 0.9;
+  animation: textFade 2s ease-in-out infinite alternate;
 }
 
-/* 加载动画 */
+/* 动画定义 */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -56,59 +129,184 @@
   }
 }
 
-@keyframes pulse {
+@keyframes iconFloat {
   0%, 100% {
-    transform: scale(1);
-    opacity: 0.8;
+    transform: translateY(0px);
   }
   50% {
-    transform: scale(1.1);
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes iconRotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes iconPulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+@keyframes iconBounce {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+}
+
+@keyframes titleGlow {
+  from {
+    text-shadow: 0 0 10px rgba(24, 144, 255, 0.3);
+  }
+  to {
+    text-shadow: 0 0 20px rgba(24, 144, 255, 0.6);
+  }
+}
+
+@keyframes dotBounce {
+  0%, 80%, 100% {
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+  40% {
+    transform: scale(1.2);
     opacity: 1;
   }
 }
 
-/* Ant Design Spin 样式覆盖 */
-.global-loading-container .ant-spin {
-  color: white;
-}
-
-.global-loading-container .ant-spin-dot-item {
-  background-color: white;
+@keyframes textFade {
+  from {
+    opacity: 0.7;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 /* 响应式设计 */
 @media (max-width: 768px) {
-  .loading-logo {
-    width: 60px;
-    height: 60px;
+  .global-loading-container {
+    padding: 32px 16px;
   }
   
-  .logo-image {
-    width: 35px;
-    height: 35px;
+  .site-icon {
+    width: 56px;
+    height: 56px;
   }
   
-  .loading-text {
-    font-size: 14px;
+  .loading-title {
+    font-size: 24px;
+    margin-bottom: 24px;
+  }
+  
+  .loading-animation {
+    margin-bottom: 24px;
+  }
+  
+  .loading-progress {
+    max-width: 280px;
   }
 }
 
 @media (max-width: 480px) {
-  .global-loading-content {
-    gap: 16px;
+  .global-loading-container {
+    padding: 24px 12px;
   }
   
-  .loading-logo {
-    width: 50px;
-    height: 50px;
+  .site-icon {
+    width: 48px;
+    height: 48px;
   }
   
-  .logo-image {
-    width: 30px;
-    height: 30px;
+  .loading-title {
+    font-size: 20px;
+    margin-bottom: 20px;
   }
   
-  .loading-text {
+  .loading-animation {
+    margin-bottom: 20px;
+  }
+  
+  .loading-progress {
+    max-width: 240px;
+  }
+  
+  .progress-text {
     font-size: 12px;
+  }
+}
+
+/* 深色模式支持 */
+@media (prefers-color-scheme: dark) {
+  .global-loading-overlay {
+    background: rgba(0, 0, 0, 0.95);
+  }
+  
+  .loading-title {
+    color: #ffffff;
+  }
+  
+  .progress-text {
+    color: #bfbfbf;
+  }
+  
+  .site-icon .icon-circle,
+  .site-icon .icon-lines,
+  .site-icon .icon-dot {
+    stroke: #40a9ff;
+    fill: #40a9ff;
+  }
+  
+  .dot {
+    background: #40a9ff;
+  }
+}
+
+/* 减少动画效果（用户偏好） */
+@media (prefers-reduced-motion: reduce) {
+  .icon-animation,
+  .icon-circle,
+  .icon-lines,
+  .icon-dot,
+  .loading-title,
+  .dot,
+  .progress-text {
+    animation: none;
+  }
+  
+  .global-loading-overlay {
+    animation: none;
+  }
+}
+
+/* 高对比度模式 */
+@media (prefers-contrast: high) {
+  .global-loading-overlay {
+    background: rgba(255, 255, 255, 1);
+    backdrop-filter: none;
+  }
+  
+  .loading-title {
+    color: #000000;
+    text-shadow: none;
+  }
+  
+  .progress-text {
+    color: #000000;
+  }
+  
+  .site-icon {
+    filter: none;
   }
 }

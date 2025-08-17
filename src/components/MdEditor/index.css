@@ -1,0 +1,14 @@
+.md-editor {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.md-editor .bytemd {
+    height: 100% !important;
+    flex: 1;
+}
+
+.bytemd-toolbar-icon.bytemd-tippy.bytemd-tippy-right:last-child {
+    display: none;
+}

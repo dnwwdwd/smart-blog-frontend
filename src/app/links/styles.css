@@ -97,6 +97,50 @@
   justify-content: center;
 }
 
+/* 分页信息区域 */
+.pagination-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 16px;
+  color: #666;
+  font-size: 14px;
+}
+
+/* 错误提示区域 */
+.error-section {
+  margin: 20px 0;
+}
+
+/* 加载状态 */
+.loading-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  color: #666;
+}
+
+.load-more-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  color: #666;
+}
+
+.no-more-section {
+  text-align: center;
+  padding: 20px;
+}
+
+.manual-load-more {
+  text-align: center;
+  margin: 20px 0;
+}
+
 /* 申请友链区域 */
 .apply-section {
   display: flex;
@@ -233,6 +277,15 @@
   
   .contact-info {
     padding: 16px;
+  }
+  
+  .pagination-info {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .loading-section {
+    padding: 40px 20px;
   }
 }
 

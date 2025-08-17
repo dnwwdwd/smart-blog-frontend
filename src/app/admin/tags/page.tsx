@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Table,
   Button,
@@ -23,6 +23,7 @@ import {
   TagOutlined
 } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/es/table';
+import { getTagPage } from '@/api/tagController';
 import './styles.css';
 
 const { TextArea } = Input;
@@ -30,14 +31,16 @@ const { Option } = Select;
 
 interface TagData {
   key: string;
-  id: number;
-  name: string;
-  description: string;
-  color: string;
-  articleCount: number;
-  status: 'active' | 'inactive';
-  createDate: string;
-  updateDate: string;
+  id?: number;
+  name?: string;
+  description?: string;
+  color?: string;
+  articleCount?: number;
+  status?: 'active' | 'inactive';
+  createDate?: string;
+  updateDate?: string;
+  createTime?: string;
+  updateTime?: string;
 }
 
 const mockTags: TagData[] = [
@@ -110,13 +113,71 @@ const mockTags: TagData[] = [
 ];
 
 const TagManagement: React.FC = () => {
-  const [tags, setTags] = useState<TagData[]>(mockTags);
+  const [tags, setTags] = useState<TagData[]>([]);
   const [loading, setLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [editingTag, setEditingTag] = useState<TagData | null>(null);
   const [form] = Form.useForm();
   const [searchText, setSearchText] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('');
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 10,
+    total: 0
+  });
+
+  // 获取标签数据
+  const fetchTags = async () => {
+    setLoading(true);
+    try {
+      const response = await getTagPage({
+        request: {
+          current: pagination.current,
+          pageSize: pagination.pageSize,
+          tagName: searchText || undefined
+        }
+      });
+      
+      if (response.data?.code === 0 && response.data?.data) {
+        const tagData = response.data.data.records?.map((tag: API.TagVo) => ({
+          key: tag.id?.toString() || '',
+          id: tag.id,
+          name: tag.name,
+          description: tag.description,
+          color: tag.color || '#1890ff',
+          articleCount: tag.articleCount || 0,
+          status: 'active' as const,
+          createTime: tag.createTime,
+          updateTime: tag.updateTime,
+          createDate: tag.createTime?.split('T')[0],
+          updateDate: tag.updateTime?.split('T')[0]
+        })) || [];
+        
+        setTags(tagData);
+        setPagination(prev => ({
+          ...prev,
+          total: response.data?.data?.total || 0
+        }));
+      }
+    } catch (error) {
+      console.error('获取标签数据失败:', error);
+      message.error('获取标签数据失败');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchTags();
+  }, [pagination.current, pagination.pageSize]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setPagination(prev => ({ ...prev, current: 1 }));
+      fetchTags();
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [searchText]);
 
   const handleAdd = () => {
     setEditingTag(null);
@@ -136,7 +197,8 @@ const TagManagement: React.FC = () => {
     setModalVisible(true);
   };
 
-  const handleDelete = (id: number) => {
+  const handleDelete = (id: number | undefined) => {
+    if (!id) return;
     setTags(tags.filter(tag => tag.id !== id));
     message.success('标签删除成功');
   };
@@ -189,8 +251,8 @@ const TagManagement: React.FC = () => {
   };
 
   const filteredTags = tags.filter(tag => {
-    const matchesSearch = tag.name.toLowerCase().includes(searchText.toLowerCase()) ||
-                         tag.description.toLowerCase().includes(searchText.toLowerCase());
+    const matchesSearch = (tag.name || '').toLowerCase().includes(searchText.toLowerCase()) ||
+                         (tag.description || '').toLowerCase().includes(searchText.toLowerCase());
     const matchesStatus = !statusFilter || tag.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
@@ -201,7 +263,7 @@ const TagManagement: React.FC = () => {
       dataIndex: 'id',
       key: 'id',
       width: 80,
-      sorter: (a, b) => a.id - b.id
+      sorter: (a, b) => (a.id || 0) - (b.id || 0),
     },
     {
       title: '标签名称',
@@ -250,7 +312,7 @@ const TagManagement: React.FC = () => {
       dataIndex: 'articleCount',
       key: 'articleCount',
       width: 100,
-      sorter: (a, b) => a.articleCount - b.articleCount,
+      sorter: (a, b) => (a.articleCount || 0) - (b.articleCount || 0),
       render: (count: number) => (
         <Badge count={count} style={{ backgroundColor: '#52c41a' }} />
       )
@@ -272,14 +334,14 @@ const TagManagement: React.FC = () => {
       dataIndex: 'createDate',
       key: 'createDate',
       width: 120,
-      sorter: (a, b) => new Date(a.createDate).getTime() - new Date(b.createDate).getTime()
+      sorter: (a, b) => new Date(a.createDate || '').getTime() - new Date(b.createDate || '').getTime(),
     },
     {
       title: '更新日期',
       dataIndex: 'updateDate',
       key: 'updateDate',
       width: 120,
-      sorter: (a, b) => new Date(a.updateDate).getTime() - new Date(b.updateDate).getTime()
+      sorter: (a, b) => new Date(a.updateDate || '').getTime() - new Date(b.updateDate || '').getTime(),
     },
     {
       title: '操作',

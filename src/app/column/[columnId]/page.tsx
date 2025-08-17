@@ -1,13 +1,7 @@
 "use server";
 import React from "react";
-import { Metadata } from "next";
-import { Avatar, Col, Row, Statistic, Tag } from "antd";
-import {
-  CalendarOutlined,
-  EyeOutlined,
-  FileTextOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
+import { Col, Row, Statistic } from "antd";
+import { CalendarOutlined, FileTextOutlined } from "@ant-design/icons";
 import ArticleList from "@/components/ArticleList/page";
 import Sidebar from "@/components/Sidebar/page";
 import "./styles.css";

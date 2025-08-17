@@ -1,37 +1,34 @@
 "use server";
 import React from "react";
-import Title from "antd/es/typography/Title";
-import Paragraph from "antd/es/typography/Paragraph";
-import Sidebar from "@/components/Sidebar/page";
-import TagCard, { Tag } from "@/components/TagCard/page";
-import "./styles.css";
 import { getTagPage } from "@/api/tagController";
+import TagsPageClient from "@/components/TagsPageClient";
+import "./styles.css";
+import "@ant-design/v5-patch-for-react-19";
 
-export default async function TagsPage() {
-  let tags = [];
-
-  const res = await getTagPage({
+const TagsPage = async () => {
+  const initialResponse = (await getTagPage({
     current: 1,
-    pageSize: -1,
-  });
-  tags = res.data.records ?? [];
+    pageSize: 20,
+  })) as any;
+
+  const initialData = initialResponse?.data?.records || [];
+  const initialTotal = initialResponse?.data?.total || 0;
 
   return (
     <div className="tags-page">
       <div className="container">
-        <div className="tags-header">
-          <Title level={2}>🏷️ 标签列表</Title>
+        <div className="tags-header mb-6">
+          <h1>🏷️ 标签列表</h1>
         </div>
-
         <div className="page-layout">
-          {/* 主内容区 */}
-          <div className="main-content">
-            <div className="tags-grid">
-              <TagCard tags={tags} />
-            </div>
-          </div>
+          <TagsPageClient
+            initialData={initialData}
+            initialTotal={initialTotal}
+          />
         </div>
       </div>
     </div>
   );
-}
+};
+
+export default TagsPage;

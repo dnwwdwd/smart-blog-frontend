@@ -5,7 +5,7 @@
 }
 
 .container {
-  max-width: 80%;
+  max-width: 90%;
   margin: 0 auto;
   padding: 0 24px;
 }
@@ -13,14 +13,15 @@
 /* 页面布局 */
 .page-layout {
   display: flex;
-  justify-content: center;
-  width: 100%;
+  gap: 2rem;
+  align-items: flex-start;
 }
 
 .main-content {
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  justify-content: center;
 }
 
 .gap-6 {
@@ -48,7 +49,12 @@
 /* 标签网格布局 */
 .tags-grid {
   width: 100%;
-  margin-bottom: 32px;
+  max-width: 1200px;
+  margin: 0 auto 32px auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
 }
 
 /* 响应式设计 */
@@ -74,6 +80,19 @@
   }
 }
 
+/* 平板和手机 - 响应式布局 */
+@media (max-width: 992px) {
+  .page-layout {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .sidebar-content {
+    width: 100%;
+    order: -1;
+  }
+}
+
 @media (max-width: 768px) {
   .tags-page {
     padding: 16px 0;
@@ -84,8 +103,8 @@
     padding: 0 12px;
   }
   
-  .main-content {
-    max-width: 100%;
+  .page-layout {
+    gap: 1rem;
   }
   
   .tags-header {
@@ -98,6 +117,7 @@
   }
   
   .tags-grid {
+    gap: 12px;
     margin-bottom: 24px;
   }
 }

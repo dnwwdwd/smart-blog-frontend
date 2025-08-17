@@ -169,3 +169,62 @@
     font-size: 18px;
   }
 }
+
+/* 用户信息样式 */
+.user-info-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.user-info-container:hover {
+  background: #f0f8ff;
+}
+
+.user-avatar {
+  flex-shrink: 0;
+}
+
+.user-name {
+  font-weight: 500;
+  color: #333;
+  max-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 移动端用户信息样式 */
+.mobile-user-info {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.mobile-user-profile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: #f8f9fa;
+  border-radius: 12px;
+}
+
+.mobile-user-avatar {
+  flex-shrink: 0;
+}
+
+.mobile-user-name {
+  font-weight: 600;
+  color: #333;
+  font-size: 16px;
+}
+
+.mobile-logout {
+  border-radius: 20px;
+  height: 40px;
+}

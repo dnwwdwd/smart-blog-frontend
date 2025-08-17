@@ -5,24 +5,26 @@
 }
 
 .container {
-  max-width: 80%;
+  max-width: 90%;
   margin: 0 auto;
   padding: 0 24px;
 }
 
 /* 页面布局 */
 .page-layout {
-  display: grid;
+  display: flex;
   gap: 2rem;
-  grid-template-columns: 1fr 300px;
+  align-items: flex-start;
 }
 
 .main-content {
+  flex: 1;
   min-width: 0;
 }
 
 .sidebar-content {
   width: 300px;
+  flex-shrink: 0;
 }
 
 .gap-6 {
@@ -46,12 +48,11 @@
   margin-bottom: 8px;
 }
 
-/* 专栏网格布局 */
+/* 专栏瀑布流布局 */
 .columns-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
-  align-items: start;
+  column-count: 3;
+  column-gap: 24px;
+  column-fill: balance;
 }
 
 /* 专栏卡片 */
@@ -159,19 +160,14 @@
 /* 大屏幕 (PC端) - 3列 */
 @media (min-width: 1200px) {
   .columns-grid {
-    grid-template-columns: repeat(3, 1fr);
+    column-count: 3;
   }
 }
 
 /* 中等屏幕 (平板) - 2列 */
-@media (max-width: 1199px) and (min-width: 769px) {
+@media (max-width: 1199px) and (min-width: 993px) {
   .container {
     max-width: 90%;
-  }
-  
-  .page-layout {
-    grid-template-columns: 1fr 280px;
-    gap: 1.5rem;
   }
   
   .sidebar-content {
@@ -179,8 +175,26 @@
   }
   
   .columns-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
+    column-count: 2;
+    column-gap: 20px;
+  }
+}
+
+/* 平板和手机 - 响应式布局 */
+@media (max-width: 992px) {
+  .page-layout {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .sidebar-content {
+    width: 100%;
+    order: -1;
+  }
+  
+  .columns-grid {
+    column-count: 2;
+    column-gap: 20px;
   }
 }
 
@@ -196,22 +210,12 @@
   }
   
   .page-layout {
-    grid-template-columns: 1fr;
     gap: 1rem;
   }
   
-  .sidebar-content {
-    width: 100%;
-    order: 2;
-  }
-  
-  .main-content {
-    order: 1;
-  }
-  
   .columns-grid {
-    grid-template-columns: 1fr;
-    gap: 16px;
+    column-count: 1;
+    column-gap: 16px;
   }
   
   .column-card {
@@ -275,15 +279,15 @@
 .column-card:nth-child(5) { animation-delay: 0.5s; }
 .column-card:nth-child(6) { animation-delay: 0.6s; }
 
-/* 网格布局优化 */
-@supports (display: grid) {
+/* 瀑布流布局优化 */
+@supports (column-count: 1) {
   .columns-grid {
-    grid-auto-rows: max-content;
+    column-fill: balance;
   }
 }
 
-/* 兼容旧浏览器 */
-@supports not (display: grid) {
+/* 兼容旧浏览器 - 使用 flexbox */
+@supports not (column-count: 1) {
   .columns-grid {
     display: flex;
     flex-wrap: wrap;
@@ -295,7 +299,13 @@
     margin-bottom: 24px;
   }
   
-  @media (max-width: 1199px) and (min-width: 769px) {
+  @media (max-width: 1199px) and (min-width: 993px) {
+    .column-card {
+      flex: 1 1 calc(50% - 12px);
+    }
+  }
+  
+  @media (max-width: 992px) {
     .column-card {
       flex: 1 1 calc(50% - 12px);
     }

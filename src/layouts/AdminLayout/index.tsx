@@ -1,19 +1,18 @@
 "use client";
-import React, { useState } from 'react';
-import { Layout, Menu, Button, Drawer } from 'antd';
+import React, { useState } from "react";
+import { Drawer, Layout, Menu } from "antd";
 import {
+  BookOutlined,
   DashboardOutlined,
   FileTextOutlined,
-  TagsOutlined,
-  BookOutlined,
+  LinkOutlined,
   SettingOutlined,
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
-} from '@ant-design/icons';
-import { usePathname } from 'next/navigation';
-import Link from 'next/link';
-import Image from 'next/image';
-import './styles.css';
+  TagsOutlined,
+} from "@ant-design/icons";
+import { usePathname } from "next/navigation";
+import Link from "next/link";
+import Image from "next/image";
+import "./styles.css";
 
 const { Header, Sider, Content } = Layout;
 
@@ -43,7 +42,7 @@ const AdminLayout: React.FC<Props> = ({ children }) => {
         },
         {
           key: '/admin/articles/create',
-          label: <Link href="/admin/articles/create">创建文章</Link>,
+          label: <Link href="/admin/articles/create">新建文章</Link>,
         },
       ],
     },
@@ -56,6 +55,11 @@ const AdminLayout: React.FC<Props> = ({ children }) => {
       key: '/admin/columns',
       icon: <BookOutlined />,
       label: <Link href="/admin/columns">专栏管理</Link>,
+    },
+        {
+      key: '/admin/friend-link',
+      icon: <LinkOutlined />,
+      label: <Link href="/admin/friend-link">友链管理</Link>,
     },
     {
       key: '/admin/settings',
@@ -121,18 +125,7 @@ const AdminLayout: React.FC<Props> = ({ children }) => {
       </Drawer>
 
       <Layout>
-        {/* 顶部触发器（仅在桌面端显示） */}
-        <Header className="admin-header d-none d-lg-flex">
-          <Button
-            type="text"
-            icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-            onClick={() => setCollapsed(!collapsed)}
-            className="trigger"
-          />
-        </Header>
-
-
-
+        
         <Content className="admin-content">
           {children}
         </Content>

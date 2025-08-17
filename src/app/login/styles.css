@@ -230,21 +230,35 @@
 
 /* 密码输入框特殊样式 */
 .ant-input-password {
-  height: 48px !important;
-  border-radius: 12px !important;
+  height: 40px !important;
+  border-radius: 6px !important;
+  border: 1px solid #d9d9d9 !important;
+  background: #ffffff !important;
+  transition: all 0.2s ease !important;
+}
+
+.ant-input-password:hover {
+  border-color: #40a9ff !important;
+}
+
+.ant-input-password:focus,
+.ant-input-password.ant-input-affix-wrapper-focused {
+  border-color: #1890ff !important;
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2) !important;
 }
 
 .ant-input-password .ant-input {
-  height: 44px !important;
+  height: 38px !important;
   border: none !important;
   background: transparent !important;
+  font-size: 14px !important;
 }
 
 .ant-input-password .ant-input-suffix {
-  color: #999;
+  color: #bfbfbf !important;
 }
 
 .ant-input-password:hover .ant-input-suffix,
 .ant-input-password.ant-input-affix-wrapper-focused .ant-input-suffix {
-  color: #667eea;
+  color: #1890ff !important;
 }

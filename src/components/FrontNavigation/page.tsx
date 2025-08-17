@@ -1,19 +1,32 @@
 "use client";
-import React, { useState, useEffect } from 'react';
-import { Menu, Input, Button, Drawer } from 'antd';
-import { SearchOutlined, UserOutlined, MenuOutlined } from '@ant-design/icons';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import './styles.css';
+import React, { useState, useEffect } from "react";
+import { Menu, Input, Button, Drawer, Avatar, Dropdown } from "antd";
+import { SearchOutlined, UserOutlined, MenuOutlined, LogoutOutlined, CrownOutlined } from "@ant-design/icons";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/stores/authStore";
+import SearchModal from "@/components/SearchModal";
+import "./styles.css";
 
 interface FrontNavigationProps {
   currentPath?: string;
 }
 
-const FrontNavigation: React.FC<FrontNavigationProps> = ({ currentPath = '/' }) => {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+const FrontNavigation: React.FC<FrontNavigationProps> = ({
+  currentPath = "/",
+}) => {
   const [isMobile, setIsMobile] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [searchModalVisible, setSearchModalVisible] = useState(false);
+  const [searchKeyword, setSearchKeyword] = useState("");
   const router = useRouter();
+  const { user, isLoggedIn, logout } = useAuth();
+
+  // 处理登出
+  const handleLogout = () => {
+    logout();
+    router.push('/login');
+  };
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -24,25 +37,41 @@ const FrontNavigation: React.FC<FrontNavigationProps> = ({ currentPath = '/' }) 
     checkScreenSize();
 
     // 添加窗口大小变化监听器
-    window.addEventListener('resize', checkScreenSize);
+    window.addEventListener("resize", checkScreenSize);
 
     // 清理监听器
     return () => {
-      window.removeEventListener('resize', checkScreenSize);
+      window.removeEventListener("resize", checkScreenSize);
     };
   }, []);
 
   const menuItems = [
-    { key: '/', label: '首页', href: '/' },
-    { key: '/articles', label: '文章', href: '/articles' },
-    { key: '/columns', label: '专栏', href: '/columns' },
-    { key: '/tags', label: '标签', href: '/tags' },
-    { key: '/links', label: '友链', href: '/links' },
-    { key: '/about', label: '关于', href: '/about' },
+    { key: "/", label: "首页", href: "/" },
+    { key: "/articles", label: "文章", href: "/articles" },
+    { key: "/columns", label: "专栏", href: "/columns" },
+    { key: "/tags", label: "标签", href: "/tags" },
+    { key: "/links", label: "友链", href: "/links" },
+    { key: "/about", label: "关于", href: "/about" },
+  ];
+
+  // 用户下拉菜单项
+  const userMenuItems = [
+    {
+      key: 'admin',
+      label: '后台管理',
+      icon: <CrownOutlined />,
+      onClick: () => router.push('/admin'),
+    },
+    {
+      key: 'logout',
+      label: '退出登录',
+      icon: <LogoutOutlined />,
+      onClick: handleLogout,
+    }
   ];
 
   const handleMenuClick = (e: any) => {
-    const item = menuItems.find(item => item.key === e.key);
+    const item = menuItems.find((item) => item.key === e.key);
     if (item) {
       router.push(item.href);
       setMobileMenuOpen(false);
@@ -58,7 +87,7 @@ const FrontNavigation: React.FC<FrontNavigationProps> = ({ currentPath = '/' }) 
             <span className="logo-text">智能博客</span>
           </Link>
         </div>
-        
+
         {/* 桌面端菜单 */}
         {!isMobile && (
           <div className="desktop-menu">
@@ -67,14 +96,14 @@ const FrontNavigation: React.FC<FrontNavigationProps> = ({ currentPath = '/' }) 
               selectedKeys={[currentPath]}
               onClick={handleMenuClick}
               className="nav-menu"
-              items={menuItems.map(item => ({
+              items={menuItems.map((item) => ({
                 key: item.key,
                 label: item.label,
               }))}
             />
           </div>
         )}
-        
+
         {/* 操作区域 */}
         <div className="nav-actions">
           {!isMobile && (
@@ -84,18 +113,45 @@ const FrontNavigation: React.FC<FrontNavigationProps> = ({ currentPath = '/' }) 
                   placeholder="搜索文章..."
                   prefix={<SearchOutlined />}
                   className="search-input"
+                  onClick={() => setSearchModalVisible(true)}
+                  onPressEnter={(e) => {
+                    const value = (e.target as HTMLInputElement).value;
+                    setSearchKeyword(value);
+                    setSearchModalVisible(true);
+                  }}
+                  style={{ cursor: 'pointer' }}
                 />
               </div>
-              <Button 
-                type="text" 
-                icon={<UserOutlined />} 
-                className="user-button desktop-user"
-              >
-                登录
-              </Button>
+              {isLoggedIn ? (
+                <Dropdown
+                  menu={{ items: userMenuItems }}
+                  placement="bottomRight"
+                  trigger={['click']}
+                >
+                  <div className="user-info-container">
+                    <Avatar
+                      src={user?.userAvatar}
+                      icon={<UserOutlined />}
+                      size={32}
+                      className="user-avatar"
+                    />
+                    <span className="user-name">{user?.username}</span>
+                  </div>
+                </Dropdown>
+              ) : (
+                <Link href="/login">
+                  <Button
+                    type="text"
+                    icon={<UserOutlined />}
+                    className="user-button desktop-user"
+                  >
+                    登录
+                  </Button>
+                </Link>
+              )}
             </>
           )}
-          
+
           {/* 移动端菜单按钮 */}
           {isMobile && (
             <Button
@@ -107,7 +163,7 @@ const FrontNavigation: React.FC<FrontNavigationProps> = ({ currentPath = '/' }) 
           )}
         </div>
       </div>
-      
+
       {/* 移动端抽屉菜单 */}
       <Drawer
         title="菜单"
@@ -123,26 +179,51 @@ const FrontNavigation: React.FC<FrontNavigationProps> = ({ currentPath = '/' }) 
             selectedKeys={[currentPath]}
             onClick={handleMenuClick}
             className="mobile-nav-menu"
-            items={menuItems.map(item => ({
+            items={menuItems.map((item) => ({
               key: item.key,
               label: item.label,
             }))}
           />
-          
+
           <div className="mobile-actions">
             <Input
               placeholder="搜索文章..."
               prefix={<SearchOutlined />}
               className="mobile-search"
             />
-            <Button 
-              type="primary" 
-              icon={<UserOutlined />} 
-              block
-              className="mobile-login"
-            >
-              登录
-            </Button>
+            {isLoggedIn ? (
+              <div className="mobile-user-info">
+                <div className="mobile-user-profile">
+                  <Avatar
+                    src={user?.userAvatar}
+                    icon={<UserOutlined />}
+                    size={40}
+                    className="mobile-user-avatar"
+                  />
+                  <span className="mobile-user-name">{user?.username}</span>
+                </div>
+                <Button
+                  type="primary"
+                  icon={<LogoutOutlined />}
+                  block
+                  className="mobile-logout"
+                  onClick={handleLogout}
+                >
+                  退出登录
+                </Button>
+              </div>
+            ) : (
+              <Link href="/login">
+                <Button
+                  type="primary"
+                  icon={<UserOutlined />}
+                  block
+                  className="mobile-login"
+                >
+                  登录
+                </Button>
+              </Link>
+            )}
           </div>
         </div>
       </Drawer>

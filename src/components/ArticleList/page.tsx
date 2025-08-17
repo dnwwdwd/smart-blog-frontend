@@ -10,9 +10,10 @@ import Paragraph from "antd/es/typography/Paragraph";
 import "./styles.css";
 import { formatDate } from "@/utils";
 import Article = API.Article;
+import ArticleVo = API.ArticleVo;
 
 interface ArticleListProps {
-  articles?: Article[]; // 改为可选的文章数组
+  articles?: (Article | ArticleVo)[]; // 支持Article和ArticleVo类型
   showPagination?: boolean; // 是否显示分页
   pageSize?: number; // 每页显示数量
 }
@@ -63,17 +64,17 @@ export default function ArticleList({
   );
 }
 
-function ArticleItem({ article }: { article: Article }) {
+function ArticleItem({ article }: { article: Article | ArticleVo }) {
   const [imgError, setImgError] = useState(false);
 
   return (
     <List.Item className="article-item" key={article.id}>
       <List.Item.Meta
         avatar={
-          !imgError ? (
+          !imgError && article.coverImage ? (
             <Image
               src={article.coverImage}
-              alt={article.title}
+              alt={article.title || ''}
               width={200}
               height={150}
               style={{ objectFit: "cover", borderRadius: "8px" }}
@@ -125,14 +126,14 @@ function ArticleItem({ article }: { article: Article }) {
               <Space size="small">
                 <CalendarOutlined style={{ color: "#999" }} />
                 <span style={{ color: "#999" }}>
-                  {formatDate(article.publishedTime)}
+                  {article.publishedTime ? formatDate(new Date(article.publishedTime)) : '未知时间'}
                 </span>
               </Space>
             </div>
 
             <div className="article-tags" style={{ marginTop: 16 }}>
-              {article.tags.map((tag) => (
-                <Tag key={tag} color={article.color}>
+              {('tags' in article ? article.tags : [])?.map((tag: string) => (
+                <Tag key={tag}>
                   {tag}
                 </Tag>
               ))}

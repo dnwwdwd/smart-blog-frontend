@@ -1,8 +1,23 @@
-'use client';
-import React, { useState } from 'react';
-import { Button, Modal, Tabs, QRCode, Form, Input, Space, Typography, message } from 'antd';
-import { HeartOutlined, WechatOutlined, AlipayOutlined, GiftOutlined } from '@ant-design/icons';
-import './styles.css';
+"use client";
+import React, { useState } from "react";
+import {
+  Button,
+  Modal,
+  Tabs,
+  QRCode,
+  Form,
+  Input,
+  Space,
+  Typography,
+  message,
+} from "antd";
+import {
+  HeartOutlined,
+  WechatOutlined,
+  AlipayOutlined,
+  GiftOutlined,
+} from "@ant-design/icons";
+import "./styles.css";
 
 const { Title, Text } = Typography;
 const { TextArea } = Input;
@@ -30,16 +45,16 @@ const RewardModal: React.FC = () => {
 
   const handleSubmit = async (values: RewardFormData) => {
     setSubmitting(true);
-    
+
     try {
       // 模拟提交打赏信息
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      message.success('感谢您的打赏支持！');
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      message.success("感谢您的打赏支持！");
       setIsModalVisible(false);
       form.resetFields();
     } catch (error) {
-      message.error('提交失败，请重试。');
+      message.error("提交失败，请重试。");
     } finally {
       setSubmitting(false);
     }
@@ -47,10 +62,10 @@ const RewardModal: React.FC = () => {
 
   const tabItems = [
     {
-      key: 'wechat',
+      key: "wechat",
       label: (
         <Space>
-          <WechatOutlined style={{ color: '#07c160' }} />
+          <WechatOutlined style={{ color: "#07c160" }} />
           微信支付
         </Space>
       ),
@@ -60,7 +75,7 @@ const RewardModal: React.FC = () => {
             <QRCode
               value="wxp://f2f0abcdefghijklmnopqrstuvwxyz123456789"
               size={200}
-              style={{ margin: '0 auto' }}
+              style={{ margin: "0 auto" }}
             />
           </div>
           <div className="payment-tips">
@@ -70,10 +85,10 @@ const RewardModal: React.FC = () => {
       ),
     },
     {
-      key: 'alipay',
+      key: "alipay",
       label: (
         <Space>
-          <AlipayOutlined style={{ color: '#1677ff' }} />
+          <AlipayOutlined style={{ color: "#1677ff" }} />
           支付宝
         </Space>
       ),
@@ -83,7 +98,7 @@ const RewardModal: React.FC = () => {
             <QRCode
               value="https://qr.alipay.com/fkx123456789abcdefghijklmnop"
               size={200}
-              style={{ margin: '0 auto' }}
+              style={{ margin: "0 auto" }}
             />
           </div>
           <div className="payment-tips">
@@ -93,10 +108,10 @@ const RewardModal: React.FC = () => {
       ),
     },
     {
-      key: 'message',
+      key: "message",
       label: (
         <Space>
-          <GiftOutlined style={{ color: '#ff4d4f' }} />
+          <GiftOutlined style={{ color: "#ff4d4f" }} />
           留言支持
         </Space>
       ),
@@ -111,33 +126,30 @@ const RewardModal: React.FC = () => {
             <Form.Item
               name="nickname"
               label="昵称"
-              rules={[{ required: true, message: '请输入您的昵称' }]}
+              rules={[{ required: true, message: "请输入您的昵称" }]}
             >
               <Input placeholder="请输入您的昵称" />
             </Form.Item>
-            
+
             <Form.Item
               name="email"
               label="邮箱"
               rules={[
-                { required: true, message: '请输入邮箱' },
-                { type: 'email', message: '请输入有效的邮箱地址' }
+                { required: true, message: "请输入邮箱" },
+                { type: "email", message: "请输入有效的邮箱地址" },
               ]}
             >
               <Input placeholder="请输入您的邮箱" />
             </Form.Item>
-            
-            <Form.Item
-              name="website"
-              label="网站（可选）"
-            >
+
+            <Form.Item name="website" label="网站（可选）">
               <Input placeholder="请输入您的网站" />
             </Form.Item>
-            
+
             <Form.Item
               name="message"
               label="留言"
-              rules={[{ required: true, message: '请输入留言内容' }]}
+              rules={[{ required: true, message: "请输入留言内容" }]}
             >
               <TextArea
                 rows={4}
@@ -146,7 +158,7 @@ const RewardModal: React.FC = () => {
                 maxLength={200}
               />
             </Form.Item>
-            
+
             <Form.Item>
               <Button
                 type="primary"
@@ -175,11 +187,11 @@ const RewardModal: React.FC = () => {
       >
         打赏支持
       </Button>
-      
+
       <Modal
         title={
           <div className="modal-title">
-            <HeartOutlined style={{ color: '#ff4d4f', marginRight: 8 }} />
+            <HeartOutlined style={{ color: "#ff4d4f", marginRight: 8 }} />
             支持作者
           </div>
         }
@@ -192,23 +204,33 @@ const RewardModal: React.FC = () => {
       >
         <div className="modal-content">
           <div className="reward-intro">
-            <Title level={4} style={{ textAlign: 'center', marginBottom: 8 }}>
+            <Title level={4} style={{ textAlign: "center", marginBottom: 8 }}>
               感谢您的支持
             </Title>
-            <Text type="secondary" style={{ display: 'block', textAlign: 'center', marginBottom: 24 }}>
+            <Text
+              type="secondary"
+              style={{
+                display: "block",
+                textAlign: "center",
+                marginBottom: 24,
+              }}
+            >
               您的支持是我创作的最大动力
             </Text>
           </div>
-          
+
           <Tabs
             defaultActiveKey="wechat"
             items={tabItems}
             centered
             className="reward-tabs"
           />
-          
+
           <div className="reward-footer">
-            <Text type="secondary" style={{ fontSize: 12, textAlign: 'center', display: 'block' }}>
+            <Text
+              type="secondary"
+              style={{ fontSize: 12, textAlign: "center", display: "block" }}
+            >
               打赏金额随意，心意最重要 ❤️
             </Text>
           </div>

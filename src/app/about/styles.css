@@ -1,6 +1,5 @@
 .about-page {
   min-height: 100vh;
-  background: #fafafa;
   padding: 24px 0;
 }
 
@@ -14,7 +13,6 @@
 .profile-card {
   margin-bottom: 24px;
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .profile-header {
@@ -88,7 +86,6 @@
 
 .stat-card {
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease;
 }
 
@@ -132,7 +129,6 @@
 .timeline-card,
 .skills-card {
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   height: 100%;
 }
 
@@ -211,7 +207,6 @@
 /* 成就卡片 */
 .achievements-card {
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .achievements-list {
@@ -224,7 +219,6 @@
   padding: 8px 16px;
   font-size: 14px;
   border-radius: 20px;
-  background: #f0f9ff;
   border: 1px solid #bae6fd;
   color: #0369a1;
   margin: 0;

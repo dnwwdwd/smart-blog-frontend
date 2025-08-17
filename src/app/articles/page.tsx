@@ -1,42 +1,33 @@
 "use server";
 import React from "react";
-import ArticleList from "@/components/ArticleList/page";
-import Sidebar from "@/components/Sidebar/page";
-import Title from "antd/es/typography/Title";
-import Paragraph from "antd/es/typography/Paragraph";
-import "./styles.css";
 import { getArticlePage } from "@/api/articleController";
+import ArticlesPageClient from "@/components/ArticlesPageClient";
+import "./styles.css";
+import "@ant-design/v5-patch-for-react-19";
 
-export default async function ArticlesPage() {
-  let articleList = [];
-
-  const res = await getArticlePage({
+const ArticlesPage = async () => {
+  // 服务端渲染：获取初始数据
+  const initialResponse = (await getArticlePage({
     current: 1,
-    pageSize: 10,
-  });
+    pageSize: 20,
+  })) as any;
 
-  articleList = res.data?.records || [];
+  const initialData = initialResponse?.data?.records || [];
+  const initialTotal = initialResponse?.data?.total || 0;
 
   return (
     <div className="articles-page">
       <div className="container">
         <div className="articles-header mb-6">
-          <Title level={2}>📚 文章列表</Title>
-          <Paragraph type="secondary">分享技术心得，记录学习历程</Paragraph>
+          <h1>📚 文章列表</h1>
         </div>
-
-        <div className="page-layout">
-          {/* 主内容区 */}
-          <div className="main-content">
-            <ArticleList articles={articleList} />
-          </div>
-
-          {/* 侧边栏 */}
-          <div className="sidebar-content">
-            <Sidebar />
-          </div>
-        </div>
+        <ArticlesPageClient
+          initialData={initialData}
+          initialTotal={initialTotal}
+        />
       </div>
     </div>
   );
-}
+};
+
+export default ArticlesPage;

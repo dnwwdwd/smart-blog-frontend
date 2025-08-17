@@ -18,7 +18,7 @@
 }
 
 .article-container {
-  max-width: 1200px;
+  max-width: 90%;
   margin: 0 auto;
   padding: 0 20px;
   /* 确保容器有最小高度，防止布局跳动 */
@@ -32,7 +32,7 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   /* 防止内容区域布局跳动 */
-  min-height: 500px;
+  min-height: 700px;
 }
 
 /* 文章头部 */

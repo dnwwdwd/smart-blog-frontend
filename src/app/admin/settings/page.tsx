@@ -1,28 +1,26 @@
-'use client';
-import React, { useState } from 'react';
+"use client";
+import React, { useState } from "react";
+import type { UploadFile, UploadProps } from "antd";
 import {
+  Button,
   Card,
   Form,
   Input,
-  Button,
-  Space,
-  message,
-  Divider,
-  Upload,
-  Image,
-  Switch,
   InputNumber,
+  message,
   Select,
-  Tabs
-} from 'antd';
+  Space,
+  Switch,
+  Tabs,
+  Upload,
+} from "antd";
 import {
+  ReloadOutlined,
   SaveOutlined,
   UploadOutlined,
-  DeleteOutlined,
-  ReloadOutlined
-} from '@ant-design/icons';
-import type { UploadFile, UploadProps } from 'antd';
-import './styles.css';
+} from "@ant-design/icons";
+import "./styles.css";
+import "@ant-design/v5-patch-for-react-19";
 
 const { TextArea } = Input;
 const { Option } = Select;
