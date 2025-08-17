@@ -1,0 +1,183 @@
+/* 最新文章区域 */
+.recent-articles-section {
+  margin-bottom: 48px;
+}
+
+/* 区域标题 */
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.section-title {
+  margin: 0 !important;
+  color: #1a1a1a;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.title-icon {
+  color: #1890ff;
+  font-size: 24px;
+}
+
+.more-button {
+  color: #666;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.more-button:hover {
+  color: #1890ff;
+  transform: translateX(4px);
+}
+
+/* 文章网格 */
+.articles-grid {
+  min-height: 400px;
+}
+
+.article-col {
+  display: flex;
+}
+
+.article-col .article-card {
+  width: 100%;
+}
+
+/* 交错动画效果 */
+.article-col-1 {
+  animation: fadeInUp 0.6s ease-out 0.1s both;
+}
+
+.article-col-2 {
+  animation: fadeInUp 0.6s ease-out 0.2s both;
+}
+
+.article-col-3 {
+  animation: fadeInUp 0.6s ease-out 0.3s both;
+}
+
+.article-col-4 {
+  animation: fadeInUp 0.6s ease-out 0.4s both;
+}
+
+.article-col-5 {
+  animation: fadeInUp 0.6s ease-out 0.5s both;
+}
+
+.article-col-6 {
+  animation: fadeInUp 0.6s ease-out 0.6s both;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 空状态 */
+.empty-state {
+  padding: 80px 0;
+  text-align: center;
+  background: #fafafa;
+  border-radius: 12px;
+  border: 2px dashed #d9d9d9;
+}
+
+.empty-state .ant-empty {
+  margin: 0;
+}
+
+.empty-state .ant-empty-description {
+  color: #999;
+  font-size: 16px;
+}
+
+/* 响应式设计 */
+@media (max-width: 1200px) {
+  .articles-grid {
+    margin: 0 -12px;
+  }
+  
+  .articles-grid .ant-col {
+    padding: 0 12px;
+    margin-bottom: 24px;
+  }
+}
+
+@media (max-width: 768px) {
+  .recent-articles-section {
+    margin-bottom: 32px;
+  }
+  
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  
+  .section-title {
+    font-size: 20px !important;
+  }
+  
+  .title-icon {
+    font-size: 20px;
+  }
+  
+  .more-button {
+    align-self: flex-end;
+  }
+  
+  .articles-grid {
+    min-height: 300px;
+    margin: 0 -8px;
+  }
+  
+  .articles-grid .ant-col {
+    padding: 0 8px;
+    margin-bottom: 16px;
+  }
+  
+  .empty-state {
+    padding: 60px 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .section-header {
+    margin-bottom: 20px;
+  }
+  
+  .section-title {
+    font-size: 18px !important;
+  }
+  
+  .title-icon {
+    font-size: 18px;
+  }
+  
+  .articles-grid {
+    min-height: 250px;
+  }
+  
+  .empty-state {
+    padding: 40px 16px;
+  }
+  
+  .empty-state .ant-empty-description {
+    font-size: 14px;
+  }
+}
