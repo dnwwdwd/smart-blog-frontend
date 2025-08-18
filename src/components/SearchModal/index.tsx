@@ -103,7 +103,7 @@ const SearchModal: React.FC<SearchModalProps> = ({
         columnName: searchKeyword,
       })) as any;
 
-      if (response?.data?.code === 0 && response?.data?.data) {
+      if (response?.code === 0 && response?.data) {
         setSearchResult((prev) => ({
           ...prev,
           columns: response.data?.records || [],
@@ -283,6 +283,7 @@ const SearchModal: React.FC<SearchModalProps> = ({
           <Spin spinning={searchResult.loading.columns}>
             {searchResult.columns.length > 0 ? (
               <List
+                bordered={true}
                 dataSource={searchResult.columns}
                 renderItem={(column) => (
                   <List.Item className="search-item">
@@ -330,6 +331,7 @@ const SearchModal: React.FC<SearchModalProps> = ({
           <Spin spinning={searchResult.loading.tags}>
             {searchResult.tags.length > 0 ? (
               <List
+                bordered={true}
                 dataSource={searchResult.tags}
                 renderItem={(tag) => (
                   <List.Item className="search-item">

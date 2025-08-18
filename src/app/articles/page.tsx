@@ -17,7 +17,7 @@ const ArticlesPage = async () => {
 
   return (
     <div className="articles-page">
-      <div className="container">
+      <div className="articles-container">
         <div className="articles-header mb-6">
           <h1>📚 文章列表</h1>
         </div>

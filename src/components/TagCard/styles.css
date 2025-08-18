@@ -3,7 +3,7 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 8px 12px;
+  gap: 16px 20px;
   padding: 20px;
   max-width: 1200px;
   margin: 0 auto;
@@ -109,7 +109,7 @@
 @media (max-width: 768px) {
   .tag-container {
     padding: 16px;
-    gap: 10px;
+    gap: 14px 16px;
   }
   
   .tag-card {
@@ -134,7 +134,7 @@
 @media (max-width: 480px) {
   .tag-container {
     padding: 12px;
-    gap: 8px;
+    gap: 12px 14px;
   }
   
   .tag-card {

@@ -4,7 +4,7 @@
   padding: 24px 0;
 }
 
-.container {
+.tags-container {
   max-width: 90%;
   margin: 0 auto;
   padding: 0 24px;
@@ -54,12 +54,12 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 16px;
+  gap: 20px;
 }
 
 /* 响应式设计 */
 @media (max-width: 1200px) {
-  .container {
+  .tags-container {
     max-width: 90%;
     padding: 0 20px;
   }
@@ -70,7 +70,7 @@
 }
 
 @media (max-width: 1024px) {
-  .container {
+  .tags-container {
     max-width: 95%;
     padding: 0 16px;
   }
@@ -98,7 +98,7 @@
     padding: 16px 0;
   }
   
-  .container {
+  .tags-container {
     max-width: 100%;
     padding: 0 12px;
   }
@@ -117,13 +117,13 @@
   }
   
   .tags-grid {
-    gap: 12px;
+    gap: 16px;
     margin-bottom: 24px;
   }
 }
 
 @media (max-width: 480px) {
-  .container {
+  .tags-container {
     padding: 0 8px;
   }
   

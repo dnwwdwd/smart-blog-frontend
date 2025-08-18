@@ -8,7 +8,7 @@ const TagListClient: React.FC = () => {
   const { data: tags, loading } = useTagsData();
 
   return (
-    <div className="align-center">
+    <div className="tag-container">
       {tags.map((tag) => (
         <TagCard key={tag.id} tag={tag} />
       ))}

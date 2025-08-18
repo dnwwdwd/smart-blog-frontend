@@ -4,7 +4,7 @@
   padding: 24px 0;
 }
 
-.container {
+.columns-container {
   max-width: 90%;
   margin: 0 auto;
   padding: 0 24px;
@@ -166,7 +166,7 @@
 
 /* 中等屏幕 (平板) - 2列 */
 @media (max-width: 1199px) and (min-width: 993px) {
-  .container {
+  .columns-container {
     max-width: 90%;
   }
   
@@ -204,7 +204,7 @@
     padding: 16px 0;
   }
   
-  .container {
+  .columns-container {
     max-width: 95%;
     padding: 0 16px;
   }
@@ -240,7 +240,7 @@
 }
 
 @media (max-width: 480px) {
-  .container {
+  .columns-container {
     padding: 0 12px;
   }
   

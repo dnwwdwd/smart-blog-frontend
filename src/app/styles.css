@@ -2,7 +2,7 @@
     min-height: 100vh;
 }
 
-.container {
+.home-container {
     max-width: 90%;
     margin: 0 auto;
     padding: 0 24px;
@@ -205,7 +205,7 @@
 
 /* 响应式设计 */
 @media (max-width: 1200px) {
-    .container {
+    .home-container {
         max-width: 90%;
     }
 
@@ -231,7 +231,7 @@
 }
 
 @media (max-width: 768px) {
-    .container {
+    .home-container {
         max-width: 95%;
         padding: 0 16px;
     }
@@ -509,4 +509,39 @@ body {
 ::-moz-selection {
     background: rgba(102, 126, 234, 0.2);
     color: #333;
+}
+
+/* 首页专用 - ColumnCard 和 ArticleCard 高度调整 */
+.home-page .column-card {
+    height: 280px !important;
+}
+
+.home-page .column-card .ant-card-body {
+    height: calc(100% - 200px) !important;
+    display: flex;
+    flex-direction: column;
+}
+
+.home-page .column-card .column-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.home-page .article-card {
+    height: 350px !important;
+}
+
+.home-page .article-card .ant-card-body {
+    height: calc(100% - 200px) !important;
+    display: flex;
+    flex-direction: column;
+}
+
+.home-page .article-card .article-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }

@@ -247,8 +247,7 @@
   }
 }
 
-/* 深色模式支持 */
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   .global-loading-overlay {
     background: rgba(0, 0, 0, 0.95);
   }
@@ -271,7 +270,7 @@
   .dot {
     background: #40a9ff;
   }
-}
+} */
 
 /* 减少动画效果（用户偏好） */
 @media (prefers-reduced-motion: reduce) {
