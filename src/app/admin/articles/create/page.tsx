@@ -29,6 +29,8 @@ import { getColumnPage } from "@/api/columnController";
 import { getTagPage } from "@/api/tagController";
 import "./styles.css";
 import MdEditor from "@/components/MdEditor";
+import { uploadImage } from "@/api/imageController";
+import { useRouter } from "next/navigation";
 
 interface ArticleData {
   title: string;
@@ -44,6 +46,7 @@ interface ArticleData {
 }
 
 const ArticleCreatePage: React.FC = () => {
+  const router = useRouter();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [settingsVisible, setSettingsVisible] = useState(false);
@@ -78,12 +81,12 @@ const ArticleCreatePage: React.FC = () => {
   // 加载专栏数据
   const loadColumns = async () => {
     try {
-      const res = await getColumnPage({
+      const res: any = await getColumnPage({
         current: 1,
         pageSize: 100,
       });
-      if (res.data?.code === 0) {
-        setColumns(res.data?.data?.records || []);
+      if (res.code === 0) {
+        setColumns(res.data?.records || []);
       }
     } catch (error) {
       console.error("加载专栏失败:", error);
@@ -93,12 +96,12 @@ const ArticleCreatePage: React.FC = () => {
   // 加载标签数据
   const loadTags = async () => {
     try {
-      const res = await getTagPage({
+      const res: any = await getTagPage({
         current: 1,
         pageSize: 100,
       });
-      if (res.data?.code === 0) {
-        setTags(res.data?.data?.records || []);
+      if (res.code === 0) {
+        setTags(res.data?.records || []);
       }
     } catch (error) {
       console.error("加载标签失败:", error);
@@ -113,20 +116,42 @@ const ArticleCreatePage: React.FC = () => {
   // 上传配置
   const uploadProps: UploadProps = {
     name: "file",
-    action: "/api/upload",
+    // 使用自定义上传，将文件上传到后端接口
+    customRequest: async (options: any) => {
+      const { file, onSuccess, onError } = options;
+      const formData = new FormData();
+      formData.append("file", file as File);
+      try {
+        const res: any = await uploadImage(formData);
+        if (res?.code === 0) {
+          // 通知 antd 上传成功，response 挂到 file.response
+          onSuccess?.(res, file);
+        } else {
+          onError?.(new Error(res?.message || "上传失败"));
+        }
+      } catch (err) {
+        onError?.(err as any);
+      }
+    },
     listType: "picture-card",
     fileList,
     maxCount: 1,
     accept: "image/*",
-    headers: {
-      authorization: "authorization-text",
-    },
     onChange(info) {
-      setFileList(info.fileList);
+      // 确保上传成功后，使用后端返回的URL作为文件的展示地址
+      const newList = info.fileList.map((f) => {
+        if (f.uid === info.file.uid && info.file.status === "done") {
+          const url = (info.file as any).response?.data || info.file.url;
+          return { ...f, url } as UploadFile<any>;
+        }
+        return f;
+      });
+      setFileList(newList);
+
       if (info.file.status === "done") {
-        message.success(`${info.file.name} 文件上传成功`);
+        message.success(`图片上传成功`);
         form.setFieldsValue({
-          coverImage: info.file.response?.url || info.file.url,
+          coverImage: (info.file as any).response?.data || info.file.url,
         });
       } else if (info.file.status === "error") {
         message.error(`${info.file.name} 文件上传失败`);
@@ -177,11 +202,12 @@ const ArticleCreatePage: React.FC = () => {
         tags: values.tags || [],
         seoTitle: values.seoTitle?.trim(),
         seoDescription: values.seoDescription?.trim(),
-        seoKeywords: values.seoKeywords?.trim(),
+        seoKeywords: values.seoKeywords,
+        status: 1, // 立即发布
       };
 
-      const res = await publishArticle(articleData);
-      if (res.data?.code === 0) {
+      const res: any = await publishArticle(articleData);
+      if (res.code === 0) {
         message.success("文章发布成功!");
         hasUnsavedChanges.current = false;
         setSettingsVisible(false);
@@ -190,8 +216,12 @@ const ArticleCreatePage: React.FC = () => {
         setContent("");
         form.resetFields();
         setFileList([]);
+        // 仅在发布成功时跳转到详情页
+        if (res.data) {
+          router.replace(`/article/${res.data}`);
+        }
       } else {
-        message.error(res.data?.message || "发布失败");
+        message.error(res.message || "发布失败");
       }
     } catch (error) {
       console.error("发布失败:", error);
@@ -201,11 +231,44 @@ const ArticleCreatePage: React.FC = () => {
     }
   };
 
-  // 保存草稿
-  const handleSaveDraft = () => {
-    // 这里可以实现保存草稿的逻辑
-    message.success("草稿已保存");
-    hasUnsavedChanges.current = false;
+  // 保存草稿（status = 0）
+  const handleSaveDraft = async () => {
+    // 可以只做基础校验：至少填写了标题或内容之一
+    if (!title.trim() && !content.trim()) {
+      message.error("请至少填写标题或内容再保存草稿");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const values = form.getFieldsValue();
+      const articleData: API.ArticlePublishRequest = {
+        title: title.trim(),
+        content: content.trim(),
+        excerpt: values.excerpt?.trim(),
+        coverImage: values.coverImage,
+        columnIds: values.columnIds || [],
+        tags: values.tags || [],
+        seoTitle: values.seoTitle?.trim(),
+        seoDescription: values.seoDescription?.trim(),
+        seoKeywords: values.seoKeywords,
+        status: 0, // 保存为草稿
+      };
+
+      const res: any = await publishArticle(articleData);
+      if (res.code === 0) {
+        message.success("草稿已保存");
+        hasUnsavedChanges.current = false;
+        // 草稿保存后保留当前编辑内容，方便继续编辑
+      } else {
+        message.error(res.message || "保存草稿失败");
+      }
+    } catch (error) {
+      console.error("保存草稿失败:", error);
+      message.error("保存草稿失败，请重试");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -227,6 +290,15 @@ const ArticleCreatePage: React.FC = () => {
 
         <div className="toolbar-right">
           <Space size="middle">
+              <Button
+                icon={<UploadOutlined />}
+                onClick={ () => {
+                  router.push("/admin/articles/upload");
+                }}
+                className="action-btn"
+              >
+                批量上传
+              </Button>
             <Tooltip title="保存草稿">
               <Button
                 icon={<SaveOutlined />}
@@ -346,7 +418,7 @@ const ArticleCreatePage: React.FC = () => {
             />
           </Form.Item>
 
-          {/* 标签选择 */}
+          {/* 标签选择（支持额外新增） */}
           <Form.Item
             label={
               <div className="form-label">
@@ -357,8 +429,8 @@ const ArticleCreatePage: React.FC = () => {
             name="tags"
           >
             <Select
-              mode="multiple"
-              placeholder="添加相关标签"
+              mode="tags"
+              placeholder="添加相关标签（可新建）"
               options={tags.map((tag) => ({
                 label: tag.name,
                 value: tag.name,
@@ -392,7 +464,10 @@ const ArticleCreatePage: React.FC = () => {
             </Form.Item>
 
             <Form.Item label="SEO 关键词" name="seoKeywords">
-              <Input placeholder="用逗号分隔多个关键词" />
+            <Select
+              mode="tags"
+              placeholder="请选择或输入关键词"
+            />
             </Form.Item>
           </div>
         </Form>

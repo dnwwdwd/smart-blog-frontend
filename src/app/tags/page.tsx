@@ -20,7 +20,7 @@ const TagsPage = async () => {
         <div className="tags-header mb-6">
           <h1>🏷️ 标签列表</h1>
         </div>
-        <div className="page-layout">
+        <div className="tags-page-layout">
           <TagsPageClient
             initialData={initialData}
             initialTotal={initialTotal}

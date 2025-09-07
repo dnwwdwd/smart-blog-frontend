@@ -1,11 +1,12 @@
-/* 代码块样式 */
+/* 代码块样式 - 暗黑主题 */
 .code-block-container {
   position: relative;
   margin: 16px 0;
   border-radius: 8px;
   overflow: hidden;
-  background: #f6f8fa;
-  border: 1px solid #e1e4e8;
+  background: #0d1117;
+  border: 1px solid #30363d;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .code-block-header {
@@ -13,48 +14,91 @@
   justify-content: space-between;
   align-items: center;
   padding: 8px 16px;
-  background: #f1f3f4;
-  border-bottom: 1px solid #e1e4e8;
+  background: #161b22;
+  border-bottom: 1px solid #30363d;
   font-size: 12px;
 }
 
 .code-language {
-  color: #586069;
-  font-weight: 500;
+  color: #f0f6fc;
+  font-weight: 600;
   text-transform: uppercase;
   font-family: 'SFMono-Regular', 'Consolas', 'Liberation Mono', 'Menlo', monospace;
+  letter-spacing: 0.5px;
+  background: linear-gradient(90deg, #58a6ff, #79c0ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .copy-button {
-  color: #586069;
+  color: #8b949e;
   transition: all 0.2s ease;
   font-size: 12px;
   height: 24px;
   padding: 0 8px;
+  border-radius: 4px;
 }
 
 .copy-button:hover {
-  color: #0366d6;
-  background: rgba(3, 102, 214, 0.1);
+  color: #58a6ff;
+  background: rgba(88, 166, 255, 0.1);
+  border-color: rgba(88, 166, 255, 0.2);
 }
 
 .copy-button.copied {
-  color: #28a745;
+  color: #56d364;
 }
 
 .copy-button.copied:hover {
-  color: #28a745;
-  background: rgba(40, 167, 69, 0.1);
+  color: #56d364;
+  background: rgba(86, 211, 100, 0.1);
 }
 
 .code-block-content {
   margin: 0;
   padding: 16px;
-  background: #f6f8fa;
+  background: #0d1117;
   overflow-x: auto;
   font-family: 'SFMono-Regular', 'Consolas', 'Liberation Mono', 'Menlo', monospace;
   font-size: 14px;
   line-height: 1.45;
+  border: none;
+  position: relative;
+  overflow-y: auto;
+}
+
+/* 带行号的代码块 */
+.code-block-content.with-line-numbers {
+  padding-left: 50px;
+}
+
+/* 行号样式 */
+.line-numbers {
+  position: absolute;
+  left: 0;
+  top: 16px;
+  bottom: 16px;
+  width: 40px;
+  background: #161b22;
+  border-right: 1px solid #30363d;
+  padding: 0 8px 0 0;
+  text-align: right;
+  user-select: none;
+  overflow: hidden;
+}
+
+.line-number {
+  display: block;
+  color: #6e7681;
+  font-size: 12px;
+  line-height: 1.45;
+  height: 1.45em;
+  font-family: 'SFMono-Regular', 'Consolas', 'Liberation Mono', 'Menlo', monospace;
+}
+
+.line-number:hover {
+  color: #8b949e;
 }
 
 .code-block-content code {
@@ -63,60 +107,135 @@
   border: none;
   font-family: inherit;
   font-size: inherit;
-  color: #24292e;
+  color: #e6edf3;
+  display: block;
+  white-space: pre;
 }
 
-/* 滚动条样式 */
+/* Highlight.js 暗黑主题样式增强 */
+.code-block-content .hljs {
+  background: #0d1117 !important;
+  color: #e6edf3 !important;
+  padding: 0;
+}
+
+/* 针对不同语言的特殊样式 */
+.code-block-content .language-javascript .hljs-keyword,
+.code-block-content .language-typescript .hljs-keyword {
+  color: #ff7b72;
+  font-weight: 600;
+}
+
+.code-block-content .language-python .hljs-keyword {
+  color: #ffa657;
+  font-weight: 600;
+}
+
+.code-block-content .language-java .hljs-keyword {
+  color: #79c0ff;
+  font-weight: 600;
+}
+
+.code-block-content .language-html .hljs-tag {
+  color: #7ee787;
+}
+
+.code-block-content .language-css .hljs-selector-tag {
+  color: #ffa657;
+}
+
+.code-block-content .language-json .hljs-attr {
+  color: #79c0ff;
+}
+
+/* 字符串样式 */
+.code-block-content .hljs-string {
+  color: #a5d6ff;
+}
+
+/* 注释样式 */
+.code-block-content .hljs-comment {
+  color: #8b949e;
+  font-style: italic;
+}
+
+/* 数字样式 */
+.code-block-content .hljs-number {
+  color: #79c0ff;
+}
+
+/* 函数名样式 */
+.code-block-content .hljs-function {
+  color: #d2a8ff;
+}
+
+/* 变量样式 */
+.code-block-content .hljs-variable {
+  color: #ffa657;
+}
+
+/* 滚动条样式 - 暗黑主题 */
 .code-block-content::-webkit-scrollbar {
   height: 8px;
 }
 
 .code-block-content::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: #161b22;
   border-radius: 4px;
 }
 
 .code-block-content::-webkit-scrollbar-thumb {
-  background: #c1c1c1;
+  background: #30363d;
   border-radius: 4px;
 }
 
 .code-block-content::-webkit-scrollbar-thumb:hover {
-  background: #a8a8a8;
+  background: #484f58;
 }
 
-/* 暗色主题 */
-@media (prefers-color-scheme: dark) {
-  .code-block-container {
-    background: #161b22;
-    border-color: #30363d;
-  }
-  
-  .code-block-header {
-    background: #21262d;
-    border-bottom-color: #30363d;
-  }
-  
-  .code-language {
-    color: #8b949e;
-  }
-  
-  .copy-button {
-    color: #8b949e;
-  }
-  
-  .copy-button:hover {
-    color: #58a6ff;
-    background: rgba(88, 166, 255, 0.1);
-  }
-  
-  .code-block-content {
-    background: #161b22;
-  }
-  
-  .code-block-content code {
-    color: #e6edf3;
-  }
+/* 选中文本样式 */
+.code-block-content::selection {
+  background: rgba(88, 166, 255, 0.3);
+}
+
+.code-block-content *::selection {
+  background: rgba(88, 166, 255, 0.3);
+}
+
+/* 移除原有的暗色主题媒体查询，因为现在默认就是暗色主题 */
+
+/* 语言特定的头部样式 */
+.code-block-header[data-language="javascript"] .code-language::before {
+  content: "⚡ ";
+}
+
+.code-block-header[data-language="typescript"] .code-language::before {
+  content: "📘 ";
+}
+
+.code-block-header[data-language="python"] .code-language::before {
+  content: "🐍 ";
+}
+
+.code-block-header[data-language="java"] .code-language::before {
+  content: "☕ ";
+}
+
+.code-block-header[data-language="html"] .code-language::before {
+  content: "🌐 ";
+}
+
+.code-block-header[data-language="css"] .code-language::before {
+  content: "🎨 ";
+}
+
+.code-block-header[data-language="json"] .code-language::before {
+  content: "📋 ";
+}
+
+.code-block-header[data-language="bash"] .code-language::before,
+.code-block-header[data-language="shell"] .code-language::before {
+  content: "💻 ";
 }
 
 /* 响应式设计 */
@@ -128,6 +247,19 @@
   .code-block-content {
     padding: 12px;
     font-size: 13px;
+  }
+  
+  .code-block-content.with-line-numbers {
+    padding-left: 40px;
+  }
+  
+  .line-numbers {
+    width: 30px;
+    padding-right: 6px;
+  }
+  
+  .line-number {
+    font-size: 11px;
   }
   
   .copy-button {
@@ -147,6 +279,19 @@
     font-size: 12px;
   }
   
+  .code-block-content.with-line-numbers {
+    padding-left: 35px;
+  }
+  
+  .line-numbers {
+    width: 25px;
+    padding-right: 4px;
+  }
+  
+  .line-number {
+    font-size: 10px;
+  }
+  
   .code-language {
     font-size: 10px;
   }
@@ -156,4 +301,14 @@
     height: 18px;
     padding: 0 4px;
   }
+}
+
+/* 动画效果 */
+.code-block-container {
+  transition: all 0.3s ease;
+}
+
+.code-block-container:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  transform: translateY(-1px);
 }

@@ -163,3 +163,12 @@
     height: 100px;
   }
 }
+
+/* 去除 Sidebar 内各卡片的悬浮上移与阴影增强，仅影响 Sidebar */
+.user-card.ant-card:hover,
+.promotion-card.ant-card:hover,
+.sponsor-card.ant-card:hover {
+  transform: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  border-color: #f0f0f0;
+}

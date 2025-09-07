@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { Menu, Input, Button, Drawer, Avatar, Dropdown } from "antd";
-import { SearchOutlined, UserOutlined, MenuOutlined, LogoutOutlined, CrownOutlined } from "@ant-design/icons";
+import { SearchOutlined, UserOutlined, MenuOutlined, LogoutOutlined, CrownOutlined,HomeOutlined,FileSearchOutlined,TagsOutlined,InfoCircleOutlined,LinkOutlined,BookOutlined  } from "@ant-design/icons";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/stores/authStore";
@@ -46,12 +46,12 @@ const FrontNavigation: React.FC<FrontNavigationProps> = ({
   }, []);
 
   const menuItems = [
-    { key: "/", label: "首页", href: "/" },
-    { key: "/articles", label: "文章", href: "/articles" },
-    { key: "/columns", label: "专栏", href: "/columns" },
-    { key: "/tags", label: "标签", href: "/tags" },
-    { key: "/links", label: "友链", href: "/links" },
-    { key: "/about", label: "关于", href: "/about" },
+    { key: "/", label: "首页", href: "/", icon: <HomeOutlined /> },
+    { key: "/articles", label: "文章", href: "/articles", icon: <FileSearchOutlined /> },
+    { key: "/columns", label: "专栏", href: "/columns", icon: <BookOutlined /> },
+    { key: "/tags", label: "标签", href: "/tags", icon: <TagsOutlined /> },
+    { key: "/links", label: "友链", href: "/links", icon: <LinkOutlined /> },
+    { key: "/about", label: "关于", href: "/about", icon: <InfoCircleOutlined /> },
   ];
 
   // 用户下拉菜单项
@@ -99,6 +99,7 @@ const FrontNavigation: React.FC<FrontNavigationProps> = ({
               items={menuItems.map((item) => ({
                 key: item.key,
                 label: item.label,
+                icon: item.icon,
               }))}
             />
           </div>
@@ -182,6 +183,7 @@ const FrontNavigation: React.FC<FrontNavigationProps> = ({
             items={menuItems.map((item) => ({
               key: item.key,
               label: item.label,
+              icon: item.icon,
             }))}
           />
 
@@ -227,6 +229,13 @@ const FrontNavigation: React.FC<FrontNavigationProps> = ({
           </div>
         </div>
       </Drawer>
+
+      {/* 搜索模态框 */}
+      <SearchModal
+        visible={searchModalVisible}
+        onClose={() => setSearchModalVisible(false)}
+        defaultKeyword={searchKeyword}
+      />
     </header>
   );
 };

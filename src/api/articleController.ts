@@ -24,6 +24,23 @@ export async function getArticlePageByColumnId(
   );
 }
 
+/** 批量上传文章 POST /article/batch/upload */
+export async function batchUploadArticles(
+  files: File[],
+  options?: { [key: string]: any }
+) {
+  const formData = new FormData();
+  files.forEach(file => {
+    formData.append("files", file);
+  });
+  
+  return request<API.BaseResponseVoid>("/article/batch/upload", {
+    method: "POST",
+    data: formData,
+    ...(options || {}),
+  });
+}
+
 /** 此处后端没有提供注释 GET /article/get/vo/${param0} */
 export async function getArticleVoById(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -43,7 +60,7 @@ export async function getAllArticles(
   body: API.ArticleRequest,
   options?: { [key: string]: any }
 ) {
-  return request<API.BaseResponsePageArticle>("/article/list/all", {
+  return request<API.BaseResponsePageArticleVo>("/article/list/all", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -73,7 +90,22 @@ export async function publishArticle(
   body: API.ArticlePublishRequest,
   options?: { [key: string]: any }
 ) {
-  return request<API.BaseResponseVoid>("/article/publish", {
+  return request<API.BaseResponseLong>("/article/publish", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
+/** 更新文章 POST /article/update */
+export async function updateArticle(
+  body: API.ArticlePublishRequest,
+  options?: { [key: string]: any }
+) {
+  return request<API.BaseResponseVoid>("/article/update", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

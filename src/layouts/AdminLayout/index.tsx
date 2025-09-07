@@ -1,18 +1,23 @@
 "use client";
-import React, { useState } from "react";
-import { Drawer, Layout, Menu } from "antd";
+import React, { useState, useEffect } from "react";
+import { Drawer, Layout, Menu, message } from "antd";
 import {
   BookOutlined,
   DashboardOutlined,
   FileTextOutlined,
+  ImportOutlined,
   LinkOutlined,
+  PlusOutlined,
   SettingOutlined,
   TagsOutlined,
+  UploadOutlined,
 } from "@ant-design/icons";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
+import { useAuthStore } from "@/stores/authStore";
 import "./styles.css";
+import "@ant-design/v5-patch-for-react-19";
 
 const { Header, Sider, Content } = Layout;
 
@@ -23,7 +28,41 @@ interface Props {
 const AdminLayout: React.FC<Props> = ({ children }) => {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
+  const [checking, setChecking] = useState(true);
   const pathname = usePathname();
+  const router = useRouter();
+  
+  // 获取登录状态
+  const { isLoggedIn, checkLogin } = useAuthStore();
+  
+  // 登录验证逻辑：在挂载时先向后端校验一次会话
+  useEffect(() => {
+    let ignore = false;
+    (async () => {
+      try {
+        await checkLogin();
+      } finally {
+        if (!ignore) setChecking(false);
+      }
+    })();
+    return () => {
+      ignore = true;
+    };
+  }, [checkLogin]);
+  
+  // 根据状态跳转
+  useEffect(() => {
+    if (checking) return; // 等待检查完成
+    if (!isLoggedIn) {
+      message.warning("您还未登录");
+      router.push("/login");
+    }
+  }, [checking, isLoggedIn, router]);
+  
+  // 如果未登录或正在检查，不渲染后台内容
+  if (checking || !isLoggedIn) {
+    return null;
+  }
 
   const menuItems = [
     {
@@ -39,10 +78,17 @@ const AdminLayout: React.FC<Props> = ({ children }) => {
         {
           key: '/admin/articles',
           label: <Link href="/admin/articles">文章列表</Link>,
+          icon: <BookOutlined />,
         },
         {
           key: '/admin/articles/create',
           label: <Link href="/admin/articles/create">新建文章</Link>,
+          icon: <PlusOutlined />,
+        },
+        {
+          key: '/admin/articles/upload',
+          label: <Link href="/admin/articles/upload">上传文章</Link>,
+          icon: <UploadOutlined />,
         },
       ],
     },
@@ -60,6 +106,11 @@ const AdminLayout: React.FC<Props> = ({ children }) => {
       key: '/admin/friend-link',
       icon: <LinkOutlined />,
       label: <Link href="/admin/friend-link">友链管理</Link>,
+    },
+    {
+      key: '/admin/ai-chat',
+      icon: <ImportOutlined />,
+      label: <Link href="/admin/ai-chat">AI 聊天</Link>,
     },
     {
       key: '/admin/settings',

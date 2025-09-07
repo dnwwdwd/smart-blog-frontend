@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, Row, Col, Typography, Tag, Space } from 'antd';
 import { CalendarOutlined, EyeOutlined } from '@ant-design/icons';
-import Link from 'next/link';
+import LoadingLink from '@/components/LoadingLink';
 import './styles.css';
 
 const { Title, Text, Paragraph } = Typography;
@@ -142,7 +142,7 @@ const RelatedArticles: React.FC<RelatedArticlesProps> = ({ currentArticleId, tag
       <Row gutter={[16, 16]}>
         {relatedArticles.map((article) => (
           <Col xs={24} sm={12} lg={8} key={article.id}>
-            <Link href={`/article/${article.id}`} style={{ textDecoration: 'none' }}>
+            <LoadingLink href={`/article/${article.id}`} style={{ textDecoration: 'none' }}>
               <Card
                 hoverable
                 className="related-article-card"
@@ -208,15 +208,15 @@ const RelatedArticles: React.FC<RelatedArticlesProps> = ({ currentArticleId, tag
                   </div>
                 </div>
               </Card>
-            </Link>
+            </LoadingLink>
           </Col>
         ))}
       </Row>
       
       <div className="view-more">
-        <Link href="/articles">
+        <LoadingLink href="/articles">
           <Text type="secondary">查看更多文章 →</Text>
-        </Link>
+        </LoadingLink>
       </div>
     </div>
   );

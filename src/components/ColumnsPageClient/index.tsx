@@ -34,6 +34,8 @@ export default function ColumnsPageClient({ initialData, initialTotal }: Columns
   const [total, setTotal] = useState(initialTotal);
   const [hasMore, setHasMore] = useState(initialData.length < initialTotal);
 
+  const PAGE_SIZE = 20;
+
   const loadMore = async () => {
     if (loading || !hasMore) return;
 
@@ -42,15 +44,18 @@ export default function ColumnsPageClient({ initialData, initialTotal }: Columns
       const nextPage = currentPage + 1;
       const response = (await getColumnPage({
         current: nextPage,
-        pageSize: 20,
+        pageSize: PAGE_SIZE,
       })) as any;
 
       if (response?.code === 0 && response?.data) {
         const newData = response.data.records || [];
         setData(prev => [...prev, ...newData]);
         setCurrentPage(nextPage);
-        setTotal(response.data.total || 0);
-        setHasMore(newData.length === 20 && data.length + newData.length < response.data.total);
+        const totalCount = response.data.total || 0;
+        setTotal(totalCount);
+        // 如果新数据长度小于 PAGE_SIZE，说明到了最后一页；或者累积数据量已达到总数
+        const reachedEnd = newData.length < PAGE_SIZE || (data.length + newData.length) >= totalCount;
+        setHasMore(!reachedEnd);
       }
     } catch (error) {
       console.error('加载更多专栏失败:', error);

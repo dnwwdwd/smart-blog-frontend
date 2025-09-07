@@ -16,7 +16,8 @@ import RecentArticles from "@/components/RecentArticles";
 import ColumnCard from "@/components/ColumnCard/page";
 import TagCard from "@/components/TagCard/page";
 import Sidebar from "@/components/Sidebar/page";
-import SearchInput from "../components/Search";
+import PopularArticlesSidebar from "@/components/PopularArticlesSidebar/page";
+
 import "./styles.css";
 import Title from "antd/es/typography/Title";
 import Paragraph from "antd/es/typography/Paragraph";
@@ -85,7 +86,7 @@ export default async function HomePage() {
 
             {/* 搜索区域 */}
             <div className="hero-search">
-              <SearchInput className="search-input" />
+              
             </div>
 
             {/* 快速导航 */}
@@ -210,6 +211,7 @@ export default async function HomePage() {
 
           {/* 侧边栏 */}
           <div className="sidebar-area">
+            <PopularArticlesSidebar />
             <Sidebar />
           </div>
         </div>

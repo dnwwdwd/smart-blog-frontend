@@ -1,0 +1,85 @@
+/* 热门文章卡片样式 */
+.popular-articles-card {
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  border: 1px solid #f0f0f0;
+  /* 与 Sidebar 内部组件的默认间距一致（.sidebar gap: 20px） */
+  margin-bottom: 20px;
+}
+
+/* 去除该卡片的悬浮上移效果，覆盖全局 .ant-card:hover */
+.popular-articles-card.ant-card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  transform: none;
+  border-color: #f0f0f0;
+}
+
+.popular-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.popular-title {
+  font-weight: 600;
+}
+
+.popular-list .popular-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 8px 0;
+}
+
+.rank-badge {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #fff5f0, #ffecec);
+  color: #ff4d4f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  border: 1px solid #ffe1e1;
+}
+
+.popular-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.popular-link {
+  text-decoration: none;
+}
+
+.popular-item-title {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-weight: 500;
+}
+
+.popular-meta {
+  color: #999;
+  font-size: 12px;
+}
+
+/* 响应式优化：与 Sidebar 在移动端的间距一致（gap: 16px） */
+@media (max-width: 768px) {
+  .popular-articles-card {
+    margin-bottom: 16px;
+  }
+
+  .rank-badge {
+    width: 24px;
+    height: 24px;
+    font-size: 12px;
+  }
+
+  .popular-item-title {
+    font-size: 14px;
+  }
+}

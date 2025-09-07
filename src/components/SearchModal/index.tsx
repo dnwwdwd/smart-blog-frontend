@@ -8,7 +8,7 @@ import {
   SearchOutlined,
   TagsOutlined,
 } from "@ant-design/icons";
-import Link from "next/link";
+import LoadingLink from '@/components/LoadingLink';
 import { getArticlePage } from "@/api/articleController";
 import { getColumnPage } from "@/api/columnController";
 import { getTagPage } from "@/api/tagController";
@@ -243,7 +243,7 @@ const SearchModal: React.FC<SearchModalProps> = ({
                 dataSource={searchResult.articles}
                 renderItem={(article) => (
                   <List.Item className="search-item">
-                    <Link href={`/article/${article.id}`} onClick={onClose}>
+                    <LoadingLink href={`/article/${article.id}`} onClick={onClose}>
                       <div className="search-item-content">
                         <div className="search-item-header">
                           <h4 className="search-item-title">{article.title}</h4>
@@ -258,7 +258,7 @@ const SearchModal: React.FC<SearchModalProps> = ({
                           ))}
                         </div>
                       </div>
-                    </Link>
+                    </LoadingLink>
                   </List.Item>
                 )}
               />
@@ -286,7 +286,7 @@ const SearchModal: React.FC<SearchModalProps> = ({
                 dataSource={searchResult.columns}
                 renderItem={(column) => (
                   <List.Item className="search-item">
-                    <Link href={`/column/${column.id}`} onClick={onClose}>
+                    <LoadingLink href={`/column/${column.id}`} onClick={onClose}>
                       <div className="search-item-content">
                         <div className="search-item-header">
                           <Avatar
@@ -305,7 +305,7 @@ const SearchModal: React.FC<SearchModalProps> = ({
                           {column.description}
                         </p>
                       </div>
-                    </Link>
+                    </LoadingLink>
                   </List.Item>
                 )}
               />
@@ -333,7 +333,7 @@ const SearchModal: React.FC<SearchModalProps> = ({
                 dataSource={searchResult.tags}
                 renderItem={(tag) => (
                   <List.Item className="search-item">
-                    <Link href={`/tag/${tag.id}`} onClick={onClose}>
+                    <LoadingLink href={`/tag/${tag.id}`} onClick={onClose}>
                       <div className="search-item-content">
                         <div className="search-item-header">
                           <Tag color={tag.color} className="search-tag-item">
@@ -345,7 +345,7 @@ const SearchModal: React.FC<SearchModalProps> = ({
                         </div>
                         <p className="search-item-excerpt">{tag.description}</p>
                       </div>
-                    </Link>
+                    </LoadingLink>
                   </List.Item>
                 )}
               />

@@ -305,7 +305,7 @@ const ColumnManagement: React.FC = () => {
     onChange(info) {
       setFileList(info.fileList);
       if (info.file.status === "done") {
-        message.success(`${info.file.name} 文件上传成功`);
+        message.success(`图片上传成功`);
         // 更新表单中的coverImage字段
         form.setFieldsValue({
           coverImage: info.file.response?.url || info.file.url,
@@ -474,6 +474,7 @@ const ColumnManagement: React.FC = () => {
         onCancel={() => setModalVisible(false)}
         width={800}
         className="column-modal"
+        zIndex={2000}
         footer={
           <div style={{ textAlign: "right" }}>
             <Space>

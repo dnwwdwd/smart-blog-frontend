@@ -1,14 +1,63 @@
 .md-editor {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
+    height: 100% !important;
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important; /* 防止内容溢出 */
+    min-height: 0 !important;
+    flex: 1 !important;
 }
 
 .md-editor .bytemd {
     height: 100% !important;
-    flex: 1;
+    flex: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    min-height: 0 !important; /* 允许flex子项缩小 */
+    width: 100% !important;
 }
 
+/* 确保编辑器主体区域占满高度 */
+.md-editor .bytemd-body {
+    flex: 1 !important;
+    height: 100% !important;
+    overflow: hidden !important;
+    display: flex !important;
+    min-height: 0 !important;
+}
+
+/* 确保编辑器和预览面板占满高度 */
+.md-editor .bytemd-editor,
+.md-editor .bytemd-preview {
+    height: 100% !important;
+    overflow-y: auto !important;
+    flex: 1 !important;
+    min-height: 0 !important;
+}
+
+/* CodeMirror 编辑器高度 */
+.md-editor .CodeMirror {
+    height: 100% !important;
+    min-height: 800px !important;
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace !important;
+    font-size: 14px !important;
+    line-height: 1.6 !important;
+}
+
+/* CodeMirror 的内部容器 */
+.md-editor .CodeMirror-scroll {
+    height: 100% !important;
+    min-height: 800px !important;
+}
+
+/* 工具栏样式 */
+.md-editor .bytemd-toolbar {
+    flex-shrink: 0 !important;
+    border-bottom: 1px solid #e8e8e8 !important;
+    background: #fafafa !important;
+}
+
+/* 隐藏不需要的工具栏按钮 */
 .bytemd-toolbar-icon.bytemd-tippy.bytemd-tippy-right:last-child {
-    display: none;
+    display: none !important;
 }

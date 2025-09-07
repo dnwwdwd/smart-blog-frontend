@@ -1,4 +1,3 @@
-"use server";
 import React from "react";
 import { getArticlePage } from "@/api/articleController";
 import ArticlesPageClient from "@/components/ArticlesPageClient";

@@ -1,4 +1,3 @@
-"use server";
 import React from "react";
 import { getColumnPage } from "@/api/columnController";
 import ColumnsPageClient from "@/components/ColumnsPageClient";

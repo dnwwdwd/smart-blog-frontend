@@ -1,6 +1,6 @@
 declare namespace API {
   type Article = {
-    id?: number;
+    id?: string;
     title?: string;
     content?: string;
     excerpt?: string;
@@ -17,15 +17,16 @@ declare namespace API {
   };
 
   type ArticlePublishRequest = {
-    title?: string;
-    content?: string;
+    title: string;
+    content: string;
     excerpt?: string;
-    coverImage?: string;
-    seoTitle?: string;
-    seoDescription?: string;
-    seoKeywords?: string;
-    tags?: string[];
-    columnIds?: number[];
+    coverImage: string;
+    seoTitle: string;
+    seoDescription: string;
+    seoKeywords: string[];
+    tags: string[];
+    columnIds: number[];
+    status: number;
   };
 
   type ArticleRequest = {
@@ -36,7 +37,7 @@ declare namespace API {
   };
 
   type ArticleVo = {
-    id?: number;
+    id?: string;
     title?: string;
     content?: string;
     excerpt?: string;
@@ -48,7 +49,7 @@ declare namespace API {
     seoDescription?: string;
     seoKeywords?: string[];
     tags?: string[];
-    comments?: Comment[];
+    comments?: CommentVo[];
     columns?: Column[];
     publishedTime?: string;
     createTime?: string;
@@ -73,9 +74,9 @@ declare namespace API {
     message?: string;
   };
 
-  type BaseResponseListComment = {
+  type BaseResponseListCommentVo = {
     code?: number;
-    data?: Comment[];
+    data?: CommentVo[];
     message?: string;
   };
 
@@ -85,9 +86,9 @@ declare namespace API {
     message?: string;
   };
 
-  type BaseResponsePageArticle = {
+  type BaseResponseLong = {
     code?: number;
-    data?: PageArticle;
+    data?: number;
     message?: string;
   };
 
@@ -112,6 +113,12 @@ declare namespace API {
   type BaseResponsePageTagVo = {
     code?: number;
     data?: PageTagVo;
+    message?: string;
+  };
+
+  type BaseResponseString = {
+    code?: number;
+    data?: string;
     message?: string;
   };
 
@@ -162,28 +169,25 @@ declare namespace API {
     articleCount?: number;
   };
 
-  type Comment = {
-    id?: number;
-    articleId?: number;
-    parentId?: number;
-    nickname?: string;
-    userEmail?: string;
-    userWebsite?: string;
-    userAvatar?: string;
-    content?: string;
-    ipAddress?: Record<string, any>;
-    userAgent?: string;
-    createTime?: string;
-    updateTime?: string;
+  type CommentDto = {
+    articleId: string;
+    nickname: string;
+    email: string;
+    content: string;
+    website?: string;
+    parentId?: string;
+    avatar?: string;
   };
 
-  type CommentSubmitDto = {
-    articleId: number;
-    parentId?: number;
-    nickname: string;
-    userEmail: string;
-    content: string;
-    userWebsite?: string;
+  type CommentVo = {
+    id?: string;
+    author?: string;
+    email?: string;
+    website?: string;
+    content?: string;
+    createTime?: Date;
+    avatar?: string;
+    replies?: CommentVo[];
   };
 
   type deleteColumnParams = {
@@ -196,6 +200,10 @@ declare namespace API {
 
   type deleteTagParams = {
     tagId: number;
+  };
+
+  type deleteCommentParams = {
+    commentId: string;
   };
 
   type FriendLinkDto = {
@@ -248,7 +256,7 @@ declare namespace API {
   };
 
   type getArticleVoByIdParams = {
-    articleId: number;
+    articleId: string;
   };
 
   type getColumnByIdParams = {
@@ -256,7 +264,7 @@ declare namespace API {
   };
 
   type getCommentParams = {
-    articleId: number;
+    articleId: string;
   };
 
   type getTagParams = {
@@ -276,20 +284,6 @@ declare namespace API {
   type OrderItem = {
     column?: string;
     asc?: boolean;
-  };
-
-  type PageArticle = {
-    records?: Article[];
-    total?: number;
-    size?: number;
-    current?: number;
-    orders?: OrderItem[];
-    optimizeCountSql?: PageArticle;
-    searchCount?: PageArticle;
-    optimizeJoinOfCountSql?: boolean;
-    maxLimit?: number;
-    countId?: string;
-    pages?: number;
   };
 
   type PageArticleVo = {

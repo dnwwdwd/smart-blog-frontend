@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { userLogout } from "@/api/userController";
+import { getLoginUser, userLogout } from "@/api/userController";
 import { message } from "antd";
 
 // 用户信息接口
@@ -20,6 +20,7 @@ interface AuthState {
   login: (userInfo: UserInfo) => void;
   logout: () => void;
   updateUser: (userInfo: Partial<UserInfo>) => void;
+  checkLogin: () => Promise<boolean>;
 }
 
 // 创建zustand store
@@ -41,12 +42,33 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
     }
   },
 
+  getUserInfo: async () => {
+    return get().user;
+  },
+
   // 更新用户信息
   updateUser: (userInfo: Partial<UserInfo>) => {
     const currentUser = get().user;
     if (currentUser) {
       const updatedUser = { ...currentUser, ...userInfo };
       set({ user: updatedUser });
+    }
+  },
+
+  // 从后端检查登录状态（会话）
+  checkLogin: async () => {
+    try {
+      const res = (await getLoginUser()) as any;
+      console.log("check login" + JSON.stringify(res));
+      if (res?.code === 0 && res?.data) {
+        set({ user: res.data as UserInfo, isLoggedIn: true });
+        return true;
+      }
+      set({ user: null, isLoggedIn: false });
+      return false;
+    } catch (e) {
+      set({ user: null, isLoggedIn: false });
+      return false;
     }
   },
 }));

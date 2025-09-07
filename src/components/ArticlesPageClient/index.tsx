@@ -34,6 +34,8 @@ export default function ArticlesPageClient({ initialData, initialTotal }: Articl
   const [total, setTotal] = useState(initialTotal);
   const [hasMore, setHasMore] = useState(initialData.length < initialTotal);
 
+  const PAGE_SIZE = 20;
+
   const loadMore = async () => {
     if (loading || !hasMore) return;
 
@@ -42,18 +44,20 @@ export default function ArticlesPageClient({ initialData, initialTotal }: Articl
       const nextPage = currentPage + 1;
       const params = {
         current: nextPage,
-        pageSize: 20,
+        pageSize: PAGE_SIZE,
       };
 
-      const response = await getArticlePage(params);
-      const result = response.data?.data;
-      
-      if (result?.records) {
-        const newData = result.records as API.ArticleVo[];
+      const response = (await getArticlePage(params)) as any; // BaseResponse<Page<ArticleVo>>
+
+      if (response?.code === 0 && response?.data) {
+        const pageData = response.data;
+        const newData = (pageData.records || []) as API.ArticleVo[];
         setData(prev => [...prev, ...newData]);
         setCurrentPage(nextPage);
-        setTotal(result.total || 0);
-        setHasMore(newData.length === 20 && (data.length + newData.length) < (result.total || 0));
+        const totalCount = pageData.total || 0;
+        setTotal(totalCount);
+        const reachedEnd = newData.length < PAGE_SIZE || (data.length + newData.length) >= totalCount;
+        setHasMore(!reachedEnd);
       }
     } catch (error) {
       console.error('Failed to load more articles:', error);

@@ -25,6 +25,7 @@ import {
 import type { ColumnsType } from 'antd/es/table';
 import { getTagPage } from '@/api/tagController';
 import './styles.css';
+import { formatDate } from '@/utils';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -37,80 +38,9 @@ interface TagData {
   color?: string;
   articleCount?: number;
   status?: 'active' | 'inactive';
-  createDate?: string;
-  updateDate?: string;
-  createTime?: string;
-  updateTime?: string;
+  createDate?: Date;
+  updateDate?: Date;
 }
-
-const mockTags: TagData[] = [
-  {
-    key: '1',
-    id: 1,
-    name: 'React',
-    description: 'React 是一个用于构建用户界面的 JavaScript 库',
-    color: '#61dafb',
-    articleCount: 25,
-    status: 'active',
-    createDate: '2025-01-10',
-    updateDate: '2025-01-15'
-  },
-  {
-    key: '2',
-    id: 2,
-    name: 'Vue',
-    description: 'Vue.js 是一套用于构建用户界面的渐进式框架',
-    color: '#4fc08d',
-    articleCount: 18,
-    status: 'active',
-    createDate: '2025-01-08',
-    updateDate: '2025-01-14'
-  },
-  {
-    key: '3',
-    id: 3,
-    name: 'JavaScript',
-    description: 'JavaScript 是一种高级的、解释执行的编程语言',
-    color: '#f7df1e',
-    articleCount: 42,
-    status: 'active',
-    createDate: '2025-01-05',
-    updateDate: '2025-01-13'
-  },
-  {
-    key: '4',
-    id: 4,
-    name: 'TypeScript',
-    description: 'TypeScript 是 JavaScript 的一个超集，添加了静态类型定义',
-    color: '#3178c6',
-    articleCount: 15,
-    status: 'active',
-    createDate: '2025-01-03',
-    updateDate: '2025-01-12'
-  },
-  {
-    key: '5',
-    id: 5,
-    name: 'Node.js',
-    description: 'Node.js 是一个基于 Chrome V8 引擎的 JavaScript 运行环境',
-    color: '#339933',
-    articleCount: 12,
-    status: 'active',
-    createDate: '2025-01-01',
-    updateDate: '2025-01-11'
-  },
-  {
-    key: '6',
-    id: 6,
-    name: 'Python',
-    description: 'Python 是一种高级编程语言，以其简洁和可读性著称',
-    color: '#3776ab',
-    articleCount: 8,
-    status: 'inactive',
-    createDate: '2024-12-28',
-    updateDate: '2025-01-10'
-  }
-];
 
 const TagManagement: React.FC = () => {
   const [tags, setTags] = useState<TagData[]>([]);
@@ -131,26 +61,22 @@ const TagManagement: React.FC = () => {
     setLoading(true);
     try {
       const response = await getTagPage({
-        request: {
           current: pagination.current,
           pageSize: pagination.pageSize,
           tagName: searchText || undefined
-        }
-      });
+      }) as any;
       
-      if (response.data?.code === 0 && response.data?.data) {
-        const tagData = response.data.data.records?.map((tag: API.TagVo) => ({
+      if (response?.code === 0 && response?.data) {
+        const tagData = response.data.records?.map((tag: API.TagVo) => ({
           key: tag.id?.toString() || '',
           id: tag.id,
           name: tag.name,
           description: tag.description,
           color: tag.color || '#1890ff',
-          articleCount: tag.articleCount || 0,
+          articleCount: tag.articleCount,
           status: 'active' as const,
-          createTime: tag.createTime,
-          updateTime: tag.updateTime,
-          createDate: tag.createTime?.split('T')[0],
-          updateDate: tag.updateTime?.split('T')[0]
+          createDate: formatDate(tag.createTime),
+          updateDate: formatDate(tag.updateTime)
         })) || [];
         
         setTags(tagData);
@@ -318,30 +244,18 @@ const TagManagement: React.FC = () => {
       )
     },
     {
-      title: '状态',
-      dataIndex: 'status',
-      key: 'status',
-      width: 100,
-      render: (status: string) => getStatusBadge(status),
-      filters: [
-        { text: '启用', value: 'active' },
-        { text: '禁用', value: 'inactive' }
-      ],
-      onFilter: (value, record) => record.status === value
-    },
-    {
       title: '创建日期',
       dataIndex: 'createDate',
       key: 'createDate',
       width: 120,
-      sorter: (a, b) => new Date(a.createDate || '').getTime() - new Date(b.createDate || '').getTime(),
+      sorter: (a, b) => a.createDate - b.createDate,
     },
     {
       title: '更新日期',
       dataIndex: 'updateDate',
       key: 'updateDate',
       width: 120,
-      sorter: (a, b) => new Date(a.updateDate || '').getTime() - new Date(b.updateDate || '').getTime(),
+      sorter: (a, b) => a.updateDate - b.updateDate,
     },
     {
       title: '操作',
@@ -433,6 +347,7 @@ const TagManagement: React.FC = () => {
         footer={null}
         width={600}
         className="tag-modal"
+        zIndex={2000}
       >
         <Form
           form={form}
@@ -496,17 +411,6 @@ const TagManagement: React.FC = () => {
                 }
               ]}
             />
-          </Form.Item>
-
-          <Form.Item
-            name="status"
-            label="状态"
-            rules={[{ required: true, message: '请选择状态' }]}
-          >
-            <Select placeholder="请选择状态">
-              <Option value="active">启用</Option>
-              <Option value="inactive">禁用</Option>
-            </Select>
           </Form.Item>
 
           <Form.Item>

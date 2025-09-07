@@ -1,11 +1,16 @@
-/* 文章详情页样式 */
-.article-page {
+/* 文章详情页样式 - 使用独立命名空间避免与其他页面冲突 */
+.article-detail-page {
   min-height: 100vh;
   background-color: #f5f5f5;
   padding: 20px 0;
   /* 防止初次渲染布局跳动 */
   opacity: 0;
   animation: fadeIn 0.3s ease-in-out forwards;
+  /* 防止布局跳动 */
+  contain: layout style;
+  will-change: transform, opacity;
+  /* 确保样式隔离 */
+  isolation: isolate;
 }
 
 @keyframes fadeIn {
@@ -17,42 +22,66 @@
   }
 }
 
-.article-container {
+/* 页面过渡期间的稳定布局 */
+.article-detail-page * {
+  box-sizing: border-box;
+}
+
+.article-detail-page img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* 防止内容闪烁 */
+.article-detail-page .ant-card,
+.article-detail-page .ant-typography {
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+.article-detail-container {
   max-width: 90%;
   margin: 0 auto;
   padding: 0 20px;
   /* 确保容器有最小高度，防止布局跳动 */
   min-height: 600px;
+  /* 防止与其他页面布局冲突 */
+  isolation: isolate;
 }
 
 /* 文章内容区域 */
-.article-content {
+.article-detail-content {
   background: #fff;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
+  /* 仅隐藏横向滚动条，不阻断页面纵向滚动 */
+  overflow-x: hidden;
+  overflow-y: visible;
   /* 防止内容区域布局跳动 */
   min-height: 700px;
+  /* 确保与文章列表页面样式隔离 */
+  contain: layout style;
 }
 
 /* 文章头部 */
-.article-header {
+.article-detail-header {
   padding: 32px 32px 0;
   border-bottom: 1px solid #f0f0f0;
 }
 
-.article-meta-top {
+.article-detail-meta-top {
   margin-bottom: 16px;
 }
 
-.article-meta-top .meta-item {
+.article-detail-meta-top .meta-item {
   color: #666;
   font-size: 14px;
   display: flex;
   align-items: center;
 }
 
-.article-title {
+.article-detail-title {
   margin: 0 0 16px 0 !important;
   font-size: 28px !important;
   font-weight: 700 !important;
@@ -60,66 +89,67 @@
   color: #1a1a1a !important;
 }
 
-.article-tags {
+.article-detail-tags {
   margin-bottom: 24px;
 }
 
 /* 文章正文 */
-.article-body {
+.article-detail-body {
   padding: 32px;
   line-height: 1.8;
   font-size: 16px;
   color: #333;
 }
 
-.article-body h1,
-.article-body h2,
-.article-body h3,
-.article-body h4,
-.article-body h5,
-.article-body h6 {
+.article-detail-body h1,
+.article-detail-body h2,
+.article-detail-body h3,
+.article-detail-body h4,
+.article-detail-body h5,
+.article-detail-body h6 {
   margin-top: 32px;
   margin-bottom: 16px;
   font-weight: 600;
   line-height: 1.4;
+  scroll-margin-top: 80px; /* 防止固定头部遮挡 */
 }
 
-.article-body h1 {
+.article-detail-body h1 {
   font-size: 24px;
   border-bottom: 2px solid #e8e8e8;
   padding-bottom: 8px;
 }
 
-.article-body h2 {
+.article-detail-body h2 {
   font-size: 20px;
   border-bottom: 1px solid #e8e8e8;
   padding-bottom: 6px;
 }
 
-.article-body h3 {
+.article-detail-body h3 {
   font-size: 18px;
 }
 
-.article-body h4 {
+.article-detail-body h4 {
   font-size: 16px;
 }
 
-.article-body p {
+.article-detail-body p {
   margin-bottom: 16px;
   text-align: justify;
 }
 
-.article-body ul,
-.article-body ol {
+.article-detail-body ul,
+.article-detail-body ol {
   margin: 16px 0;
   padding-left: 24px;
 }
 
-.article-body li {
+.article-detail-body li {
   margin-bottom: 8px;
 }
 
-.article-body blockquote {
+.article-detail-body blockquote {
   margin: 16px 0;
   padding: 16px 20px;
   background-color: #f8f9fa;
@@ -127,7 +157,7 @@
   border-radius: 4px;
 }
 
-.article-body code {
+.article-detail-body code {
   background-color: #f6f8fa;
   padding: 2px 6px;
   border-radius: 3px;
@@ -136,7 +166,7 @@
   color: #d73a49;
 }
 
-.article-body pre {
+.article-detail-body pre {
   background-color: #f6f8fa;
   padding: 16px;
   border-radius: 6px;
@@ -144,13 +174,13 @@
   margin: 16px 0;
 }
 
-.article-body pre code {
+.article-detail-body pre code {
   background: none;
   padding: 0;
   color: inherit;
 }
 
-.article-body img {
+.article-detail-body img {
   max-width: 100%;
   height: auto;
   border-radius: 4px;
@@ -158,31 +188,31 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.article-body table {
+.article-detail-body table {
   width: 100%;
   border-collapse: collapse;
   margin: 16px 0;
 }
 
-.article-body th,
-.article-body td {
+.article-detail-body th,
+.article-detail-body td {
   border: 1px solid #e8e8e8;
   padding: 8px 12px;
   text-align: left;
 }
 
-.article-body th {
+.article-detail-body th {
   background-color: #f8f9fa;
   font-weight: 600;
 }
 
 /* 文章底部 */
-.article-footer {
+.article-detail-footer {
   padding: 0 32px 32px;
 }
 
 /* 侧边栏 */
-.article-sidebar {
+.article-detail-sidebar {
   position: sticky;
   top: 20px;
   /* 确保侧边栏有最小高度，防止布局跳动 */
@@ -280,31 +310,90 @@
   flex-direction: column;
 }
 
+/* 自定义目录（替代 Antd Anchor） */
+.custom-toc ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.custom-toc li {
+  margin: 6px 0;
+}
+
+.custom-toc a {
+  display: inline-block;
+  font-size: 13px;
+  line-height: 1.4;
+  color: #666;
+  text-decoration: none;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.custom-toc a:hover {
+  color: #1890ff;
+  background-color: #f0f8ff;
+}
+
+.custom-toc a.active {
+  color: #1890ff;
+  background-color: #e6f7ff;
+  font-weight: 500;
+  border-left: 3px solid #1890ff;
+  padding-left: 5px;
+}
+
+.custom-toc .toc-level-1 > a,
+.custom-toc .toc-level-1 a {
+  font-weight: 600;
+  color: #333;
+}
+
+.custom-toc .toc-level-1 a.active {
+  color: #1890ff;
+  font-weight: 700;
+}
+
+.custom-toc .toc-level-2 {
+  padding-left: 12px;
+}
+
+.custom-toc .toc-level-3 {
+  padding-left: 24px;
+}
+
+.custom-toc .toc-level-4 {
+  padding-left: 36px;
+}
+
 /* 响应式设计 */
 @media (max-width: 768px) {
-  .article-container {
+  .article-detail-container {
     padding: 0 12px;
   }
   
-  .article-header {
+  .article-detail-header {
     padding: 20px 20px 0;
   }
   
-  .article-title {
+  .article-detail-title {
     font-size: 22px !important;
   }
   
-  .article-body {
+  .article-detail-body {
     padding: 20px;
     font-size: 15px;
   }
   
-  .article-footer,
+  .article-detail-footer,
   .comment-section {
     padding: 0 20px 20px;
   }
   
-  .article-sidebar {
+  .article-detail-sidebar {
     position: static;
     margin-top: 20px;
     /* 确保移动端侧边栏有最小高度 */
@@ -313,28 +402,28 @@
 }
 
 @media (max-width: 576px) {
-  .article-page {
+  .article-detail-page {
     padding: 10px 0;
   }
   
-  .article-container {
+  .article-detail-container {
     padding: 0 8px;
   }
   
-  .article-header {
+  .article-detail-header {
     padding: 16px 16px 0;
   }
   
-  .article-title {
+  .article-detail-title {
     font-size: 20px !important;
   }
   
-  .article-body {
+  .article-detail-body {
     padding: 16px;
     font-size: 14px;
   }
   
-  .article-footer,
+  .article-detail-footer,
   .comment-section {
     padding: 0 16px 16px;
   }

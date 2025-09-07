@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "openapi": "set NODE_OPTIONS=--loader ts-node/esm&& ts-node openapi.config.ts",
+    "openapi": "NODE_OPTIONS='--loader ts-node/esm' ts-node openapi.config.ts",
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
@@ -29,6 +29,7 @@
     "bytemd": "^1.22.0",
     "dayjs": "^1.11.13",
     "github-markdown-css": "^5.8.1",
+    "highlight.js": "^11.11.1",
     "next": "15.4.6",
     "react": "19.1.0",
     "react-dom": "19.1.0",

@@ -28,8 +28,11 @@ import Link from "next/link";
 import type { ColumnsType } from "antd/es/table";
 import "./styles.css";
 import "@ant-design/v5-patch-for-react-19";
-import { getAllArticles } from "@/api/articleController";
+import { getAllArticles, updateArticle } from "@/api/articleController";
 import { formatDate } from "@/utils";
+import { getColumnPage } from "@/api/columnController";
+import { getTagPage } from "@/api/tagController";
+import { uploadImage } from "@/api/imageController";
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -47,6 +50,9 @@ interface Article {
   likes: number;
   excerpt: string;
   coverImage?: string;
+  seoTitle?: string;
+  seoDescription?: string;
+  seoKeywords?: string;
 }
 
 const ArticleManagement: React.FC = () => {
@@ -58,25 +64,48 @@ const ArticleManagement: React.FC = () => {
   const [searchText, setSearchText] = useState("");
   const [statusFilter, setStatusFilter] = useState<number>();
   const [fileList, setFileList] = useState<UploadFile[]>([]);
+  const [columns, setColumns] = useState<any[]>([]);
+  const [tags, setTags] = useState<any[]>([]);
 
   // 上传配置
   const uploadProps: UploadProps = {
     name: "file",
-    action: "/api/upload",
+    // 使用自定义上传到后端
+    customRequest: async (options: any) => {
+      const { file, onSuccess, onError } = options;
+      const formData = new FormData();
+      formData.append("file", file as File);
+      try {
+        const res: any = await uploadImage(formData);
+        if (res?.code === 0) {
+          onSuccess?.(res, file);
+        } else {
+          onError?.(new Error(res?.message || "上传失败"));
+        }
+      } catch (err) {
+        onError?.(err as any);
+      }
+    },
     listType: "picture-card",
     fileList,
     maxCount: 1,
     accept: "image/*",
-    headers: {
-      authorization: "authorization-text",
-    },
     onChange(info) {
-      setFileList(info.fileList);
+      // 同步url，保证预览可用
+      const newList = info.fileList.map((f) => {
+        if (f.uid === info.file.uid && info.file.status === "done") {
+          const url = (info.file as any).response?.data || info.file.url;
+          return { ...f, url } as UploadFile<any>;
+        }
+        return f;
+      });
+      setFileList(newList);
+
       if (info.file.status === "done") {
-        message.success(`${info.file.name} 文件上传成功`);
+        message.success(`图片上传成功`);
         // 更新表单中的coverImage字段
         form.setFieldsValue({
-          coverImage: info.file.response?.url || info.file.url,
+          coverImage: (info.file as any).response?.data || info.file.url,
         });
       } else if (info.file.status === "error") {
         message.error(`${info.file.name} 文件上传失败`);
@@ -93,7 +122,9 @@ const ArticleManagement: React.FC = () => {
       }
       const imgWindow = window.open(src);
       if (imgWindow) {
-        imgWindow.document.write(`<img src="${src}" style="max-width: 100%; height: auto;" />`);
+        imgWindow.document.write(
+          `<img src="${src}" style="max-width: 100%; height: auto;" />`
+        );
       }
     },
     onRemove: () => {
@@ -103,6 +134,24 @@ const ArticleManagement: React.FC = () => {
 
   useEffect(() => {
     getArticles();
+  }, []);
+
+  useEffect(() => {
+    // 加载专栏与标签
+    (async () => {
+      try {
+        const [colResRaw, tagResRaw] = await Promise.all([
+          getColumnPage({ current: 1, pageSize: 100 }),
+          getTagPage({ current: 1, pageSize: 100 }),
+        ]);
+        const colRes: any = colResRaw as any;
+        const tagRes: any = tagResRaw as any;
+        if (colRes?.code === 0) setColumns(colRes.data?.records || []);
+        if (tagRes?.code === 0) setTags(tagRes.data?.records || []);
+      } catch (e) {
+        // 静默失败
+      }
+    })();
   }, []);
 
   const getArticles = async () => {
@@ -123,17 +172,22 @@ const ArticleManagement: React.FC = () => {
 
   const handleEdit = (record: Article) => {
     setEditingArticle(record);
-    form.setFieldsValue({
+
+    // 处理SEO关键词字段，将JSON字符串解析为数组
+    const formValues = {
       ...record,
       publishDate: record.publishDate,
-    });
+    };
+
+    form.setFieldsValue(formValues);
+
     // 设置现有封面图片到文件列表
     if (record.coverImage) {
       setFileList([
         {
-          uid: '-1',
-          name: 'cover.jpg',
-          status: 'done',
+          uid: "-1",
+          name: "cover.jpg",
+          status: "done",
           url: record.coverImage,
         },
       ]);
@@ -151,25 +205,43 @@ const ArticleManagement: React.FC = () => {
   const handleSubmit = async (values: any) => {
     setLoading(true);
     try {
+      // 处理字段，确保以List类型传递给后端
+      const processedValues = {
+        ...values,
+        columnIds: values.columnIds || [],
+        tags: values.tags || [],
+        seoKeywords: values.seoKeywords || [],
+      };
+
       if (editingArticle) {
-        // 编辑文章
-        setArticles(
-          articles.map((article) =>
-            article.id === editingArticle.id
-              ? { ...article, ...values, key: article.key }
-              : article
-          )
-        );
-        message.success("文章更新成功");
+        // 编辑文章 - 调用后端接口
+        const response = (await updateArticle({
+          ...processedValues,
+          id: editingArticle.id,
+        })) as any;
+
+        if (response.code === 0) {
+          // 更新前端状态
+          setArticles(
+            articles.map((article) =>
+              article.id === editingArticle.id
+                ? { ...article, ...processedValues, key: article.key }
+                : article
+            )
+          );
+          message.success("文章更新成功");
+        } else {
+          message.error(response.message || "文章更新失败");
+        }
       } else {
         // 新增文章
         const newArticle: Article = {
-          ...values,
+          ...processedValues,
           key: Date.now().toString(),
           id: Date.now(),
           views: 0,
           likes: 0,
-        };
+        } as Article;
         setArticles([newArticle, ...articles]);
         message.success("文章创建成功");
       }
@@ -198,17 +270,17 @@ const ArticleManagement: React.FC = () => {
   const filteredArticles = articles.filter((article) => {
     const matchesSearch =
       article.title.toLowerCase().includes(searchText.toLowerCase()) ||
-      article.author.toLowerCase().includes(searchText.toLowerCase());
-    const matchesStatus = !statusFilter || article.status === statusFilter;
+      (article.author && article.author.toLowerCase().includes(searchText.toLowerCase()));
+    const matchesStatus = !statusFilter || article.status === Number(statusFilter);
     return matchesSearch && matchesStatus;
   });
 
-  const columns: ColumnsType<Article> = [
+  const columnsDef: ColumnsType<Article> = [
     {
       title: "ID",
       dataIndex: "id",
       key: "id",
-      width: 80,
+      width: 150,
       sorter: (a, b) => a.id - b.id,
     },
     {
@@ -216,9 +288,33 @@ const ArticleManagement: React.FC = () => {
       dataIndex: "coverImage",
       key: "coverImage",
       width: 80,
-      render: (coverImage: string) => (
-        <Image src={coverImage} alt="封面" style={{ width: 40, height: 40 }} />
-      ),
+      render: (coverImage: string) =>
+        coverImage ? (
+          <Image
+            src={coverImage}
+            alt="封面"
+            style={{ width: 40, height: 40 }}
+            fallback="暂无图片"
+            onError={() => {
+              // 图片加载失败时显示"暂无图片"
+              return false;
+            }}
+          />
+        ) : (
+          <div
+            style={{
+              width: 40,
+              height: 40,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              backgroundColor: "#f0f0f0",
+              color: "#999",
+            }}
+          >
+            暂无图片
+          </div>
+        ),
     },
     {
       title: "标题",
@@ -347,18 +443,6 @@ const ArticleManagement: React.FC = () => {
               新建文章
             </Button>
           </Link>
-          <Button
-            type="primary"
-            icon={<PlusOutlined />}
-            onClick={() => {
-              setEditingArticle(null);
-              form.resetFields();
-              setFileList([]);
-              setModalVisible(true);
-            }}
-          >
-            新建文章
-          </Button>
         </div>
 
         <div className="search-filters">
@@ -386,7 +470,7 @@ const ArticleManagement: React.FC = () => {
 
         <Table
           rowKey="id"
-          columns={columns}
+          columns={columnsDef}
           dataSource={filteredArticles}
           loading={loading}
           pagination={{
@@ -407,9 +491,16 @@ const ArticleManagement: React.FC = () => {
         onCancel={() => setModalVisible(false)}
         width={800}
         className="article-modal"
+        maskClosable={false}
+        zIndex={2000}
         footer={
           <Space>
-            <Button type="primary" htmlType="submit" loading={loading}>
+            <Button
+              type="primary"
+              htmlType="submit"
+              loading={loading}
+              onClick={() => form.submit()}
+            >
               {editingArticle ? "更新" : "创建"}
             </Button>
             <Button onClick={() => setModalVisible(false)}>取消</Button>
@@ -432,47 +523,24 @@ const ArticleManagement: React.FC = () => {
             <Input placeholder="请输入文章标题" />
           </Form.Item>
 
-          <Form.Item
-            name="author"
-            label="作者"
-            rules={[{ required: true, message: "请输入作者" }]}
-          >
-            <Input placeholder="请输入作者" />
+          {/* 专栏（来自后端） */}
+          <Form.Item name="columnIds" label="选择专栏">
+            <Select
+              mode="multiple"
+              placeholder="选择文章所属专栏（可选）"
+              options={columns.map((col) => ({
+                label: col.name,
+                value: col.id,
+              }))}
+              allowClear
+            />
           </Form.Item>
 
-          <Form.Item
-            name="category"
-            label="分类"
-            rules={[{ required: true, message: "请选择分类" }]}
-          >
-            <Select placeholder="请选择分类">
-              <Option value="前端开发">前端开发</Option>
-              <Option value="后端开发">后端开发</Option>
-              <Option value="移动开发">移动开发</Option>
-              <Option value="数据科学">数据科学</Option>
-              <Option value="人工智能">人工智能</Option>
-              <Option value="编程语言">编程语言</Option>
-              <Option value="运维部署">运维部署</Option>
-            </Select>
-          </Form.Item>
-
-          <Form.Item
-            name="tags"
-            label="标签"
-            rules={[{ required: true, message: "请选择标签" }]}
-          >
+          <Form.Item name="tags" label="标签">
             <Select
               mode="tags"
-              placeholder="请选择或输入标签"
-              options={[
-                { value: "React", label: "React" },
-                { value: "Vue", label: "Vue" },
-                { value: "JavaScript", label: "JavaScript" },
-                { value: "TypeScript", label: "TypeScript" },
-                { value: "Node.js", label: "Node.js" },
-                { value: "Python", label: "Python" },
-                { value: "Java", label: "Java" },
-              ]}
+              placeholder="请选择或输入标签（可选）"
+              options={tags.map((t) => ({ value: t.name, label: t.name }))}
             />
           </Form.Item>
 
@@ -510,10 +578,32 @@ const ArticleManagement: React.FC = () => {
             rules={[{ required: true, message: "请选择状态" }]}
           >
             <Select placeholder="请选择状态">
-              <Option value="draft">草稿</Option>
-              <Option value="published">发布</Option>
-              <Option value="archived">归档</Option>
+              <Option value="0">草稿</Option>
+              <Option value="1">已发布</Option>
+              <Option value="2">已归档</Option>
             </Select>
+          </Form.Item>
+
+          {/* SEO字段 */}
+          <Form.Item name="seoTitle" label="SEO标题">
+            <Input placeholder="请输入SEO标题（可选）" />
+          </Form.Item>
+
+          <Form.Item name="seoDescription" label="SEO描述">
+            <TextArea
+              rows={2}
+              placeholder="请输入SEO描述（可选）"
+              maxLength={200}
+              showCount
+            />
+          </Form.Item>
+
+          <Form.Item name="seoKeywords" label="SEO关键词">
+            <Select
+              mode="tags"
+              placeholder="请输入SEO关键词（可选）"
+              tokenSeparators={[",", "，"]}
+            />
           </Form.Item>
         </Form>
       </Modal>

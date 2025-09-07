@@ -1,12 +1,55 @@
+html {
+    scroll-behavior: smooth;
+}
+
 html,
 body {
     max-width: 100vw;
-    max-height: 100vh;
+    /* 允许页面根据内容高度自然滚动，避免 100vh 限制导致无法滚动 */
+    min-height: 100%;
+    overflow-x: hidden; /* 防止水平滚动条 */
+    overflow-y: auto; /* 确保可垂直滚动 */
 }
 
 * {
     box-sizing: border-box;
     padding: 0;
     margin: 0;
+}
+
+/* 确保布局稳定性 */
+.front-content {
+    min-height: calc(100vh - 64px);
+    position: relative;
+    isolation: isolate; /* 创建堆叠上下文 */
+}
+
+/* 防止布局跳动的通用规则 */
+.page-layout,
+.tags-page-layout {
+    contain: layout style; /* 包含布局和样式 */
+    will-change: auto;
+}
+
+.main-content,
+.tags-main-content {
+    min-height: 200px; /* 防止内容区域完全折叠 */
+}
+
+.sidebar-content {
+    min-height: 200px; /* 防止侧边栏完全折叠 */
+}
+
+/* 文章详情页面样式隔离保护 */
+.article-detail-page {
+    /* 确保与其他页面样式完全隔离 */
+    isolation: isolate;
+    contain: layout style;
+    /* 防止与文章列表页面的类名冲突 */
+}
+
+.article-detail-page * {
+    /* 重置可能的样式冲突 */
+    box-sizing: border-box;
 }
 

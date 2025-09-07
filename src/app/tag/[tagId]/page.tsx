@@ -3,39 +3,22 @@ import React from 'react';
 import {Metadata} from 'next';
 import {Col, Row, Statistic} from 'antd';
 import {FileTextOutlined, TagOutlined} from '@ant-design/icons';
-import ArticleList from '@/components/ArticleList/page';
+import TagArticleListClient from '@/components/TagArticleListClient';
 import Sidebar from '@/components/Sidebar/page';
 import './styles.css';
 import Title from "antd/es/typography/Title";
 import Paragraph from "antd/es/typography/Paragraph";
 
-// Mock data for tags
-const mockTags = [
-    {
-        id: 1,
-        name: 'React',
-        description: 'React 是一个用于构建用户界面的 JavaScript 库，由 Facebook 开发和维护。',
-        articleCount: 156,
-        followCount: 1240,
-        color: '#61dafb'
-    },
-    {
-        id: 2,
-        name: 'Vue.js',
-        description: 'Vue.js 是一套用于构建用户界面的渐进式框架，易学易用，性能出色。',
-        articleCount: 98,
-        followCount: 890,
-        color: '#4fc08d'
-    },
-    {
-        id: 3,
-        name: 'JavaScript',
-        description: 'JavaScript 是一种高级的、解释执行的编程语言，是 Web 开发的核心技术之一。',
-        articleCount: 234,
-        followCount: 2100,
-        color: '#f7df1e'
-    }
-];
+async function getTagInfo(tagId: string) {
+  return {
+    id: parseInt(tagId),
+    name: `标签 ${tagId}`,
+    description: `这是标签 ${tagId} 的描述信息`,
+    articleCount: 0,
+    followCount: 0,
+    color: '#1890ff'
+  };
+}
 
 interface Props {
     params: Promise<{
@@ -44,24 +27,22 @@ interface Props {
 }
 
 export async function generateStaticParams() {
-    return mockTags.map((tag) => ({
-        tagId: tag.id.toString(),
-    }));
+    return [];
 }
 
 export async function generateMetadata({params}: Props): Promise<Metadata> {
     const {tagId} = await params;
-    const tag = mockTags.find(t => t.id === parseInt(tagId));
+    const tag = await getTagInfo(tagId);
 
     return {
-        title: tag ? `${tag.name} - 汉堡博客` : '标签详情 - 汉堡博客',
-        description: tag?.description || '标签详情页面',
+        title: `${tag.name} - 汉堡博客`,
+        description: tag.description,
     };
 }
 
 export default async function TagDetailPage({params}: Props) {
     const {tagId} = await params;
-    const tag = mockTags.find(t => t.id === parseInt(tagId));
+    const tag = await getTagInfo(tagId);
 
     if (!tag) {
         return (
@@ -104,7 +85,7 @@ export default async function TagDetailPage({params}: Props) {
                     {/* 相关文章列表 */}
                     <div className="tag-articles">
                         <Title level={3}>相关文章</Title>
-                        <ArticleList showPagination={true} pageSize={10}/>
+                        <TagArticleListClient tagId={tagId} />
                     </div>
                 </Col>
 

@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { List, Pagination, Space, Tag } from "antd";
 import { CalendarOutlined } from "@ant-design/icons";
 import Image from "next/image";
-import Link from "next/link";
+import LoadingLink from "@/components/LoadingLink";
 import Title from "antd/es/typography/Title";
 import Paragraph from "antd/es/typography/Paragraph";
 import "./styles.css";
@@ -28,7 +28,7 @@ export default function ArticleList({
   // 计算当前页显示的文章
   const startIndex = (currentPage - 1) * pageSize;
   const endIndex = startIndex + pageSize;
-  const currentArticles = articles.slice(startIndex, endIndex);
+  const currentArticles = showPagination ? articles.slice(startIndex, endIndex) : articles;
 
   return (
     <div>
@@ -100,7 +100,7 @@ function ArticleItem({ article }: { article: Article | ArticleVo }) {
           )
         }
         title={
-          <Link
+          <LoadingLink
             href={`/article/${article.id}`}
             style={{ textDecoration: "none" }}
           >
@@ -111,7 +111,7 @@ function ArticleItem({ article }: { article: Article | ArticleVo }) {
             >
               {article.title}
             </Title>
-          </Link>
+          </LoadingLink>
         }
         description={
           <>

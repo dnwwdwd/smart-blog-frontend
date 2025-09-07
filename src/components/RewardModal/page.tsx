@@ -192,7 +192,7 @@ const RewardModal: React.FC = () => {
         title={
           <div className="modal-title">
             <HeartOutlined style={{ color: "#ff4d4f", marginRight: 8 }} />
-            支持作者
+            <span style={{color: '#027FFD'}}>支持作者</span>
           </div>
         }
         open={isModalVisible}

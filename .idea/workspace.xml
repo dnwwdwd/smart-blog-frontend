@@ -4,34 +4,49 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5bbedd87-77e4-4b9e-8dcb-f82810a3040f" name="更改" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
+    <list default="true" id="5bbedd87-77e4-4b9e-8dcb-f82810a3040f" name="更改" comment="feat: implement the function of user info storage">
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/_2025_8_16_09_50____.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/MarsCodeWorkspaceAppSettings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/MarsCodeWorkspaceAppSettings.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/openapi.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/openapi.config.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/api/articleController.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/api/columnController.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/api/index.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/api/tagController.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/api/typings.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/api/userController.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/articleController.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/articleController.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/commentController.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/commentController.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/typings.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/typings.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/admin/articles/create/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/admin/articles/create/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/admin/articles/create/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/admin/articles/create/styles.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/admin/articles/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/admin/articles/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/admin/columns/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/admin/columns/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/admin/tags/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/admin/tags/page.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/app/article/[articleId]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/article/[articleId]/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/article/[articleId]/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/article/[articleId]/styles.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/app/articles/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/articles/page.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/app/articles/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/articles/styles.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/column/[columnId]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/column/[columnId]/page.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/app/columns/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/columns/page.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/app/columns/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/columns/styles.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/link/[linkId]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/link/[linkId]/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/links/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/links/styles.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/globals.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/globals.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/login/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/login/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/page.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/app/tags/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/tags/page.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/app/tags/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/tags/styles.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/ArticleCard/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ArticleCard/index.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/ArticleList/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ArticleList/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/ColumnCard/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ColumnCard/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/TagCard/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/TagCard/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/TagCard/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/TagCard/styles.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/libs/request.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/libs/request.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/CodeBlock/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/CodeBlock/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/CodeBlock/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/CodeBlock/styles.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/CommentSection/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/CommentSection/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/CommentSection/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/CommentSection/styles.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/FrontNavigation/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/FrontNavigation/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/MdEditor/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/MdEditor/index.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/MdEditor/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/MdEditor/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/RelatedArticles/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/RelatedArticles/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/RewardModal/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/RewardModal/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/SearchModal/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/SearchModal/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/TagsPageClient/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/TagsPageClient/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/layouts/AdminLayout/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/AdminLayout/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/layouts/BasicLayout/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/BasicLayout/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/layouts/BasicLayout/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/BasicLayout/styles.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/stores/authStore.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/stores/authStore.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/utils/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/index.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -42,8 +57,23 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;dnwwdwd&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;git@github.com:dnwwdwd/smart-blog-frontend.git&quot;,
+    &quot;accountId&quot;: &quot;2b7b018b-acb6-4500-b84f-7dd48a16b197&quot;
+  }
+}</component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
+  </component>
+  <component name="PackageJsonUpdateNotifier">
+    <dismissed value="$PROJECT_DIR$/package.json" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 2
@@ -60,7 +90,7 @@
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/hejiajun/Documents/study/projects/smart-blog/smart-blog-frontend/public/assets&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/hejiajun/Documents/study/projects/smart-blog/smart-blog-frontend/src/components&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.standard&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
@@ -70,14 +100,15 @@
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
     &quot;npm.dev.executor&quot;: &quot;Run&quot;,
     &quot;npm.openapi.executor&quot;: &quot;Run&quot;,
-    &quot;prettierjs.PrettierConfiguration.Package&quot;: &quot;D:\\hejiajun\\smart-blog-frontend\\node_modules\\prettier&quot;,
+    &quot;prettierjs.PrettierConfiguration.Package&quot;: &quot;/Users/hejiajun/Documents/study/projects/smart-blog/smart-blog-frontend/node_modules/prettier&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;settings.javascript.prettier&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;D:\\hejiajun\\smart-blog-frontend\\node_modules\\typescript\\lib&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Users/hejiajun/Documents/study/projects/smart-blog/smart-blog-frontend/node_modules/typescript/lib&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/components" />
       <recent name="$PROJECT_DIR$/public/assets" />
       <recent name="$PROJECT_DIR$/src/layouts/BasicLayout" />
       <recent name="$PROJECT_DIR$/config" />
@@ -87,7 +118,7 @@
       <recent name="$PROJECT_DIR$/src/layouts/BasicLayout/components" />
     </key>
   </component>
-  <component name="RunManager" selected="npm.dev">
+  <component name="RunManager" selected="npm.openapi">
     <configuration name="dev" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
       <package-json value="$PROJECT_DIR$/package.json" />
       <command value="run" />
@@ -110,8 +141,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="npm.dev" />
         <item itemvalue="npm.openapi" />
+        <item itemvalue="npm.dev" />
       </list>
     </recent_temporary>
   </component>
@@ -135,7 +166,30 @@
       <workItem from="1754722232122" duration="32331000" />
       <workItem from="1754891250059" duration="11329000" />
       <workItem from="1755246914105" duration="444000" />
+      <workItem from="1755404992659" duration="11222000" />
+      <workItem from="1755952665223" duration="1320000" />
+      <workItem from="1756012362314" duration="209000" />
+      <workItem from="1756012984968" duration="811000" />
+      <workItem from="1756022682691" duration="16057000" />
+      <workItem from="1756905119459" duration="5000" />
     </task>
+    <task id="LOCAL-00001" summary="feat: implement homepage layout with hero section and navigation&#10;feat: add search modal component with multi-tab functionality&#10;feat: create article, column, and tag listing pages&#10;feat: implement infinite scroll for content pagination&#10;feat: add responsive design for mobile and desktop&#10;feat: create about page with system information&#10;feat: implement comment system for articles&#10;feat: add friend links management&#10;feat: create admin layout and basic structure&#10;fix: resolve search modal API data access path issues&#10;fix: center search input in modal dialog&#10;fix: adjust column card width for better display&#10;style: remove background colors from homepage and about page&#10;refactor: optimize search logic to query data only on tab switch&#10;fix: prevent horizontal scrollbar in search result items">
+      <option name="closed" value="true" />
+      <created>1755431987392</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1755431987392</updated>
+    </task>
+    <task id="LOCAL-00002" summary="feat: implement the function of user info storage">
+      <option name="closed" value="true" />
+      <created>1755432230399</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1755432230399</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -151,5 +205,10 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="feat: implement homepage layout with hero section and navigation&#10;feat: add search modal component with multi-tab functionality&#10;feat: create article, column, and tag listing pages&#10;feat: implement infinite scroll for content pagination&#10;feat: add responsive design for mobile and desktop&#10;feat: create about page with system information&#10;feat: implement comment system for articles&#10;feat: add friend links management&#10;feat: create admin layout and basic structure&#10;fix: resolve search modal API data access path issues&#10;fix: center search input in modal dialog&#10;fix: adjust column card width for better display&#10;style: remove background colors from homepage and about page&#10;refactor: optimize search logic to query data only on tab switch&#10;fix: prevent horizontal scrollbar in search result items" />
+    <MESSAGE value="feat: implement the function of user info storage" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: implement the function of user info storage" />
   </component>
 </project>

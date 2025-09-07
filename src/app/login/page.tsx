@@ -5,9 +5,9 @@ import { LockOutlined, LoginOutlined, UserOutlined } from "@ant-design/icons";
 import "./styles.css";
 import Title from "antd/es/typography/Title";
 import "@ant-design/v5-patch-for-react-19";
-import { userLogin } from "@/api/userController";
+import {userLogin } from "@/api/userController";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/stores/authStore";
+import { useAuth, useCurrentUser } from "@/stores/authStore";
 
 interface LoginForm {
   userAccount: string;
@@ -25,6 +25,7 @@ export default function LoginPage() {
 
     try {
       const res = await userLogin(values) as any;
+      console.log("login: " + JSON.stringify(res));
       if (res.code == 0) {
         // 保存用户信息到全局状态
         login(res.data);

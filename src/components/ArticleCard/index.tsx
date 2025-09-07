@@ -9,7 +9,7 @@ import {
   ClockCircleOutlined,
 } from "@ant-design/icons";
 import Image from "next/image";
-import Link from "next/link";
+import LoadingLink from "@/components/LoadingLink";
 import { formatDate } from "@/utils";
 import "./styles.css";
 
@@ -83,11 +83,11 @@ export default function ArticleCard({
       ]}
     >
       <div className="article-content">
-        <Link href={`/article/${article.id}`} className="article-link">
+        <LoadingLink href={`/article/${article.id}`} className="article-link">
           <Title level={4} className="article-title" ellipsis={{ rows: 2 }}>
             {article.title}
           </Title>
-        </Link>
+        </LoadingLink>
 
         <Paragraph
           className="article-excerpt"

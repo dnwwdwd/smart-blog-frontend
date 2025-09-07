@@ -10,19 +10,19 @@
   padding: 0 24px;
 }
 
-/* 页面布局 */
-.page-layout {
+/* 专栏页面布局 */
+.columns-page .page-layout {
   display: flex;
   gap: 2rem;
   align-items: flex-start;
 }
 
-.main-content {
+.columns-page .main-content {
   flex: 1;
   min-width: 0;
 }
 
-.sidebar-content {
+.columns-page .sidebar-content {
   width: 300px;
   flex-shrink: 0;
 }
@@ -170,7 +170,7 @@
     max-width: 90%;
   }
   
-  .sidebar-content {
+  .columns-page .sidebar-content {
     width: 280px;
   }
   
@@ -182,12 +182,12 @@
 
 /* 平板和手机 - 响应式布局 */
 @media (max-width: 992px) {
-  .page-layout {
+  .columns-page .page-layout {
     flex-direction: column;
     gap: 1.5rem;
   }
   
-  .sidebar-content {
+  .columns-page .sidebar-content {
     width: 100%;
     order: -1;
   }
