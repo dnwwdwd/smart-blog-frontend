@@ -150,9 +150,13 @@ const AdminDashboard: React.FC = () => {
     radius: 0.8,
     label: {
       type: 'outer',
-      content: '{name} {percentage}'
+      formatter: (datum: { tag: string; value: number }, mappingData: any) => {
+        const total = mockTagData.reduce((sum, d) => sum + d.value, 0);
+        const pct = total ? ((datum.value / total) * 100).toFixed(1) : '0.0';
+        return `${datum.tag} ${pct}%`;
+      },
     },
-    interactions: [{ type: 'element-active' }]
+    interactions: [{ type: 'element-active' }],
   };
 
   return (

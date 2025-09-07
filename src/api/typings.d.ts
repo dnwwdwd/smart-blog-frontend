@@ -1,6 +1,6 @@
 declare namespace API {
   type Article = {
-    id?: string;
+    id?: number;
     title?: string;
     content?: string;
     excerpt?: string;
@@ -16,14 +16,15 @@ declare namespace API {
     updateTime?: string;
   };
 
-  type ArticlePublishRequest = {
+  type ArticleDto = {
+    id?: number;
     title: string;
     content: string;
     excerpt?: string;
     coverImage: string;
-    seoTitle: string;
-    seoDescription: string;
-    seoKeywords: string[];
+    seoTitle?: string;
+    seoDescription?: string;
+    seoKeywords?: string[];
     tags: string[];
     columnIds: number[];
     status: number;
@@ -37,7 +38,7 @@ declare namespace API {
   };
 
   type ArticleVo = {
-    id?: string;
+    id?: number;
     title?: string;
     content?: string;
     excerpt?: string;
@@ -71,6 +72,12 @@ declare namespace API {
   type BaseResponseColumnVo = {
     code?: number;
     data?: ColumnVo;
+    message?: string;
+  };
+
+  type BaseResponseListChatMessage = {
+    code?: number;
+    data?: ChatMessage[];
     message?: string;
   };
 
@@ -134,6 +141,20 @@ declare namespace API {
     message?: string;
   };
 
+  type batchUploadParams = {
+    files: string[];
+  };
+
+  type ChatMessage = {
+    id?: number;
+    conversationId?: string;
+    role?: string;
+    content?: string;
+    metadata?: string;
+    createTime?: string;
+    updateTime?: string;
+  };
+
   type Column = {
     id?: number;
     name?: string;
@@ -170,28 +191,35 @@ declare namespace API {
   };
 
   type CommentDto = {
-    articleId: string;
+    articleId: number;
     nickname: string;
     email: string;
     content: string;
     website?: string;
-    parentId?: string;
+    parentId?: number;
     avatar?: string;
   };
 
   type CommentVo = {
-    id?: string;
+    id?: number;
     author?: string;
     email?: string;
     website?: string;
     content?: string;
-    createTime?: Date;
     avatar?: string;
-    replies?: CommentVo[];
+    createTime?: string;
+  };
+
+  type completionParams = {
+    message: string;
   };
 
   type deleteColumnParams = {
     columnId: number;
+  };
+
+  type deleteCommentParams = {
+    id: number;
   };
 
   type deleteFriendLinkParams = {
@@ -200,10 +228,6 @@ declare namespace API {
 
   type deleteTagParams = {
     tagId: number;
-  };
-
-  type deleteCommentParams = {
-    commentId: string;
   };
 
   type FriendLinkDto = {
@@ -256,7 +280,11 @@ declare namespace API {
   };
 
   type getArticleVoByIdParams = {
-    articleId: string;
+    articleId: number;
+  };
+
+  type getChatHistoryParams = {
+    conversationId: number;
   };
 
   type getColumnByIdParams = {
@@ -264,11 +292,31 @@ declare namespace API {
   };
 
   type getCommentParams = {
-    articleId: string;
+    articleId: number;
   };
 
   type getTagParams = {
     tagId: number;
+  };
+
+  type image2Params = {
+    input: string;
+  };
+
+  type image3Params = {
+    input: string;
+  };
+
+  type image4Params = {
+    input: string;
+  };
+
+  type image5Params = {
+    input: string;
+  };
+
+  type imageParams = {
+    input: string;
   };
 
   type LoginUserVO = {

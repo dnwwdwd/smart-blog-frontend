@@ -8,6 +8,7 @@ import * as tupianjiekou from "./imageController";
 import * as friendLinkController from "./friendLinkController";
 import * as commentController from "./commentController";
 import * as columnController from "./columnController";
+import * as liaotianjiekou from "./chatController";
 import * as articleController from "./articleController";
 export default {
   userController,
@@ -16,5 +17,6 @@ export default {
   friendLinkController,
   commentController,
   columnController,
+  liaotianjiekou,
   articleController,
 };

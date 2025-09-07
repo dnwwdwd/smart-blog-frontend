@@ -5,7 +5,7 @@ import {
   BookOutlined,
   DashboardOutlined,
   FileTextOutlined,
-  ImportOutlined,
+  OpenAIOutlined,
   LinkOutlined,
   PlusOutlined,
   SettingOutlined,
@@ -109,7 +109,7 @@ const AdminLayout: React.FC<Props> = ({ children }) => {
     },
     {
       key: '/admin/ai-chat',
-      icon: <ImportOutlined />,
+      icon: <OpenAIOutlined />,
       label: <Link href="/admin/ai-chat">AI 聊天</Link>,
     },
     {

@@ -1,0 +1,280 @@
+/* AI Chat Page - mimic ChatGPT layout in admin */
+.ai-chat-page {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  column-gap: 16px; /* 与右侧主区域留出间距 */
+  height: calc(100vh - 0px);
+  background: #f5f5f5;
+  margin-top: 16px; /* 页面整体上边距 */
+}
+
+/* Sidebar */
+.ai-chat-sidebar {
+  background: #ffffff;
+  border-right: 1px solid #f0f0f0;
+  display: flex;
+  flex-direction: column;
+  margin-left: 16px; /* 与后台侧边栏（Sider）留出间距 */
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.06);
+}
+
+.ai-chat-conv-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px; /* 与容器四周留白 */
+}
+
+.ai-chat-empty {
+  color: #999;
+  text-align: center;
+  padding: 24px 12px;
+}
+
+.ai-chat-conv-item {
+  padding: 12px 14px;
+  cursor: pointer;
+  transition: background 0.2s ease, border-radius 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 8px;
+  margin-bottom: 10px; /* item 与外层容器的间距 */
+  background: #fff;
+}
+.ai-chat-conv-item:hover { background: #f7faff; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+.ai-chat-conv-item.active { background: #e6f4ff; }
+.ai-chat-conv-item__main { flex: 1; min-width: 0; }
+.ai-chat-conv-item__actions { margin-left: 6px; }
+.ai-chat-conv-item__actions .ant-btn { color: #8c8c8c; }
+.ai-chat-conv-item__actions .ant-btn:hover { color: #1677ff; }
+
+.ai-chat-conv-item__title { font-weight: 600; color: #1f1f1f; }
+.ai-chat-conv-item__subtitle { font-size: 12px; color: #8c8c8c; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ai-chat-conv-item__time { font-size: 12px; color: #8c8c8c; margin-top: 4px; }
+
+/* Main */
+.ai-chat-main { display: flex; flex-direction: column; }
+
+.ai-chat-main-header {
+  height: 56px;
+  background: #ffffff;
+  border: 1px solid #f0f0f0;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+}
+
+.ai-chat-title { font-weight: 600; }
+
+.ai-chat-actions button + button { margin-left: 8px; }
+
+.ai-chat-messages {
+  flex: 1;
+  padding: 16px 20px;
+  overflow-y: auto;
+  background: #ffffff;
+  border: 1px solid #f0f0f0;
+  border-radius: 10px;
+  margin-top: 12px;
+  margin-bottom: 12px;
+}
+
+.ai-chat-welcome { color: #777; text-align: center; margin-top: 10vh; }
+
+/* 消息头像与气泡布局 */
+.ai-chat-msg { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 16px; }
+.ai-chat-msg.user { justify-content: flex-end; }
+.ai-chat-msg.assistant { justify-content: flex-start; }
+.ai-chat-msg .avatar { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; background: #f2f2f2; border: 1px solid #eee; }
+
+.ai-chat-msg .bubble {
+  max-width: 92%; /* 提升气泡宽度，缓解拥挤 */
+  padding: 10px 12px;
+  border-radius: 10px;
+  line-height: 1.7;
+  white-space: normal; /* 交给 Markdown 控制换行 */
+  overflow-wrap: break-word; /* 防止长单词溢出 */
+  word-break: break-word; /* 确保长文本正确换行 */
+}
+.ai-chat-msg.user .bubble { background: #1677ff; color: #fff; border-top-right-radius: 6px; }
+.ai-chat-msg.assistant .bubble { background: #fafafa; border: 1px solid #eee; border-top-left-radius: 6px; }
+
+/* Markdown 优化 */
+.ai-chat-msg .bubble pre { 
+  background: transparent; 
+  color: inherit; 
+  padding: 12px 14px; 
+  border-radius: 8px; 
+  overflow: auto;
+  max-width: 100%; /* 确保代码块不溢出 */
+  overflow-wrap: break-word; /* 代码块内文字换行 */
+}
+.ai-chat-msg .bubble code { background: rgba(27,31,35,.05); padding: 0.2em 0.4em; border-radius: 4px; }
+.ai-chat-msg .bubble pre code { background: transparent; padding: 0; }
+.ai-chat-msg .bubble p { margin: 0 0 0.6em 0; }
+
+.cursor { display: inline-block; width: 1ch; animation: blink 1s step-end infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+
+/* 输入区域：文本域占满，发送按钮在右下 */
+.ai-chat-input { position: relative; background: #ffffff; border: 1px solid #f0f0f0; border-radius: 10px; padding: 12px; display: block; }
+.ai-chat-input .ant-input { font-size: 14px; width: 100%; }
+.ai-chat-textarea textarea.ant-input {
+  padding-bottom: 44px; /* 为按钮预留空间，使按钮看起来像在 TextArea 内部 */
+}
+.ai-chat-send-btn { position: absolute; right: 20px; bottom: 20px; }
+
+/* Sidebar 收缩时的响应 */
+@media (max-width: 992px) {
+  .ai-chat-page { grid-template-columns: 1fr; }
+  .ai-chat-sidebar { display: none; }
+}
+
+/* 仅在 AI 聊天页对助手消息代码块使用亮白主题 */
+.ai-chat-msg.assistant .bubble pre {
+  background: transparent; /* 改为无背景色 */
+  color: #1f1f1f;
+  padding: 12px 14px;
+  border-radius: 8px;
+  overflow: auto;
+  border: 1px solid #eaecef;
+  max-width: 100%; /* 确保代码块不溢出 */
+  overflow-wrap: break-word; /* 代码块内文字换行 */
+}
+.ai-chat-msg.assistant .bubble code {
+  background: rgba(27,31,35,.05);
+  color: #1f1f1f;
+}
+.ai-chat-msg.assistant .bubble pre code {
+  background: transparent;
+  color: inherit;
+}
+.ai-chat-msg .bubble p { margin: 0 0 0.6em 0; }
+
+.cursor { display: inline-block; width: 1ch; animation: blink 1s step-end infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+
+/* 输入区域：文本域占满，发送按钮在右下 */
+.ai-chat-input { position: relative; background: #ffffff; border: 1px solid #f0f0f0; border-radius: 10px; padding: 12px; display: block; }
+.ai-chat-input .ant-input { font-size: 14px; width: 100%; }
+.ai-chat-textarea textarea.ant-input {
+  padding-bottom: 44px; /* 为按钮预留空间，使按钮看起来像在 TextArea 内部 */
+}
+.ai-chat-send-btn { position: absolute; right: 20px; bottom: 20px; }
+
+/* Sidebar 收缩时的响应 */
+@media (max-width: 992px) {
+  .ai-chat-page { grid-template-columns: 1fr; }
+  .ai-chat-sidebar { display: none; }
+}
+
+/* Sidebar 头部更紧凑 */
+.ai-chat-sidebar-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border-bottom: 1px solid #f5f5f5; }
+
+/* 新建按钮单独一行 */
+.ai-chat-new-conv { padding: 10px 12px 0 12px; border-bottom: 1px solid #fafafa; }
+
+/* 分组标题与分隔线 */
+.ai-chat-conv-group { margin-top: 8px; }
+.ai-chat-conv-group-label { font-size: 12px; color: #8c8c8c; margin: 8px 4px; }
+.ai-chat-conv-group-divider { height: 1px; background: #f0f0f0; margin: 8px 0; }
+
+/* 操作按钮靠右居中并放大 */
+.ai-chat-conv-item__actions { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 6px; }
+.ai-chat-conv-item__actions .anticon { font-size: 18px; }
+.ai-chat-conv-item__actions a { display: inline-flex; align-items: center; justify-content: center; width: 100%; height: 100%; color: #8c8c8c; }
+.ai-chat-conv-item__actions a:hover { color: #1677ff; }
+
+/* 缩小顶部主区域头部高度 */
+.ai-chat-main-header { height: 48px; }
+
+/* 新建按钮：白底、浅蓝字、圆角、浅灰阴影 */
+.ai-chat-new-btn {
+  background: #fff !important;
+  color: #1677ff !important;
+  border: 1px solid #f0f0f0 !important;
+  border-radius: 10px !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06) !important;
+}
+.ai-chat-new-btn:hover {
+  color: #0958d9 !important;
+  border-color: #d9e7ff !important;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.08) !important;
+}
+
+/* 发送按钮靠右顶格（与文本域右侧对齐） */
+.ai-chat-input { position: relative; }
+.ai-chat-send-btn { right: 12px; bottom: 12px; }
+
+/* 使输入框内容与按钮不重叠，保留底部内边距 */
+.ai-chat-textarea textarea.ant-input { padding-right: 96px; padding-bottom: 44px; }
+
+/* 输入区：并排布局（TextArea + 发送按钮在同一行） */
+.ai-chat-input-row {
+  display: flex;
+  gap: 12px;
+  align-items: center; /* 垂直居中 */
+  flex-wrap: nowrap;
+  width: 100%;
+}
+/* 让 TextArea 在一行中占满剩余空间，并避免被 100% 宽度规则影响 */
+.ai-chat-input-row .ant-input { width: auto !important; }
+.ai-chat-input-row .ai-chat-textarea {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding-right: 12px;
+  padding-bottom: 12px;
+}
+.ai-chat-send-btn-inline {
+  align-self: center; /* 垂直居中 */
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  flex: 0 0 auto;
+  min-width: 84px;
+}
+
+/* 用户消息气泡：减小高度并移除内外边距 */
+.ai-chat-msg.user { margin-bottom: 10px; }
+.ai-chat-msg.user .bubble {
+  padding: 0 !important;
+  margin: 0 !important;
+  line-height: 1.4;
+}
+
+/* AI 与通用气泡：长文本不溢出，必要时断词换行；链接更激进断行 */
+.ai-chat-msg .bubble,
+.ai-chat-msg .bubble p,
+.ai-chat-msg .bubble li {
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+/* 特别处理列表项序号溢出问题 */
+.ai-chat-msg .bubble ol,
+.ai-chat-msg .bubble ul {
+  padding-left: 1.5em; /* 为序号留出足够空间 */
+  margin: 0.6em 0;
+}
+
+.ai-chat-msg .bubble li {
+  margin: 0.3em 0;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+.ai-chat-msg .bubble code { word-break: break-word; overflow-wrap: anywhere; }
+.ai-chat-msg .bubble a { word-break: break-all; overflow-wrap: anywhere; }
+
+/* 确保列表项内的所有元素都能正确处理溢出 */
+.ai-chat-msg .bubble li code,
+.ai-chat-msg .bubble li a {
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+.ai-chat-msg .bubble pre { max-width: 100%; }
