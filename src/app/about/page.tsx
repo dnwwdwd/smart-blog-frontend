@@ -109,7 +109,7 @@ const achievements = [
 export default function AboutPage() {
   return (
     <div className="about-page">
-      <div className="container">
+      <div className="about-container">
         <Row gutter={[24, 24]}>
           {/* 主要内容区域 */}
           <Col xs={24} lg={16}>

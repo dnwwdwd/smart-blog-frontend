@@ -30,7 +30,7 @@ export default function FriendsPage() {
 
   return (
     <div className="friends-page">
-      <div className="container">
+      <div className="links-container">
         {/* 页面头部 */}
         <div className="page-header">
           <Title level={1} className="page-title">

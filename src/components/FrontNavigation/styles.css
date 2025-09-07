@@ -91,9 +91,11 @@
   align-items: center;
 }
 
-.search-input {
-  width: 240px;
-  border-radius: 20px;
+.search-input,
+.search-input.ant-input,
+.search-input.ant-input-affix-wrapper {
+  width: 200px;
+  margin: 0 !important;
 }
 
 .user-button {
@@ -149,8 +151,11 @@
     margin: 0 20px;
   }
   
-  .search-input {
+  .search-input,
+  .search-input.ant-input,
+  .search-input.ant-input-affix-wrapper {
     width: 200px;
+    margin: 0 !important;
   }
 }
 

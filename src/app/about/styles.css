@@ -3,7 +3,7 @@
   padding: 24px 0;
 }
 
-.container {
+.about-container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 24px;
@@ -226,7 +226,7 @@
 
 /* 响应式设计 */
 @media (max-width: 1024px) {
-  .container {
+  .about-container {
     padding: 0 16px;
   }
 }
@@ -236,7 +236,7 @@
     padding: 16px 0;
   }
   
-  .container {
+  .about-container {
     padding: 0 12px;
   }
   

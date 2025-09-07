@@ -16,7 +16,7 @@ const ColumnsPage = async () => {
 
   return (
     <div className="columns-page">
-      <div className="container">
+      <div className="columns-container">
         <div className="columns-header mb-6">
           <h1>📖 专栏列表</h1>
           <p>发现优质专栏内容 ({initialTotal} 个专栏)</p>

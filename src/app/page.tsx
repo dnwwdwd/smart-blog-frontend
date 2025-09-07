@@ -71,7 +71,7 @@ export default async function HomePage() {
 
   return (
     <div className="home-page">
-      <div className="container">
+      <div className="home-container">
         {/* Hero 区域 */}
         <section className="hero-section">
           <div className="hero-content">

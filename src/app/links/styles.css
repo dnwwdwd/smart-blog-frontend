@@ -19,7 +19,7 @@
   pointer-events: none;
 }
 
-.container {
+.links-container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 40px 20px;
@@ -243,7 +243,7 @@
 
 /* 响应式设计 */
 @media (max-width: 1200px) {
-  .container {
+  .links-container {
     padding: 30px 15px;
   }
 }
@@ -290,7 +290,7 @@
 }
 
 @media (max-width: 480px) {
-  .container {
+  .links-container {
     padding: 20px 10px;
   }
   
