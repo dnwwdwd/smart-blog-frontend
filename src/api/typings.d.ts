@@ -75,6 +75,12 @@ declare namespace API {
     message?: string;
   };
 
+  type BaseResponseListChatConversation = {
+    code?: number;
+    data?: ChatConversation[];
+    message?: string;
+  };
+
   type BaseResponseListChatMessage = {
     code?: number;
     data?: ChatMessage[];
@@ -84,6 +90,20 @@ declare namespace API {
   type BaseResponseListCommentVo = {
     code?: number;
     data?: CommentVo[];
+    message?: string;
+  };
+
+  // 新增：后端返回 Long 列表
+  type BaseResponseListLong = {
+    code?: number;
+    data?: number[];
+    message?: string;
+  };
+
+  // 新增：后端返回 Map<Long, Integer>（TS 表示为 Record<number, number>）
+  type BaseResponseMapLongInteger = {
+    code?: number;
+    data?: Record<number, number>;
     message?: string;
   };
 
@@ -145,12 +165,20 @@ declare namespace API {
     files: string[];
   };
 
+  type ChatConversation = {
+    id?: number;
+    name?: string;
+    createBy?: number;
+    createTime?: string;
+    updateTime?: string;
+  };
+
   type ChatMessage = {
     id?: number;
-    conversationId?: string;
+    conversationId?: number;
     role?: string;
-    content?: string;
     metadata?: string;
+    content?: string;
     createTime?: string;
     updateTime?: string;
   };
@@ -212,6 +240,11 @@ declare namespace API {
 
   type completionParams = {
     message: string;
+    conversationId: number;
+  };
+
+  type deleteChatConversationParams = {
+    conversationId: number;
   };
 
   type deleteColumnParams = {

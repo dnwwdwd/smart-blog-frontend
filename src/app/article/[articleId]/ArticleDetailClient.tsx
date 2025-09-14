@@ -7,9 +7,8 @@ import {
   EyeOutlined,
   OpenAIOutlined,
 } from "@ant-design/icons";
-import ReactMarkdown from "react-markdown";
+import ReactMarkdown, { Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
-import rehypeHighlight from "rehype-highlight";
 import rehypeRaw from "rehype-raw";
 import Title from "antd/es/typography/Title";
 import Paragraph from "antd/es/typography/Paragraph";
@@ -96,7 +95,7 @@ export default function ArticleDetailClient({ article, tocItems }: ArticleDetail
               <div className="article-detail-body">
                 <ReactMarkdown
                   remarkPlugins={[remarkGfm]}
-                  rehypePlugins={[rehypeHighlight, rehypeRaw]}
+                  rehypePlugins={[rehypeRaw]}
                   components={{
                     h1: ({ children, ...props }) => {
                       const text = extractText(children);
@@ -129,9 +128,9 @@ export default function ArticleDetailClient({ article, tocItems }: ArticleDetail
                       headingCounts.set(base, c);
                       const slug = c > 1 ? `${base}-${c}` : base;
                       return (
-                        <Title level={3} id={slug} {...props}>
+                        <h3 id={slug} {...props}>
                           {children}
-                        </Title>
+                        </h3>
                       );
                     },
                     h4: ({ children, ...props }) => {
@@ -141,9 +140,9 @@ export default function ArticleDetailClient({ article, tocItems }: ArticleDetail
                       headingCounts.set(base, c);
                       const slug = c > 1 ? `${base}-${c}` : base;
                       return (
-                        <Title level={4} id={slug} {...props}>
+                        <h4 id={slug} {...props}>
                           {children}
-                        </Title>
+                        </h4>
                       );
                     },
                     h5: ({ children, ...props }) => {
@@ -153,9 +152,9 @@ export default function ArticleDetailClient({ article, tocItems }: ArticleDetail
                       headingCounts.set(base, c);
                       const slug = c > 1 ? `${base}-${c}` : base;
                       return (
-                        <Title level={5} id={slug} {...props}>
+                        <h5 id={slug} {...props}>
                           {children}
-                        </Title>
+                        </h5>
                       );
                     },
                     h6: ({ children, ...props }) => {
@@ -171,27 +170,26 @@ export default function ArticleDetailClient({ article, tocItems }: ArticleDetail
                       );
                     },
                     p: ({ children }) => <Paragraph>{children}</Paragraph>,
-                    code: ({ node, className, children, ...props }) => {
+                    code: (props: any) => {
+                      const { inline, className, children, ...rest } = props;
                       const match = /language-(\w+)/.exec(className || "");
                       const language = match ? match[1] : "";
-                      const isInline = !className || !language;
 
-                      if (!isInline && language) {
+                      if (!inline) {
                         return (
-                          <CodeBlock language={language}>
-                            {String(children).replace(/\n$/, "")}
+                          <CodeBlock language={language || undefined} showLineNumbers>
+                            {children as React.ReactNode}
                           </CodeBlock>
                         );
                       }
 
                       return (
-                        <code className={className} {...props}>
+                        <code className={className} {...rest}>
                           {children}
                         </code>
                       );
                     },
-
-                  }}
+                  } as Components}
                 >
                   {article.content || "暂无内容"}
                 </ReactMarkdown>

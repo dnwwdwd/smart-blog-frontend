@@ -4,15 +4,40 @@ import request from "@/libs/request";
 
 /** 此处后端没有提供注释 POST /article/batch/upload */
 export async function batchUpload(
-  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-  params: API.batchUploadParams,
+  files: File[],
   options?: { [key: string]: any }
 ) {
-  return request<API.BaseResponseVoid>("/article/batch/upload", {
+  const formData = new FormData();
+  files.forEach((file) => {
+    formData.append('files', file);
+  });
+  return request<API.BaseResponseListLong>("/article/batch/upload", {
     method: "POST",
-    params: {
-      ...params,
-    },
+    data: formData,
+    ...(options || {}),
+  });
+}
+
+/** 轮询上传状态 GET /article/upload/status?ids=1&ids=2 */
+export async function getUploadStatuses(
+  ids: number[],
+  options?: { [key: string]: any }
+) {
+  const params = new URLSearchParams();
+  ids.forEach(id => params.append('ids', String(id)));
+  return request<API.BaseResponseMapLongInteger>(`/article/upload/status?${params.toString()}` , {
+    method: "GET",
+    ...(options || {}),
+  });
+}
+
+/** 重试上传 POST /article/upload/retry/{id} */
+export async function retryUpload(
+  id: number,
+  options?: { [key: string]: any }
+) {
+  return request<API.BaseResponseVoid>(`/article/upload/retry/${id}`, {
+    method: "POST",
     ...(options || {}),
   });
 }
@@ -42,11 +67,11 @@ export async function getArticlePageByColumnId(
 /** 此处后端没有提供注释 GET /article/get/vo/${param0} */
 export async function getArticleVoById(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-  params: API.getArticleVoByIdParams,
+  params: Omit<API.getArticleVoByIdParams, 'articleId'> & { articleId: string | number },
   options?: { [key: string]: any }
 ) {
   const { articleId: param0, ...queryParams } = params;
-  return request<API.BaseResponseArticleVo>(`/article/get/vo/${param0}`, {
+  return request<API.BaseResponseArticleVo>(`/article/get/vo/${encodeURIComponent(String(param0))}`, {
     method: "GET",
     params: { ...queryParams },
     ...(options || {}),
