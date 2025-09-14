@@ -39,6 +39,11 @@
   margin-top: 16px;
 }
 
+/* 表格容器 */
+.bulk-table-wrapper {
+  margin-top: 16px;
+}
+
 /* 文件项渲染 */
 .bulk-file-item {
   display: flex;
@@ -91,6 +96,9 @@
   }
   .bulk-dragger {
     padding: 12px;
+  }
+  .bulk-table-wrapper .ant-table {
+    font-size: 13px;
   }
 }
 

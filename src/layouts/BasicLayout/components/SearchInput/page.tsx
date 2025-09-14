@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-object-type */
 import React from "react";
 import {Input, message} from "antd";
 import {SearchOutlined} from "@ant-design/icons";

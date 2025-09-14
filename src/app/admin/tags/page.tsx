@@ -75,9 +75,9 @@ const TagManagement: React.FC = () => {
           color: tag.color || '#1890ff',
           articleCount: tag.articleCount,
           status: 'active' as const,
-          createDate: formatDate(tag.createTime),
-          updateDate: formatDate(tag.updateTime)
-        })) || [];
+          createDate: formatDate(tag.createTime ?? Date.now()),
+          updateDate: formatDate(tag.updateTime ?? Date.now())
+          })) || [];
         
         setTags(tagData);
         setPagination(prev => ({
@@ -248,14 +248,14 @@ const TagManagement: React.FC = () => {
       dataIndex: 'createDate',
       key: 'createDate',
       width: 120,
-      sorter: (a, b) => a.createDate - b.createDate,
+      sorter: (a, b) => a.createDate && b.createDate ? new Date(a.createDate).getTime() - new Date(b.createDate).getTime() : 0,
     },
     {
       title: '更新日期',
       dataIndex: 'updateDate',
       key: 'updateDate',
       width: 120,
-      sorter: (a, b) => a.updateDate - b.updateDate,
+      sorter: (a, b) => a.updateDate && b.updateDate ? new Date(a.updateDate).getTime() - new Date(b.updateDate).getTime() : 0,
     },
     {
       title: '操作',

@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import { Card, Row, Col, Statistic, Table, Progress, Tag } from 'antd';
+import { Card, Row, Col, Statistic, Table, Tag } from 'antd';
 import {
   UserOutlined,
   FileTextOutlined,
@@ -9,7 +9,7 @@ import {
   ArrowUpOutlined,
   ArrowDownOutlined
 } from '@ant-design/icons';
-import { Line, Column, Pie } from '@ant-design/plots';
+import { Line, Pie } from '@ant-design/plots';
 import './styles.css';
 
 // Mock 数据
@@ -150,10 +150,12 @@ const AdminDashboard: React.FC = () => {
     radius: 0.8,
     label: {
       type: 'outer',
-      formatter: (datum: { tag: string; value: number }, mappingData: any) => {
-        const total = mockTagData.reduce((sum, d) => sum + d.value, 0);
+      formatter: (datum: any) => {
+        if (!datum || typeof datum.value !== 'number') return '';
+        const total = mockTagData.reduce((sum, d) => sum + (typeof d.value === 'number' ? d.value : 0), 0);
         const pct = total ? ((datum.value / total) * 100).toFixed(1) : '0.0';
-        return `${datum.tag} ${pct}%`;
+        const tag = typeof datum.tag === 'string' ? datum.tag : '';
+        return `${tag} ${pct}%`;
       },
     },
     interactions: [{ type: 'element-active' }],
@@ -241,61 +243,10 @@ const AdminDashboard: React.FC = () => {
         </Col>
       </Row>
 
-      <Row gutter={[16, 16]} className="charts-row">
-        <Col xs={24} lg={12}>
-          <Card title="分类文章统计" className="chart-card">
-            <Column {...columnConfig} />
-          </Card>
-        </Col>
-        <Col xs={24} lg={12}>
-          <Card title="最近文章" className="table-card">
-            <Table
-              columns={columns}
-              dataSource={mockRecentArticles}
-              pagination={false}
-              size="small"
-            />
-          </Card>
-        </Col>
-      </Row>
-
-      {/* 系统状态 */}
-      <Row gutter={[16, 16]} className="status-row">
-        <Col xs={24} lg={12}>
-          <Card title="系统状态" className="status-card">
-            <div className="status-item">
-              <span>CPU 使用率</span>
-              <Progress percent={45} status="active" />
-            </div>
-            <div className="status-item">
-              <span>内存使用率</span>
-              <Progress percent={67} status="active" />
-            </div>
-            <div className="status-item">
-              <span>磁盘使用率</span>
-              <Progress percent={23} status="active" />
-            </div>
-          </Card>
-        </Col>
-        <Col xs={24} lg={12}>
-          <Card title="快速操作" className="quick-actions">
-            <Row gutter={[8, 8]}>
-              <Col span={12}>
-                <Card size="small" hoverable className="action-card">
-                  <FileTextOutlined className="action-icon" />
-                  <div>新建文章</div>
-                </Card>
-              </Col>
-              <Col span={12}>
-                <Card size="small" hoverable className="action-card">
-                  <UserOutlined className="action-icon" />
-                  <div>用户管理</div>
-                </Card>
-              </Col>
-            </Row>
-          </Card>
-        </Col>
-      </Row>
+      {/* 最近文章 */}
+      <Card title="最近文章" className="table-card">
+        <Table columns={columns} dataSource={mockRecentArticles} pagination={{ pageSize: 5 }} />
+      </Card>
     </div>
   );
 };

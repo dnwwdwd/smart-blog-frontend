@@ -93,7 +93,6 @@ export default function AdminAIChatPage() {
           }));
           setConversations(mapped);
           saveConversations(mapped);
-          setActiveId(mapped[0]?.id ?? null);
           setLoadingHistory(false);
           return;
         }
@@ -102,7 +101,6 @@ export default function AdminAIChatPage() {
       }
       const list = loadConversations();
       setConversations(list);
-      setActiveId(list[0]?.id ?? null);
       setLoadingHistory(false);
     })();
   }, []);
@@ -398,17 +396,17 @@ export default function AdminAIChatPage() {
       return;
     }
     try {
-      const resp: any = await deleteChatConversation(numericId);
-      if (resp?.code === 0 && resp?.data) {
-        removeConversation(activeId);
-        antdMessage.success("已删除对话");
-      } else {
+        const resp: any = await deleteChatConversation({ conversationId: numericId });
+        if (resp?.code === 0 && resp?.data) {
+          removeConversation(activeId);
+          antdMessage.success("已删除对话");
+        } else {
+          antdMessage.error("删除对话失败");
+        }
+      } catch (e) {
         antdMessage.error("删除对话失败");
       }
-    } catch (e) {
-      antdMessage.error("删除对话失败");
-    }
-  };
+    };
 
   // 新增：支持按会话ID删除，供列表项菜单调用
   const handleDeleteChatById = async (convId: string) => {
@@ -420,7 +418,7 @@ export default function AdminAIChatPage() {
       return;
     }
     try {
-      const resp: any = await deleteChatConversation(numericId);
+      const resp: any = await deleteChatConversation({ conversationId: numericId });
       if (resp?.code === 0 && resp?.data) {
         removeConversation(convId);
         antdMessage.success("已删除对话");

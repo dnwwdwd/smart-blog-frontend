@@ -34,10 +34,18 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
   const { articleId } = await params;
   let article: any = null;
 
+  if (!articleId) {
+    return (
+      <div style={{ textAlign: "center", padding: "100px 20px" }}>
+        <Title level={2}>文章未找到</Title>
+        <span>无效的文章ID。</span>
+      </div>
+    );
+  }
+
   try {
     const res = await getArticleVoById({ articleId });
     article = res.data;
-    console.log(article);
   } catch (error) {
     console.log(error);
   }

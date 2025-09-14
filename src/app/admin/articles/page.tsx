@@ -66,6 +66,10 @@ const ArticleManagement: React.FC = () => {
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [columns, setColumns] = useState<any[]>([]);
   const [tags, setTags] = useState<any[]>([]);
+  // 分页状态
+  const [pageCurrent, setPageCurrent] = useState<number>(1);
+  const [pageSize, setPageSize] = useState<number>(10);
+  const [total, setTotal] = useState<number>(0);
 
   // 上传配置
   const uploadProps: UploadProps = {
@@ -133,7 +137,7 @@ const ArticleManagement: React.FC = () => {
   };
 
   useEffect(() => {
-    getArticles();
+    getArticles(1, pageSize);
   }, []);
 
   useEffect(() => {
@@ -154,21 +158,31 @@ const ArticleManagement: React.FC = () => {
     })();
   }, []);
 
-  const getArticles = async () => {
-    setLoading(true);
-    try {
-      const res = (await getAllArticles({
-        current: 1,
-        pageSize: 10,
+  const getArticles = async (
+  current: number = pageCurrent,
+  size: number = pageSize
+  ) => {
+     setLoading(true);
+     try {
+      const params: any = {
+        current,
+        pageSize: size,
         title: searchText,
-      })) as any;
-      setArticles(res.data?.records || []);
+      };
+      if (typeof statusFilter !== "undefined") {
+        params.status = statusFilter;
+      }
+      const res = (await getAllArticles(params)) as any;
+      setArticles(res?.data?.records || []);
+      setTotal(res?.data?.total || 0);
+      setPageCurrent(current);
+      setPageSize(size);
     } catch (error) {
-      message.error("获取文章列表失败");
-    } finally {
-      setLoading(false);
-    }
-  };
+       message.error("获取文章列表失败");
+     } finally {
+       setLoading(false);
+     }
+   };
 
   const handleEdit = (record: Article) => {
     setEditingArticle(record);
@@ -267,13 +281,7 @@ const ArticleManagement: React.FC = () => {
     }
   };
 
-  const filteredArticles = articles.filter((article) => {
-    const matchesSearch =
-      article.title.toLowerCase().includes(searchText.toLowerCase()) ||
-      (article.author && article.author.toLowerCase().includes(searchText.toLowerCase()));
-    const matchesStatus = !statusFilter || article.status === Number(statusFilter);
-    return matchesSearch && matchesStatus;
-  });
+  // 使用服务端分页后，前端不再二次过滤，直接使用 articles
 
   const columnsDef: ColumnsType<Article> = [
     {
@@ -461,9 +469,9 @@ const ArticleManagement: React.FC = () => {
               style={{ width: 120 }}
               allowClear
             >
-              <Option value="0">草稿</Option>
-              <Option value="1">已发布</Option>
-              <Option value="2">已归档</Option>
+              <Option value={0}>草稿</Option>
+              <Option value={1}>已发布</Option>
+              <Option value={2}>已归档</Option>
             </Select>
           </Space>
         </div>
@@ -471,15 +479,20 @@ const ArticleManagement: React.FC = () => {
         <Table
           rowKey="id"
           columns={columnsDef}
-          dataSource={filteredArticles}
+          dataSource={articles}
           loading={loading}
           pagination={{
-            total: filteredArticles.length,
-            pageSize: 10,
+            total,
+            current: pageCurrent,
+            pageSize,
             showSizeChanger: true,
             showQuickJumper: true,
-            showTotal: (total, range) =>
-              `第 ${range[0]}-${range[1]} 条，共 ${total} 条`,
+            showTotal: (t, range) => `第 ${range[0]}-${range[1]} 条，共 ${t} 条`,
+          }}
+          onChange={(pagination) => {
+            const nextCurrent = pagination.current || 1;
+            const nextSize = pagination.pageSize || pageSize;
+            getArticles(nextCurrent, nextSize);
           }}
           scroll={{ x: 1200 }}
         />

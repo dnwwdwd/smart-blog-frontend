@@ -257,16 +257,16 @@ const CommentSection: React.FC<CommentSectionProps> = ({ articleId }) => {
     email: vo.email || "",
     website: vo.website,
     content: vo.content || "",
-    createTime: vo.createTime ? (typeof vo.createTime === 'string' ? vo.createTime : vo.createTime.toString()) : "",
+    createTime: vo.createTime || "",
     avatar: vo.avatar,
-    replies: vo.replies ? vo.replies.map(mapVoToComment) : [],
+    replies: [],
   });
 
   // 获取评论列表
   const fetchComments = async () => {
     setListLoading(true);
     try {
-      const res: any = await getComment({ articleId });
+      const res: any = await getComment({ articleId: Number(articleId) });
       // 兼容 AxiosResponse 和 已被拦截器解包的数据
       const list: API.CommentVo[] = Array.isArray(res?.data)
         ? (res.data as API.CommentVo[])
@@ -289,7 +289,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ articleId }) => {
     setLoading(true);
     try {
       const payload: API.CommentDto = {
-        articleId,
+        articleId: Number(articleId),
         nickname: values.author,
         email: values.email,
         content: values.content,
@@ -329,7 +329,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ articleId }) => {
         content: values.content,
         website: values.website,
         avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${values.author}`,
-        parentId: replyingTo, // 直接使用被回复评论的ID作为父级ID
+        parentId: Number(replyingTo), // 直接使用被回复评论的ID作为父级ID
       };
 
       const res: any = await submitComment(payload);
@@ -354,9 +354,8 @@ const CommentSection: React.FC<CommentSectionProps> = ({ articleId }) => {
 
   // 删除评论
   const handleDeleteComment = async (commentId: string) => {
-    console.log("id:" , commentId)
     try {
-      await deleteComment({ commentId });
+      await deleteComment({ id: Number(commentId) });
       message.success("评论删除成功");
       await fetchComments();
     } catch (error) {

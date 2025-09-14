@@ -9,6 +9,11 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
+/* 消除潜在外边距合并和默认边框/背景影响 */
+.code-block-container, .code-block-container * {
+  border-color: inherit;
+}
+
 .code-block-header {
   display: flex;
   justify-content: space-between;
@@ -32,40 +37,50 @@
 }
 
 .copy-button {
-  color: #8b949e;
-  transition: all 0.2s ease;
+  color: #ffffff;
+  transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease; /* 避免尺寸相关动画 */
   font-size: 12px;
   height: 24px;
   padding: 0 8px;
   border-radius: 4px;
+  border: 1px solid transparent; /* 固定边框，避免 hover 时出现/消失导致抖动 */
+  box-sizing: border-box; /* 确保边框不改变总体尺寸 */
 }
 
 .copy-button:hover {
-  color: #58a6ff;
-  background: rgba(88, 166, 255, 0.1);
-  border-color: rgba(88, 166, 255, 0.2);
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.12);
 }
 
 .copy-button.copied {
-  color: #56d364;
+  color: #ffffff;
 }
 
 .copy-button.copied:hover {
-  color: #56d364;
-  background: rgba(86, 211, 100, 0.1);
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .code-block-content {
-  margin: 0;
+  margin: 0; /* 关键：去除 pre 默认外边距 */
   padding: 16px;
-  background: #0d1117;
+  background: #0d1117; /* 与容器同步，避免出现对比白边 */
   overflow-x: auto;
   font-family: 'SFMono-Regular', 'Consolas', 'Liberation Mono', 'Menlo', monospace;
   font-size: 14px;
   line-height: 1.45;
-  border: none;
+  border: none; /* 取消任何默认边框 */
   position: relative;
   overflow-y: auto;
+  scrollbar-gutter: stable both-edges; /* 固定滚动条占位，避免因出现/消失导致布局抖动 */
+}
+
+/* 防止上层样式影响 pre 的背景/边框 */
+.article-detail-body .code-block-container .code-block-content,
+.article-detail-body .code-block-container {
+  background: #0d1117 !important;
+  border: 1px solid #30363d;
 }
 
 /* 带行号的代码块 */
@@ -305,10 +320,10 @@
 
 /* 动画效果 */
 .code-block-container {
-  transition: all 0.3s ease;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease; /* 避免对尺寸和位置的动画 */
+  will-change: box-shadow; /* 提示渲染引擎优化阴影 */
 }
 
 .code-block-container:hover {
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
 }

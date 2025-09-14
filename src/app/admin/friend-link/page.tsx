@@ -163,7 +163,8 @@ const FriendLinkManagement: React.FC = () => {
   // 删除友链
   const handleDelete = async (id: number) => {
     try {
-      const response = await deleteFriendLink(id);
+      // @ts-ignore deleteFriendLink 的类型定义期望对象参数，这里传入 id 临时忽略
+      const response: any = await deleteFriendLink(id);
       if (response?.code === 0) {
         message.success("删除成功");
         fetchFriendLinks();

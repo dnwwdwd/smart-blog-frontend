@@ -20,21 +20,22 @@ interface Props {
 
 export default async function ColumnDetailPage({ params }: Props) {
   const { columnId } = await params;
-  let column = {};
-  let columnArticles = [];
+  let column: API.ColumnVo | null = null;
+  let columnArticles: API.ArticleVo[] = [];
   try {
-    const res = await getColumnById({ columnId });
-    column = res.data;
+    const columnRes = await getColumnById({ columnId: Number(columnId) });
+    column = (columnRes.data ?? null) as API.ColumnVo | null;
   } catch (e) {
     console.log(e);
   }
 
   try {
-    const res = await getArticlePageByColumnId(
-      { columnId: columnId },
-      { pageNum: 1, pageSize: 5 }
+    const pageRes = await getArticlePageByColumnId(
+      { columnId: Number(columnId) },
+      { current: 1, pageSize: 5 }
     );
-    columnArticles = res.data.records ?? [];
+    const pageData = (pageRes.data ?? {}) as API.PageArticleVo;
+    columnArticles = pageData.records ?? [];
   } catch (e) {
     console.log(e);
   }
@@ -60,14 +61,14 @@ export default async function ColumnDetailPage({ params }: Props) {
               <Image
                 width={200}
                 height={120}
-                src={column.coverImage}
-                alt={column.name}
+                src={column.coverImage || ""}
+                alt={column.name || ""}
                 unoptimized
               />
             </div>
             <div className="column-info">
               <Title level={1} className="column-title">
-                {column.title}
+                {column.name}
               </Title>
               <Paragraph className="column-description">
                 {column.description}
@@ -83,7 +84,7 @@ export default async function ColumnDetailPage({ params }: Props) {
                   />
                   <Statistic
                     title="创建时间"
-                    value={formatDate(column.createTime)}
+                    value={formatDate(column.createTime || "")}
                     prefix={<CalendarOutlined />}
                     valueStyle={{ fontSize: "16px" }}
                   />

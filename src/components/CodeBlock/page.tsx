@@ -1,6 +1,6 @@
 'use client';
 import React, { useState, useEffect, useRef } from 'react';
-import { Button, message } from 'antd';
+import { Button, message, Tooltip } from 'antd';
 import { CopyOutlined, CheckOutlined } from '@ant-design/icons';
 import hljs from 'highlight.js';
 import 'highlight.js/styles/github-dark.css'; // 使用暗黑主题
@@ -33,39 +33,35 @@ const CodeBlock: React.FC<CodeBlockProps> = ({
     }
     return '';
   };
-  
+
   const currentLanguage = getLanguage();
   
   // 应用语法高亮
   useEffect(() => {
-    if (codeRef.current && currentLanguage) {
-      // 清除之前的高亮
-      codeRef.current.removeAttribute('data-highlighted');
-      
-      // 应用新的高亮
-      if (hljs.getLanguage(currentLanguage)) {
-        hljs.highlightElement(codeRef.current);
-      } else {
-        // 如果语言不支持，使用自动检测
-        hljs.highlightElement(codeRef.current);
-      }
-      
-      // 添加行号
-      if (showLineNumbers && codeRef.current) {
-        addLineNumbers();
-      }
+    if (!codeRef.current) return;
+
+    // 移除之前的高亮标记
+    codeRef.current.removeAttribute('data-highlighted');
+
+    // 当没有显式语言时，hljs 也会尝试自动检测
+    hljs.highlightElement(codeRef.current);
+
+    // 添加行号
+    if (showLineNumbers) {
+      addLineNumbers();
     }
   }, [currentLanguage, children, showLineNumbers]);
-  
+
   // 添加行号功能
   const addLineNumbers = () => {
     if (!codeRef.current) return;
     
     const code = codeRef.current;
-    const lines = code.textContent?.split('\n') || [];
+    const text = code.textContent || '';
+    const lines = text.split('\n');
     
     // 移除最后一个空行
-    if (lines[lines.length - 1] === '') {
+    if (lines.length && lines[lines.length - 1] === '') {
       lines.pop();
     }
     
@@ -82,20 +78,23 @@ const CodeBlock: React.FC<CodeBlockProps> = ({
     
     code.parentElement?.appendChild(lineNumbers);
   };
-  
+
   // 提取代码内容
   const getCodeContent = (node: React.ReactNode): string => {
-    if (typeof node === 'string') {
-      return node;
-    }
-    if (React.isValidElement(node)) {
-      if ((node.props as any).children) {
-        return getCodeContent((node.props as any).children);
-      }
+    if (node == null) return '';
+    if (typeof node === 'string' || typeof node === 'number') {
+      return String(node);
     }
     if (Array.isArray(node)) {
       return node.map(getCodeContent).join('');
     }
+    if (React.isValidElement(node)) {
+      const props: any = node.props || {};
+      if ('value' in props && typeof props.value === 'string') return props.value;
+      if ('children' in props) return getCodeContent(props.children);
+      return '';
+    }
+    // 其他类型（如对象/布尔值）忽略
     return '';
   };
 
@@ -154,12 +153,14 @@ const CodeBlock: React.FC<CodeBlockProps> = ({
       'nginx': 'Nginx',
       'apache': 'Apache',
     };
-    return languageNames[lang.toLowerCase()] || lang.toUpperCase();
+    return languageNames[lang.toLowerCase()] || (lang ? lang.toUpperCase() : '');
   };
-  
+
   if (!isCodeBlock) {
     return <code className={className}>{children}</code>;
   }
+
+  const codeText = getCodeContent(children);
 
   return (
     <div className="code-block-container">
@@ -170,15 +171,16 @@ const CodeBlock: React.FC<CodeBlockProps> = ({
         <span className="code-language">
           {currentLanguage ? getLanguageDisplayName(currentLanguage) : 'CODE'}
         </span>
-        <Button
-          type="text"
-          size="small"
-          icon={copied ? <CheckOutlined /> : <CopyOutlined />}
-          onClick={handleCopy}
-          className={`copy-button ${copied ? 'copied' : ''}`}
-        >
-          {copied ? '已复制' : '复制'}
-        </Button>
+        <Tooltip title="复制代码" placement="bottom">
+          <Button
+            type="text"
+            size="small"
+            icon={copied ? <CheckOutlined style={{color: "#FFFFFF"}} /> : <CopyOutlined style={{color: "#FFFFFF"}} />}
+            onClick={handleCopy}
+            className={`copy-button ${copied ? 'copied' : ''}`}
+            aria-label="复制代码"
+          />
+        </Tooltip>
       </div>
       <pre 
         className={`code-block-content ${showLineNumbers ? 'with-line-numbers' : ''}`}
@@ -188,7 +190,7 @@ const CodeBlock: React.FC<CodeBlockProps> = ({
           ref={codeRef}
           className={`hljs ${currentLanguage ? `language-${currentLanguage}` : ''}`}
         >
-          {children}
+          {codeText}
         </code>
       </pre>
     </div>
