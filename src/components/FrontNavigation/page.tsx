@@ -241,3 +241,5 @@ const FrontNavigation: React.FC<FrontNavigationProps> = ({
 };
 
 export default FrontNavigation;
+
+// no changes needed

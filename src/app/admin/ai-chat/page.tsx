@@ -1,17 +1,41 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Button, Input, List, Modal, Avatar, message as antdMessage, Spin, Dropdown, Empty } from "antd";
-import { PlusOutlined, DeleteOutlined, EditOutlined, SendOutlined, StopOutlined, DownOutlined, LoadingOutlined, EllipsisOutlined } from "@ant-design/icons";
+import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  Button,
+  Dropdown,
+  Empty,
+  FloatButton,
+  Input,
+  message as antdMessage,
+  Modal,
+  Spin,
+} from "antd";
+import {
+  DeleteOutlined,
+  DownOutlined,
+  EditOutlined,
+  EllipsisOutlined,
+  LoadingOutlined,
+  PlusOutlined,
+  SendOutlined,
+} from "@ant-design/icons";
 import "./styles.css";
 
 import { useAuthStore } from "@/stores/authStore";
-import { addChatConversation, getChatHistory, getChatConversationList, deleteChatConversation, updateChatConversation } from "@/api/chatController";
+import {
+  addChatConversation,
+  deleteChatConversation,
+  getChatConversationList,
+  getChatHistory,
+  updateChatConversation,
+} from "@/api/chatController";
 import myAxios from "@/libs/request";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeHighlight from "rehype-highlight";
 import rehypeRaw from "rehype-raw";
+
 // import CodeBlock from "@/components/CodeBlock/page";
 
 interface ChatMessage {
@@ -78,6 +102,8 @@ export default function AdminAIChatPage() {
   const currentUser = useAuthStore((s) => s.user);
   const userAvatar = currentUser?.userAvatar || "/assets/logo.png";
   const aiAvatar = "/assets/logo.png";
+  // 新增：抑制下一次会话切换时的历史加载，避免覆盖流式新增的消息
+  const suppressNextHistoryLoadRef = useRef<string | null>(null);
 
   useEffect(() => {
     (async () => {
@@ -107,6 +133,11 @@ export default function AdminAIChatPage() {
 
   useEffect(() => {
     if (!activeId) return;
+    // 如果标记要求跳过本次历史加载（通常用于刚创建会话后立即发送的场景），则直接跳过
+    if (suppressNextHistoryLoadRef.current === activeId) {
+      suppressNextHistoryLoadRef.current = null;
+      return;
+    }
     const tryFetch = async () => {
       const numericId = Number(activeId);
       if (!Number.isNaN(numericId)) {
@@ -259,9 +290,29 @@ export default function AdminAIChatPage() {
             }
             if (parts.length) {
               const data = parts.join("\n");
+              // 新增：优先尝试解析 JSON，兼容 {content:"..."} / {delta:{content}} / OpenAI choices 结构
+              let toAppend = data;
+              try {
+                const parsed = JSON.parse(data);
+                if (parsed) {
+                  if (typeof parsed === "string") {
+                    toAppend = parsed;
+                  } else if (parsed.content != null) {
+                    toAppend = String(parsed.content);
+                  } else if (parsed.delta && parsed.delta.content != null) {
+                    toAppend = String(parsed.delta.content);
+                  } else if (parsed.choices && parsed.choices[0]?.delta?.content != null) {
+                    toAppend = String(parsed.choices[0].delta.content);
+                  } else if (parsed.text != null) {
+                    toAppend = String(parsed.text);
+                  } else if (parsed.answer != null) {
+                    toAppend = String(parsed.answer);
+                  }
+                }
+              } catch {}
               receivedAny = true;
               setMessages((prev) => {
-                const next = prev.map((m) => (m.id === assistantId ? { ...m, content: m.content + data } : m));
+                const next = prev.map((m) => (m.id === assistantId ? { ...m, content: m.content + toAppend } : m));
                 saveMessages(convId, next);
                 return next;
               });
@@ -270,9 +321,28 @@ export default function AdminAIChatPage() {
         } else {
           // 非标准 SSE（纯文本）场景，兜底去除可能出现的 data: 前缀
           const clean = text.replace(/(^|\n)\s*data:\s?/g, "$1");
-          if (clean.trim().length > 0) receivedAny = true;
+          let toAppend = clean;
+          try {
+            const parsed = JSON.parse(clean);
+            if (parsed) {
+              if (typeof parsed === "string") {
+                toAppend = parsed;
+              } else if (parsed.content != null) {
+                toAppend = String(parsed.content);
+              } else if (parsed.delta && parsed.delta.content != null) {
+                toAppend = String(parsed.delta.content);
+              } else if (parsed.choices && parsed.choices[0]?.delta?.content != null) {
+                toAppend = String(parsed.choices[0].delta.content);
+              } else if (parsed.text != null) {
+                toAppend = String(parsed.text);
+              } else if (parsed.answer != null) {
+                toAppend = String(parsed.answer);
+              }
+            }
+          } catch {}
+          if (toAppend.trim().length > 0) receivedAny = true;
           setMessages((prev) => {
-            const next = prev.map((m) => (m.id === assistantId ? { ...m, content: m.content + clean } : m));
+            const next = prev.map((m) => (m.id === assistantId ? { ...m, content: m.content + toAppend } : m));
             saveMessages(convId, next);
             return next;
           });
@@ -295,9 +365,28 @@ export default function AdminAIChatPage() {
           }
           if (parts.length) {
             const data = parts.join("\n");
+            let toAppend = data;
+            try {
+              const parsed = JSON.parse(data);
+              if (parsed) {
+                if (typeof parsed === "string") {
+                  toAppend = parsed;
+                } else if (parsed.content != null) {
+                  toAppend = String(parsed.content);
+                } else if (parsed.delta && parsed.delta.content != null) {
+                  toAppend = String(parsed.delta.content);
+                } else if (parsed.choices && parsed.choices[0]?.delta?.content != null) {
+                  toAppend = String(parsed.choices[0].delta.content);
+                } else if (parsed.text != null) {
+                  toAppend = String(parsed.text);
+                } else if (parsed.answer != null) {
+                  toAppend = String(parsed.answer);
+                }
+              }
+            } catch {}
             receivedAny = true;
             setMessages((prev) => {
-              const next = prev.map((m) => (m.id === assistantId ? { ...m, content: m.content + data } : m));
+              const next = prev.map((m) => (m.id === assistantId ? { ...m, content: m.content + toAppend } : m));
               saveMessages(convId, next);
               return next;
             });
@@ -313,12 +402,19 @@ export default function AdminAIChatPage() {
         setStreaming(false);
         abortRef.current = null;
       }
-      // 如果当前会话标题为空，用首条用户消息更新本地标题
+      // 如果当前会话标题为空，用首条用户消息更新本地标题，并同步到后端
       const ac = conversations.find((c) => c.id === convId);
       if (ac && !ac.title) {
-        updateConversationTitle(convId, (prompt || "新的对话").slice(0, 20));
+        const newTitle = (prompt || "新的对话").slice(0, 20);
+        updateConversationTitle(convId, newTitle);
+        const numericId = Number(convId);
+        if (!Number.isNaN(numericId)) {
+          try {
+            await updateChatConversation({ id: numericId as any, name: newTitle } as any);
+          } catch {}
+        }
       }
-    }
+      }
   }
 
   const handleSend = async () => {
@@ -343,6 +439,20 @@ export default function AdminAIChatPage() {
           saveConversations(next);
           saveMessages(newId, []);
           convId = newId;
+          // 关键：立即选中后端返回的对话 ID，避免渲染区不展示消息
+          suppressNextHistoryLoadRef.current = newId; // 抑制切换到新会话时的历史加载
+          setActiveId(newId);
+          // 清空消息区，确保后续追加的是新会话的消息
+          setMessages([]);
+          // 首次发送消息（无历史）即用用户首条消息更新会话标题，并同步后端
+          const firstTitle = prompt.slice(0, 20);
+          updateConversationTitle(newId, firstTitle);
+          const numericId2 = Number(newId);
+          if (!Number.isNaN(numericId2)) {
+            try {
+              await updateChatConversation({ id: numericId2 as any, name: firstTitle } as any);
+            } catch {}
+          }
         } else {
           antdMessage.error("创建对话失败");
           return;
@@ -351,8 +461,15 @@ export default function AdminAIChatPage() {
         antdMessage.error("创建对话失败");
         return;
       }
-    } else if (!activeConversation.title) {
-      updateConversationTitle(activeConversation.id, prompt.slice(0, 20));
+    } else if (!activeConversation.title || activeConversation.title === "暂无标题") {
+      const newTitle = prompt.slice(0, 20);
+      updateConversationTitle(activeConversation.id, newTitle);
+      const numericId = Number(activeConversation.id);
+      if (!Number.isNaN(numericId)) {
+        try {
+          await updateChatConversation({ id: numericId as any, name: newTitle } as any);
+        } catch {}
+      }
     }
 
     setActiveId(convId!);
@@ -661,6 +778,21 @@ export default function AdminAIChatPage() {
           )}
           <div ref={chatEndRef} />
         </div>
+        
+        {/* 悬浮：一键回到底部 */}
+        {!autoScroll && (
+          <FloatButton
+            icon={<DownOutlined />}
+            type="primary"
+            style={{ right: 24, bottom: 96 }}
+            onClick={() => {
+              const el = messagesRef.current;
+              if (el) {
+                el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
+              }
+            }}
+          />
+        )}
         
         <div className="ai-chat-input">
             <div className="ai-chat-input-row">

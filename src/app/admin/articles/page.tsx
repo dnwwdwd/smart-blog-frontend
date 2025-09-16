@@ -28,7 +28,11 @@ import Link from "next/link";
 import type { ColumnsType } from "antd/es/table";
 import "./styles.css";
 import "@ant-design/v5-patch-for-react-19";
-import { getAllArticles, updateArticle } from "@/api/articleController";
+import {
+  getAllArticles,
+  getArticleVoById,
+  updateArticle,
+} from "@/api/articleController";
 import { formatDate } from "@/utils";
 import { getColumnPage } from "@/api/columnController";
 import { getTagPage } from "@/api/tagController";
@@ -214,6 +218,38 @@ const ArticleManagement: React.FC = () => {
   const handleDelete = (id: number) => {
     setArticles(articles.filter((article) => article.id !== id));
     message.success("文章删除成功");
+  };
+
+  // 下载 Markdown：优先使用当前列表项的 content，否则拉取详情
+  const handleDownload = async (record: Article) => {
+    try {
+      let content: string | undefined = (record as any).content;
+      if (!content) {
+        const res: any = await getArticleVoById({ articleId: record.id });
+        if (res?.code === 0) {
+          content = res?.data?.content || res?.data?.markdown || res?.data?.md || "";
+        }
+      }
+      if (!content) {
+        message.warning("未获取到文章内容，无法导出");
+        return;
+      }
+      const title = record.title || `article-${record.id}`;
+      const safeName = title.replace(/[\\/:*?"<>|\n\r]+/g, "-").slice(0, 80);
+      const filename = `${safeName || "article"}.md`;
+      const blob = new Blob([content], { type: "text/markdown;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      message.success(`已下载：${filename}`);
+    } catch (e: any) {
+      message.error(e?.message || "下载失败，请重试");
+    }
   };
 
   const handleSubmit = async (values: any) => {
@@ -407,7 +443,8 @@ const ArticleManagement: React.FC = () => {
     {
       title: "操作",
       key: "action",
-      width: 200,
+      width: 400,
+      align: 'center',
       fixed: "right",
       render: (_, record: Article) => (
         <Space size="small">
@@ -426,6 +463,13 @@ const ArticleManagement: React.FC = () => {
             onClick={() => handleEdit(record)}
           >
             编辑
+          </Button>
+          <Button
+            type="link"
+            size="small"
+            onClick={() => handleDownload(record)}
+          >
+            下载MD
           </Button>
           <Popconfirm
             title="确定要删除这篇文章吗？"

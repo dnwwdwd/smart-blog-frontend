@@ -5,9 +5,10 @@ import { LockOutlined, LoginOutlined, UserOutlined } from "@ant-design/icons";
 import "./styles.css";
 import Title from "antd/es/typography/Title";
 import "@ant-design/v5-patch-for-react-19";
-import {userLogin } from "@/api/userController";
+import { userLogin } from "@/api/userController";
 import { useRouter } from "next/navigation";
-import { useAuth, useCurrentUser } from "@/stores/authStore";
+import { useAuth } from "@/stores/authStore";
+import myAxios from "@/libs/request";
 
 interface LoginForm {
   userAccount: string;
@@ -29,6 +30,13 @@ export default function LoginPage() {
       if (res.code == 0) {
         // 保存用户信息到全局状态
         login(res.data);
+        // 设置 Sa-Token 默认请求头（后端未自定义 token-name，使用默认 satoken）
+        if (res?.data?.token) {
+          (myAxios as any).defaults.headers.common = {
+            ...(myAxios as any).defaults.headers.common,
+            satoken: res.data.token,
+          };
+        }
         message.success("登录成功");
         router.push("/");
       }

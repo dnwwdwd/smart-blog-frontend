@@ -353,3 +353,41 @@
 .ant-table-body::-webkit-scrollbar-thumb:hover {
   background: #a8a8a8;
 }
+
+/* 修复固定右侧列背景显示不完整（被右侧阴影覆盖） */
+.article-management .ant-table-cell-fix-right,
+.article-management .ant-table-cell-fix-right-first {
+  background: #fff; /* 与普通单元格一致 */
+  z-index: 2; /* 盖过容器::after 的阴影层 */
+}
+
+.article-management .ant-table-thead .ant-table-cell-fix-right,
+.article-management .ant-table-thead .ant-table-cell-fix-right-first {
+  background: #fafafa; /* 与表头背景一致 */
+}
+
+.article-management .ant-table-tbody > tr:hover > .ant-table-cell-fix-right,
+.article-management .ant-table-tbody > tr:hover > .ant-table-cell-fix-right-first {
+  background: #f5f5f5; /* 与 hover 行一致 */
+}
+
+/* 关闭右侧滚动时的阴影，避免遮挡“操作”列 */
+.article-management .ant-table-container::after {
+  box-shadow: none !important;
+}
+
+/* 深色主题下同步修复 */
+@media (prefers-color-scheme: dark) {
+  .article-management .ant-table-cell-fix-right,
+  .article-management .ant-table-cell-fix-right-first {
+    background: #1f1f1f;
+  }
+  .article-management .ant-table-thead .ant-table-cell-fix-right,
+  .article-management .ant-table-thead .ant-table-cell-fix-right-first {
+    background: #262626;
+  }
+  .article-management .ant-table-tbody > tr:hover > .ant-table-cell-fix-right,
+  .article-management .ant-table-tbody > tr:hover > .ant-table-cell-fix-right-first {
+    background: #262626;
+  }
+}
