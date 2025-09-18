@@ -221,59 +221,17 @@
     padding: 0 16px;
   }
 
-  .articles-page .page-layout {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-
-  .articles-page .sidebar-content {
-    width: 100%;
-    order: 2;
-  }
-
-  .articles-page .main-content {
-    order: 1;
-    max-width: none;
-    margin: 0;
-  }
-
-  .articles-header {
-    margin-bottom: 16px;
-  }
-
-  .article-card {
-    margin-bottom: 12px !important;
-  }
-
-  .article-content {
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .article-left {
-    align-self: flex-start;
-  }
-
-  .article-title {
-    font-size: 15px !important;
-  }
-
-  .meta-item {
-    font-size: 11px;
-  }
-
-  .article-excerpt {
-    font-size: 13px;
-  }
-
-  .pagination-wrapper {
-    padding: 16px;
-  }
-
-  .pagination-wrapper .ant-pagination {
-    font-size: 12px;
+  /* 平板优先主内容 */
+  @media (max-width: 1024px) {
+    .articles-page .page-layout {
+      grid-template-columns: 1fr;
+      gap: 1.25rem;
+    }
+    .articles-page .sidebar-content { order: 2; width: 100%; }
+    .articles-page .main-content { order: 1; }
   }
 }
+
 
 @media (max-width: 576px) {
   .article-content {
@@ -349,7 +307,11 @@
   
   .articles-page .sidebar-content {
     width: 100%;
-    order: -1;
+    order: 2;
+  }
+
+  .articles-page .main-content {
+    order: 1;
   }
 }
 

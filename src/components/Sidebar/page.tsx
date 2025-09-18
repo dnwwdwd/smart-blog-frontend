@@ -1,6 +1,6 @@
 import React from 'react';
-import {Card, Avatar, Button, Space, Typography, Divider, QRCode} from 'antd';
-import {GithubOutlined, MailOutlined, WechatOutlined, HeartOutlined} from '@ant-design/icons';
+import {Card, Avatar, Button, Space, Typography, Divider, QRCode, Popover} from 'antd';
+import {GithubOutlined, WechatOutlined, HeartOutlined,XOutlined} from '@ant-design/icons';
 import './styles.css';
 import Title from "antd/es/typography/Title";
 import Paragraph from "antd/es/typography/Paragraph";
@@ -56,17 +56,21 @@ export default function Sidebar() {
 
                     <div className="user-actions">
                         <Space size={12}>
-                            <Button
-                                type="primary"
-                                icon={<GithubOutlined/>}
-                                size="small"
-                                href="https://github.com/dnwwdwd"
-                                target="_blank"
-                            />
-                            <Button
-                                icon={<MailOutlined/>}
-                                size="small"
-                            />
+                                                        {/* 微信悬浮展示二维码（暂时用站点图标替代） */}
+                            <Popover
+                              placement="bottom"
+                              content={(
+                                <div style={{padding: 8}}>
+                                  <img src="/icon.svg" alt="WeChat QR" width={120} height={120} />
+                                </div>
+                              )}
+                              trigger={['hover']}
+                            >
+                              <WechatOutlined style={{color: '#52c41a'}}/> 
+                            </Popover>
+
+                            <GithubOutlined href="https://github.com/dnwwdwd"/>
+                            <XOutlined href="https://x.com/C1ownhjj"/>
                         </Space>
                     </div>
                 </div>

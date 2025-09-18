@@ -56,7 +56,7 @@
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   /* 仅隐藏横向滚动条，不阻断页面纵向滚动 */
-  overflow-x: hidden;
+  overflow-x: visible; /* 允许子元素自行处理横向滚动 */
   overflow-y: visible;
   /* 防止内容区域布局跳动 */
   min-height: 700px;

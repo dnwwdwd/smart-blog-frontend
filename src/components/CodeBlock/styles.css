@@ -22,6 +22,8 @@
   background: #161b22;
   border-bottom: 1px solid #30363d;
   font-size: 12px;
+  position: relative; /* 避免创建覆盖层 */
+  z-index: 1; /* 低于内容层的滚动条 */
 }
 
 .code-language {
@@ -62,18 +64,30 @@
   background: rgba(255, 255, 255, 0.08);
 }
 
+/* 代码块包装器 */
+.code-block-wrapper {
+  position: relative;
+  display: flex;
+  background: #0d1117;
+}
+
 .code-block-content {
   margin: 0; /* 关键：去除 pre 默认外边距 */
   padding: 16px;
   background: #0d1117; /* 与容器同步，避免出现对比白边 */
-  overflow-x: auto;
+  overflow-x: auto; /* 水平滚动 */
+  overflow-y: auto; /* 垂直滚动 */
   font-family: 'SFMono-Regular', 'Consolas', 'Liberation Mono', 'Menlo', monospace;
   font-size: 14px;
   line-height: 1.45;
   border: none; /* 取消任何默认边框 */
-  position: relative;
-  overflow-y: auto;
-  scrollbar-gutter: stable both-edges; /* 固定滚动条占位，避免因出现/消失导致布局抖动 */
+  flex: 1; /* 占据剩余空间 */
+  min-width: 0; /* 允许收缩 */
+  white-space: pre; /* 保持代码格式 */
+  word-wrap: normal; /* 不自动换行 */
+  scrollbar-gutter: stable; /* 固定滚动条占位 */
+  touch-action: pan-x pan-y; /* 允许触摸横向拖动 */
+  -webkit-overflow-scrolling: touch; /* iOS 惯性滚动 */
 }
 
 /* 防止上层样式影响 pre 的背景/边框 */
@@ -85,22 +99,21 @@
 
 /* 带行号的代码块 */
 .code-block-content.with-line-numbers {
-  padding-left: 50px;
+  padding-left: 16px; /* 减少左边距，因为行号现在是独立的 */
 }
 
 /* 行号样式 */
 .line-numbers {
-  position: absolute;
-  left: 0;
-  top: 16px;
-  bottom: 16px;
-  width: 40px;
+  flex-shrink: 0; /* 不收缩 */
+  width: 50px;
   background: #161b22;
   border-right: 1px solid #30363d;
-  padding: 0 8px 0 0;
+  padding: 16px 8px 16px 0;
   text-align: right;
   user-select: none;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .line-number {
@@ -265,12 +278,12 @@
   }
   
   .code-block-content.with-line-numbers {
-    padding-left: 40px;
+    padding-left: 12px;
   }
   
   .line-numbers {
-    width: 30px;
-    padding-right: 6px;
+    width: 40px;
+    padding: 12px 6px 12px 0;
   }
   
   .line-number {
@@ -295,12 +308,12 @@
   }
   
   .code-block-content.with-line-numbers {
-    padding-left: 35px;
+    padding-left: 8px;
   }
   
   .line-numbers {
-    width: 25px;
-    padding-right: 4px;
+    width: 35px;
+    padding: 8px 4px 8px 0;
   }
   
   .line-number {

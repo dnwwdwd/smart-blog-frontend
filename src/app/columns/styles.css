@@ -181,21 +181,14 @@
 }
 
 /* 平板和手机 - 响应式布局 */
-@media (max-width: 992px) {
+@media (max-width: 1024px) {
   .columns-page .page-layout {
     flex-direction: column;
     gap: 1.5rem;
   }
-  
-  .columns-page .sidebar-content {
-    width: 100%;
-    order: -1;
-  }
-  
-  .columns-grid {
-    column-count: 2;
-    column-gap: 20px;
-  }
+  .columns-page .sidebar-content { width: 100%; order: 2; }
+  .columns-page .main-content { order: 1; }
+  .columns-grid { column-count: 2; column-gap: 20px; }
 }
 
 /* 小屏幕 (手机) - 1列 */

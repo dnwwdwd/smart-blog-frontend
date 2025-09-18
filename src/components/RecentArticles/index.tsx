@@ -45,7 +45,8 @@ export default function RecentArticles({
               key={article.id}
               xs={24}
               sm={12}
-              lg={8}
+              lg={12}
+              xl={8}
               className={`article-col article-col-${index + 1}`}
             >
               <ArticleCard article={article} showViews={true} />

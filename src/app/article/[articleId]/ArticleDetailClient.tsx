@@ -9,7 +9,7 @@ import {
 } from "@ant-design/icons";
 import ReactMarkdown, { Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
-import rehypeRaw from "rehype-raw";
+import rehypeSanitize from "rehype-sanitize";
 import Title from "antd/es/typography/Title";
 import Paragraph from "antd/es/typography/Paragraph";
 import Sidebar from "@/components/Sidebar/page";
@@ -95,7 +95,7 @@ export default function ArticleDetailClient({ article, tocItems }: ArticleDetail
               <div className="article-detail-body">
                 <ReactMarkdown
                   remarkPlugins={[remarkGfm]}
-                  rehypePlugins={[rehypeRaw]}
+                  rehypePlugins={[rehypeSanitize]}
                   components={{
                     h1: ({ children, ...props }) => {
                       const text = extractText(children);

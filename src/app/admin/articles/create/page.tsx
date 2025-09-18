@@ -292,15 +292,15 @@ const ArticleCreatePage: React.FC = () => {
 
         <div className="toolbar-right">
           <Space size="middle">
-              <Button
-                icon={<UploadOutlined />}
-                onClick={ () => {
-                  router.push("/admin/articles/upload");
-                }}
-                className="action-btn"
-              >
-                批量上传
-              </Button>
+            <Button
+              icon={<UploadOutlined />}
+              onClick={() => {
+                router.push("/admin/articles/upload");
+              }}
+              className="action-btn"
+            >
+              批量上传
+            </Button>
             <Tooltip title="保存草稿">
               <Button
                 icon={<SaveOutlined />}
@@ -466,10 +466,10 @@ const ArticleCreatePage: React.FC = () => {
             </Form.Item>
 
             <Form.Item label="SEO 关键词" name="seoKeywords">
-            <Select
-              mode="tags"
-              placeholder="请选择或输入关键词"
-            />
+              <Select
+                mode="tags"
+                placeholder="请选择或输入关键词"
+              />
             </Form.Item>
           </div>
         </Form>

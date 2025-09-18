@@ -34,6 +34,7 @@ import myAxios from "@/libs/request";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeHighlight from "rehype-highlight";
+import rehypeSanitize from "rehype-sanitize";
 import rehypeRaw from "rehype-raw";
 
 // import CodeBlock from "@/components/CodeBlock/page";
@@ -750,7 +751,7 @@ export default function AdminAIChatPage() {
                             <>
                               <ReactMarkdown
                                 remarkPlugins={[remarkGfm]}
-                                rehypePlugins={[rehypeHighlight, rehypeRaw]}
+                                rehypePlugins={[rehypeHighlight, rehypeSanitize]}
                                 components={{
                                   code: ({ className, children, ...props }) => (
                                     <code className={className} {...props}>{children}</code>

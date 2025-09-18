@@ -2,13 +2,13 @@
 
 .home-page {
   min-height: 100vh;
-  background: #fafafa;
+  background: transparent; /* 原 #fafafa，按需移除背景色 */
   padding: 0 0 24px;
 }
 
 /* 顶部英雄区 */
 .home-hero {
-  background: linear-gradient(135deg, #e6f4ff 0%, #f9fbff 100%);
+  background: transparent; /* 原线性渐变背景，移除 */
   border-bottom: 1px solid #e6f4ff;
 }
 
@@ -38,7 +38,7 @@
   max-width: 90%;
   width: 100%;
   margin: 0 auto;
-  padding: 24px;
+  padding: 0 24px; /* 与专栏页 columns-container 对齐 */
 }
 
 .home-header {
@@ -63,9 +63,20 @@
   width: 100%;
 }
 
+/* 侧边栏统一卡片间距：与 Sidebar(.sidebar gap: 20px) 保持一致 */
+.home-page .sidebar-content > *:not(:last-child) {
+  margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+  .home-page .sidebar-content > *:not(:last-child) {
+    margin-bottom: 16px;
+  }
+}
+
 /* 卡片与列表的细节优化，可与文章列表复用 */
 .article-list, .pagination-wrapper {
-  background: #fff;
+  background: transparent; /* 原 #fff，移除背景色 */
   border-radius: 12px;
   border: 1px solid #e8e8e8;
 }
@@ -80,6 +91,15 @@
   }
 }
 
+/* 新增：平板宽度优先展示主内容 */
+@media (max-width: 1024px) {
+  .page-layout {
+    grid-template-columns: 1fr;
+  }
+  .sidebar-content { order: 2; }
+  .main-content { order: 1; }
+}
+
 @media (max-width: 768px) {
   .home-hero-inner {
     padding: 36px 16px;
@@ -88,9 +108,9 @@
     font-size: 28px;
   }
   .home-container {
-    max-width: 100%;
+    max-width: 90%;
     width: 100%;
-    padding: 16px;
+    padding: 0 16px; /* 与专栏页 columns-container 对齐 */
   }
   .page-layout {
     grid-template-columns: 1fr;
@@ -106,21 +126,13 @@
 /* 深色模式适配（可选） */
 @media (prefers-color-scheme: dark) {
   .home-page {
-    background: #0b0f16;
-  }
-  .home-hero {
-    background: linear-gradient(135deg, #0f172a 0%, #0b1220 100%);
-    border-bottom-color: rgba(255,255,255,0.06);
+    background: transparent; /* 原 #0b0f16，移除背景色 */
   }
   .home-title {
     color: #f7fafc;
   }
   .home-subtitle {
     color: #a0aec0;
-  }
-  .article-list, .pagination-wrapper {
-    background: #0d1117;
-    border-color: rgba(255,255,255,0.08);
   }
 }
 
@@ -138,23 +150,6 @@
   margin: 0;
 }
 
-.home-page .pagination-wrapper .ant-pagination-item {
-  border-radius: 8px;
-  transition: all 0.2s ease;
-}
-
-.home-page .pagination-wrapper .ant-pagination-item a {
-  padding-inline: 8px;
-}
-
-.home-page .pagination-wrapper .ant-pagination-item:hover {
-  border-color: #1677ff;
-}
-
-.home-page .pagination-wrapper .ant-pagination-item-active {
-  border-color: #1677ff;
-}
-
 .home-page .pagination-wrapper .ant-pagination-prev .ant-pagination-item-link,
 .home-page .pagination-wrapper .ant-pagination-next .ant-pagination-item-link {
   border-radius: 8px;
@@ -162,7 +157,7 @@
 
 @media (prefers-color-scheme: dark) {
   .home-page .pagination-wrapper {
-    background: #0d1117;
+    background: transparent; /* 原 #0d1117，移除背景色 */
     border-color: rgba(255, 255, 255, 0.08);
     box-shadow: none;
   }
@@ -202,7 +197,7 @@
 }
 
 .sidebar-content .columns-list-item:hover {
-  background: #f5f7fa;
+  background: transparent; /* 原 #f5f7fa，移除背景色 */
 }
 
 .sidebar-content .columns-dot {
@@ -230,6 +225,42 @@
     box-shadow: none;
   }
   .sidebar-content .columns-list-item:hover {
-    background: rgba(255,255,255,0.06);
+    background: transparent; /* 原 rgba(255,255,255,0.06)，移除背景色 */
   }
+}
+
+@media (max-width: 480px) {
+  /* 新增：与 columns-container 在 480px 下保持一致的内边距 */
+  .home-container {
+    padding: 0 12px;
+  }
+}
+
+/* === 全局覆盖：移除首页及其引用组件中一切背景色 === */
+/* Ant Design 卡片与列表背景清除 */
+.home-page .ant-card,
+.home-page .ant-card .ant-card-body,
+.home-page .ant-card .ant-card-head,
+.home-page .ant-list,
+.home-page .ant-list-item {
+  background: transparent !important;
+}
+
+/* 模块化样式中的背景（如 ColumnTabs/Sidebar/Recommended 等）统一清除 */
+.home-page [class*="tabsBar"],
+.home-page [class*="navBtn"],
+.home-page [class*="tabItem"],
+.home-page [class*="active"],
+.home-page [class*="rank"],
+.home-page [class*="sponsor-icon"],
+.home-page [class*="qr-placeholder"],
+.home-page [class*="item"]:hover {
+  background: transparent !important;
+}
+
+/* TagCard 在首页的背景清除（选中态与计数标签） */
+.home-page .tag-card.selected,
+.home-page .tag-card:active,
+.home-page .tag-count {
+  background: transparent !important;
 }

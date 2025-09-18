@@ -202,3 +202,38 @@
     font-size: 13px;
   }
 }
+
+/* 修复：宽屏下 actions 区域对齐与不换行，避免“浏览量”跑偏 */
+.article-card .ant-card-actions {
+  display: flex; /* 保证子项为等分布局 */
+  align-items: center;
+}
+
+.article-card .ant-card-actions > li {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: left;
+  flex: 1 1 0;    /* 等分伸缩，占据可用宽度 */
+  width: auto;     /* 覆盖 antd 默认宽度，交由 flex 控制 */
+}
+
+/* 禁止 actions 内的内容换行，避免数字换行导致错位 */
+.article-card .ant-card-actions > li .ant-space {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+/* 当存在 3 个操作项时，让第 2 项居中 */
+.article-card .ant-card-actions > li:nth-child(2) {
+  justify-content: center;
+  text-align: center;
+}
+
+/* 最后一项（通常是浏览量或作者）靠右 */
+.article-card .ant-card-actions > li:last-child {
+  justify-content: flex-end;
+  text-align: right;
+}

@@ -31,8 +31,10 @@ interface RewardFormData {
 
 const RewardModal: React.FC = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [form] = Form.useForm();
+  // const [form] = Form.useForm();
   const [submitting, setSubmitting] = useState(false);
+  const [formResetKey, setFormResetKey] = useState(0);
+  const [activeTab, setActiveTab] = useState<string>('wechat');
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -40,7 +42,9 @@ const RewardModal: React.FC = () => {
 
   const handleCancel = () => {
     setIsModalVisible(false);
-    form.resetFields();
+    // form.resetFields();
+    setFormResetKey((k) => k + 1);
+    setActiveTab('wechat');
   };
 
   const handleSubmit = async (values: RewardFormData) => {
@@ -52,7 +56,9 @@ const RewardModal: React.FC = () => {
 
       message.success("感谢您的打赏支持！");
       setIsModalVisible(false);
-      form.resetFields();
+      // form.resetFields();
+      setFormResetKey((k) => k + 1);
+      setActiveTab('wechat');
     } catch (error) {
       message.error("提交失败，请重试。");
     } finally {
@@ -72,11 +78,13 @@ const RewardModal: React.FC = () => {
       children: (
         <div className="payment-tab">
           <div className="qr-container">
-            <QRCode
-              value="wxp://f2f0abcdefghijklmnopqrstuvwxyz123456789"
-              size={200}
-              style={{ margin: "0 auto" }}
-            />
+            {activeTab === 'wechat' && (
+              <QRCode
+                value="wxp://f2f0abcdefghijklmnopqrstuvwxyz123456789"
+                size={200}
+                style={{ margin: "0 auto" }}
+              />
+            )}
           </div>
           <div className="payment-tips">
             <Text type="secondary">请使用微信扫描二维码进行打赏</Text>
@@ -95,11 +103,13 @@ const RewardModal: React.FC = () => {
       children: (
         <div className="payment-tab">
           <div className="qr-container">
-            <QRCode
-              value="https://qr.alipay.com/fkx123456789abcdefghijklmnop"
-              size={200}
-              style={{ margin: "0 auto" }}
-            />
+            {activeTab === 'alipay' && (
+              <QRCode
+                value="https://qr.alipay.com/fkx123456789abcdefghijklmnop"
+                size={200}
+                style={{ margin: "0 auto" }}
+              />
+            )}
           </div>
           <div className="payment-tips">
             <Text type="secondary">请使用支付宝扫描二维码进行打赏</Text>
@@ -118,7 +128,8 @@ const RewardModal: React.FC = () => {
       children: (
         <div className="message-tab">
           <Form
-            form={form}
+            // form={form}
+            key={formResetKey}
             layout="vertical"
             onFinish={handleSubmit}
             autoComplete="off"
@@ -201,26 +212,14 @@ const RewardModal: React.FC = () => {
         width={480}
         className="reward-modal"
         centered
+        destroyOnHidden
       >
         <div className="modal-content">
-          <div className="reward-intro">
-            <Title level={4} style={{ textAlign: "center", marginBottom: 8 }}>
-              感谢您的支持
-            </Title>
-            <Text
-              type="secondary"
-              style={{
-                display: "block",
-                textAlign: "center",
-                marginBottom: 24,
-              }}
-            >
-              您的支持是我创作的最大动力
-            </Text>
-          </div>
-
           <Tabs
-            defaultActiveKey="wechat"
+            activeKey={activeTab}
+            onChange={setActiveTab}
+            destroyInactiveTabPane
+            animated={{ inkBar: true, tabPane: false }}
             items={tabItems}
             centered
             className="reward-tabs"
