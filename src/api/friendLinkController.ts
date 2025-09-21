@@ -17,6 +17,21 @@ export async function addFriendLink(
   });
 }
 
+/** 申请友链 POST /friend/link/apply */
+export async function applyFriendLink(
+  body: API.FriendLinkDto,
+  options?: { [key: string]: any }
+) {
+  return request<API.BaseResponseVoid>("/friend/link/apply", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
 /** 此处后端没有提供注释 POST /friend/link/delete/${param0} */
 export async function deleteFriendLink(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)

@@ -1,12 +1,15 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Menu, Input, Button, Drawer, Avatar, Dropdown } from "antd";
+import { Menu, Input, Button, Drawer, Avatar, Dropdown, Tooltip } from "antd";
 import { SearchOutlined, UserOutlined, MenuOutlined, LogoutOutlined, CrownOutlined,HomeOutlined,FileSearchOutlined,TagsOutlined,InfoCircleOutlined,LinkOutlined,BookOutlined  } from "@ant-design/icons";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/stores/authStore";
 import SearchModal from "@/components/SearchModal";
 import "./styles.css";
+import AIChatIcon from "@/components/AIChatIcon";
+import dynamic from "next/dynamic";
+const AIChatModal = dynamic(() => import("@/components/AIChatModal"), { ssr: false });
 
 interface FrontNavigationProps {
   currentPath?: string;
@@ -60,7 +63,7 @@ const FrontNavigation: React.FC<FrontNavigationProps> = ({
       key: 'admin',
       label: '后台管理',
       icon: <CrownOutlined />,
-      onClick: () => router.push('/admin'),
+      onClick: () => router.push('/admin/dashboard'),
     },
     {
       key: 'logout',
@@ -77,6 +80,8 @@ const FrontNavigation: React.FC<FrontNavigationProps> = ({
       setMobileMenuOpen(false);
     }
   };
+
+  const [chatOpen, setChatOpen] = useState(false);
 
   return (
     <header className="front-navigation">
@@ -113,7 +118,6 @@ const FrontNavigation: React.FC<FrontNavigationProps> = ({
                 <Input
                   placeholder="搜索文章..."
                   prefix={<SearchOutlined />}
-                  className="search-input"
                   onClick={() => setSearchModalVisible(true)}
                   onPressEnter={(e) => {
                     const value = (e.target as HTMLInputElement).value;
@@ -123,6 +127,17 @@ const FrontNavigation: React.FC<FrontNavigationProps> = ({
                   style={{ cursor: 'pointer' }}
                 />
               </div>
+              {/* AI 聊天入口（桌面端） */}
+              <Tooltip title="AI聊天" placement="bottom">
+                <button
+                  type="button"
+                  aria-label="Open AI chat"
+                  className="ai-chat-trigger"
+                  onClick={() => setChatOpen(true)}
+                >
+                  <AIChatIcon size={22} />
+                </button>
+              </Tooltip>
               {isLoggedIn ? (
                 <Dropdown
                   menu={{ items: userMenuItems }}
@@ -131,7 +146,7 @@ const FrontNavigation: React.FC<FrontNavigationProps> = ({
                 >
                   <div className="user-info-container">
                     <Avatar
-                      src={user?.userAvatar}
+                      src={user?.userAvatar || "/assets/avatar.svg"}
                       icon={<UserOutlined />}
                       size={32}
                       className="user-avatar"
@@ -193,11 +208,25 @@ const FrontNavigation: React.FC<FrontNavigationProps> = ({
               prefix={<SearchOutlined />}
               className="mobile-search"
             />
+            {/* AI 聊天入口（移动端） */}
+            <Button
+              type="primary"
+              block
+              className="ai-chat-drawer-btn"
+              icon={<AIChatIcon size={18} />}
+              onClick={() => {
+                setMobileMenuOpen(false);
+                setChatOpen(true);
+              }}
+            >
+              AI 助手
+            </Button>
+
             {isLoggedIn ? (
               <div className="mobile-user-info">
                 <div className="mobile-user-profile">
                   <Avatar
-                    src={user?.userAvatar}
+                    src={user?.userAvatar || "/assets/avatar.svg"}
                     icon={<UserOutlined />}
                     size={40}
                     className="mobile-user-avatar"
@@ -236,6 +265,9 @@ const FrontNavigation: React.FC<FrontNavigationProps> = ({
         onClose={() => setSearchModalVisible(false)}
         defaultKeyword={searchKeyword}
       />
+
+      {/* AI 聊天弹窗（全局挂载一次） */}
+      <AIChatModal open={chatOpen} onClose={() => setChatOpen(false)} />
     </header>
   );
 };

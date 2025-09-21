@@ -43,7 +43,7 @@ interface Comment {
   createTime: string;
   avatar?: string;
   replies?: Comment[]; // 嵌套的回复评论
-  userId?: string; // 新增：评论所属用户ID（用于标记“作者”）
+  userId?: number;
 }
 
 // 统计某条评论的所有子回复数量（递归）
@@ -270,7 +270,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ articleId }) => {
   const fetchComments = async () => {
     setListLoading(true);
     try {
-      const res: any = await getComment({ articleId: Number(articleId) });
+      const res: any = await getComment({ articleId: articleId as any }); // 直接传递字符串，避免精度丢失
       // 兼容 AxiosResponse 和 已被拦截器解包的数据
       const list: API.CommentVo[] = Array.isArray(res?.data)
         ? (res.data as API.CommentVo[])
@@ -298,7 +298,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ articleId }) => {
       const avatarSeed = isLoggedIn ? (currentUser?.username || "user") : values.author;
 
       const payload: API.CommentDto = {
-        articleId: Number(articleId),
+        articleId: articleId as any, // 直接传递字符串，避免精度丢失
         nickname,
         email: email as any, // 登录用户无需填写邮箱，后端可根据会话识别
         content: values.content,
@@ -337,7 +337,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ articleId }) => {
       const avatarSeed = isLoggedIn ? (currentUser?.username || "user") : values.author;
 
       const payload: API.CommentDto = {
-        articleId: Number(articleId),
+        articleId: articleId as any, // 直接传递字符串，避免精度丢失
         nickname,
         email: email as any,
         content: values.content,
@@ -584,15 +584,36 @@ const renderNestedComment = (comment: Comment, replyProps?: any) => {
         <div className="comment-content">
           <div className="comment-header">
             <div className="comment-author-info">
-              <Text strong>
-                {comment.author}
-              </Text>
-              {isAuthor && (
-                <Tag color="gold" style={{ marginLeft: 8 }}>作者</Tag>
-              )}
+              <div className="comment-author-row">
+                <Text strong>
+                  {comment.author}
+                </Text>
+                {isAuthor && (
+                  <Tag color="blue">作者</Tag>
+                )}
+                {isLoggedIn && (
+                  <Popconfirm
+                    title="确定要删除这条评论吗？"
+                    onConfirm={() => handleDeleteComment(comment.id!)}
+                    okText="确定"
+                    cancelText="取消"
+                  >
+                    <Button
+                      type="text"
+                      icon={<DeleteOutlined />}
+                      className="comment-delete-btn"
+                      size="small"
+                      style={{ color: 'red' }}
+                    />
+                  </Popconfirm>
+                )}
+              </div>
 
-              {/* 用户信息 */}
-              <div className="user-details">
+              {/* 用户信息 - 在同一行显示 */}
+              <div className="comment-info-row">
+                <Text type="secondary" className="comment-createTime">
+                  🕰️ {dayjs(comment.createTime).format('YYYY-MM-DD HH:mm')}
+                </Text>
                 {comment.email && (
                   <Text type="secondary" className="user-email">
                     📧 {comment.email}
@@ -613,29 +634,11 @@ const renderNestedComment = (comment: Comment, replyProps?: any) => {
                     🌐 {comment.website}
                   </a>
                 )}
-                <Text type="secondary" className="comment-createTime">
-                  🕰️ {dayjs(comment.createTime).format('YYYY-MM-DD HH:mm')}
-                </Text>
-                {isLoggedIn && (
-                  <Popconfirm
-                    title="确定要删除这条评论吗？"
-                    onConfirm={() => handleDeleteComment(comment.id!)}
-                    okText="确定"
-                    cancelText="取消"
-                  >
-                    <Button
-                      type="text"
-                      icon={<DeleteOutlined />}
-                      className="comment-delete-btn"
-                      size="small"
-                      style={{ color: 'red', marginLeft: '8px' }}
-                    />
-                  </Popconfirm>
-                )}
               </div>
             </div>
           </div>
 
+          {/* 评论内容 - 另起一行 */}
           <div className="comment-text">{comment.content}</div>
 
           <div className="comment-actions">
@@ -652,7 +655,7 @@ const renderNestedComment = (comment: Comment, replyProps?: any) => {
 
           {/* 回复表单 */}
           {isReplying && replyForm && (
-            <div className="reply-form" style={{ marginTop: 16 }}>
+            <div className="reply-form-flat" style={{ marginTop: 16 }}>
               <Card size="small" className="reply-form-card">
                 <Form
                   form={replyForm}
@@ -751,7 +754,7 @@ const renderNestedComment = (comment: Comment, replyProps?: any) => {
                   {showReplyEmojiPicker && (
                     <div style={{ marginTop: 8 }}>
                       <Space wrap size={[6, 6]}>
-                        {emojis.map((emoji) => (
+                        {emojis.map((emoji: any) => (
                           <Button
                             key={emoji}
                             size="small"
@@ -828,24 +831,59 @@ const renderFlatComment = (comment: FlatComment, replyProps?: any) => {
                     {comment.author}
                   </Text>
                   {isAuthor && (
-                    <Tag color="gold" style={{ marginLeft: 8 }}>作者</Tag>
+                    <Tag color="blue">作者</Tag>
                   )}
                   <Text type="secondary">回复</Text>
                   <Text strong>@{comment.replyTo.author}</Text>
+                  {isLoggedIn && (
+                    <Popconfirm
+                      title="确定要删除这条评论吗？"
+                      onConfirm={() => handleDeleteComment(comment.id!)}
+                      okText="确定"
+                      cancelText="取消"
+                    >
+                      <Button
+                        type="text"
+                        icon={<DeleteOutlined />}
+                        className="comment-delete-btn"
+                        size="small"
+                        style={{ color: 'red' }}
+                      />
+                    </Popconfirm>
+                  )}
                 </div>
               ) : (
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <div className="comment-author-row">
                   <Text strong style={{ fontSize: "16px" }}>
                     {comment.author}
                   </Text>
                   {isAuthor && (
-                    <Tag color="gold">作者</Tag>
+                    <Tag color="blue">作者</Tag>
+                  )}
+                  {isLoggedIn && (
+                    <Popconfirm
+                      title="确定要删除这条评论吗？"
+                      onConfirm={() => handleDeleteComment(comment.id!)}
+                      okText="确定"
+                      cancelText="取消"
+                    >
+                      <Button
+                        type="text"
+                        icon={<DeleteOutlined />}
+                        className="comment-delete-btn"
+                        size="small"
+                        style={{ color: 'red' }}
+                      />
+                    </Popconfirm>
                   )}
                 </div>
               )}
 
-              {/* 用户信息 */}
-              <div className="user-details">
+              {/* 用户信息 - 在同一行显示 */}
+              <div className="comment-info-row">
+                <Text type="secondary" className="comment-createTime">
+                  🕰️ {dayjs(comment.createTime).format('YYYY-MM-DD HH:mm')}
+                </Text>
                 {comment.email && (
                   <Text type="secondary" className="user-email">
                     📧 {comment.email}
@@ -866,29 +904,11 @@ const renderFlatComment = (comment: FlatComment, replyProps?: any) => {
                     🌐 {comment.website}
                   </a>
                 )}
-                <Text type="secondary" className="comment-createTime">
-                  🕰️ {dayjs(comment.createTime).format('YYYY-MM-DD HH:mm')}
-                </Text>
-                {isLoggedIn && (
-                  <Popconfirm
-                    title="确定要删除这条评论吗？"
-                    onConfirm={() => handleDeleteComment(comment.id!)}
-                    okText="确定"
-                    cancelText="取消"
-                  >
-                    <Button
-                      type="text"
-                      icon={<DeleteOutlined />}
-                      className="comment-delete-btn"
-                      size="small"
-                      style={{ color: 'red', marginLeft: '8px' }}
-                    />
-                  </Popconfirm>
-                )}
               </div>
             </div>
           </div>
 
+          {/* 评论内容 - 另起一行 */}
           <div className="comment-text-flat">{comment.content}</div>
 
           <div className="comment-actions-flat">

@@ -32,6 +32,7 @@ import {
   getAllArticles,
   getArticleVoById,
   updateArticle,
+  deleteArticle,
 } from "@/api/articleController";
 import { formatDate } from "@/utils";
 import { getColumnPage } from "@/api/columnController";
@@ -215,9 +216,27 @@ const ArticleManagement: React.FC = () => {
     setModalVisible(true);
   };
 
-  const handleDelete = (id: number) => {
-    setArticles(articles.filter((article) => article.id !== id));
-    message.success("文章删除成功");
+  const handleDelete = async (id: number) => {
+    // 检查id是否有效
+    if (!id || id <= 0) {
+      message.error("无效的文章ID");
+      return;
+    }
+    
+    try {
+      setLoading(true);
+      const res: any = await deleteArticle(id);
+      if (res?.code === 0) {
+        message.success("文章删除成功");
+        await getArticles(pageCurrent, pageSize);
+      } else {
+        message.error(res?.message || "文章删除失败");
+      }
+    } catch (e: any) {
+      message.error(e?.message || "文章删除失败，请稍后重试");
+    } finally {
+      setLoading(false);
+    }
   };
 
   // 下载 Markdown：优先使用当前列表项的 content，否则拉取详情
@@ -473,7 +492,14 @@ const ArticleManagement: React.FC = () => {
           </Button>
           <Popconfirm
             title="确定要删除这篇文章吗？"
-            onConfirm={() => handleDelete(record.id)}
+            onConfirm={() => {
+              // 确保传入有效的ID
+              if (record.id && record.id > 0) {
+                handleDelete(record.id);
+              } else {
+                message.error("无效的文章ID");
+              }
+            }}
             okText="确定"
             cancelText="取消"
           >

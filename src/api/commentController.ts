@@ -44,3 +44,16 @@ export async function submitComment(
     ...(options || {}),
   });
 }
+
+/** 评论管理分页 POST /comment/page */
+export async function getCommentPage(
+  body: API.CommentRequest,
+  options?: { [key: string]: any }
+) {
+  return request<API.BaseResponsePageCommentAdminVo>("/comment/page", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    data: body,
+    ...(options || {}),
+  });
+}

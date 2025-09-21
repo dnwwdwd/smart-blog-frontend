@@ -24,43 +24,12 @@
     max-height: 600px;
 }
 
-/* 搜索输入框 */
-.search-input {
-    margin: 20px auto 0 auto;
-    transition: all 0.3s ease;
-    width: calc(100% - 48px);
-    max-width: 100%;
-    display: block;
-}
-
-.search-input .ant-input {
-    font-size: 16px;
-    padding: 12px 16px;
-    width: 100%;
-}
-
 /* 搜索标签页 */
 .search-tabs {
     flex: 1;
     margin: 16px 24px 24px 24px;
     display: flex;
     flex-direction: column;
-}
-
-.search-tabs .ant-tabs-content-holder {
-    flex: 1;
-    overflow: hidden;
-}
-
-.search-tabs .ant-tabs-tabpane {
-    height: 100%;
-    overflow: hidden;
-}
-
-.search-tabs .ant-tabs-nav {
-    margin-bottom: 16px;
-}
-
 .search-tabs .ant-tabs-tab {
     padding: 8px 16px;
     font-weight: 500;
@@ -218,8 +187,13 @@
     }
 
     .search-input {
-        width: 500px;
-        margin: 16px 32px 0 16px;
+        width: calc(100% - 32px);
+        margin: 16px auto 0 auto;
+    }
+
+    .search-input .ant-input-affix-wrapper {
+        font-size: 14px;
+        padding: 6px 12px;
     }
 
     .search-tabs {
@@ -240,16 +214,6 @@
     .search-item-count {
         align-self: flex-end;
     }
-}
-
-@media (max-width: 480px) {
-    .search-modal {
-        top: 0;
-        margin: 0;
-    }
-
-    .search-modal .ant-modal-content {
-        margin: 0;
         height: 100vh;
         border-radius: 0;
     }

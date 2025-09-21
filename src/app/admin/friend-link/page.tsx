@@ -18,6 +18,9 @@ import {
   Table,
   Tag,
   Upload,
+  List,
+  Popover,
+  Tooltip,
 } from "antd";
 import {
   DeleteOutlined,
@@ -26,6 +29,10 @@ import {
   PlusOutlined,
   SearchOutlined,
   UserOutlined,
+  GithubOutlined,
+  QqOutlined,
+  WechatOutlined,
+  XOutlined,
 } from "@ant-design/icons";
 import type { ColumnsType } from "antd/es/table";
 import {
@@ -36,6 +43,8 @@ import {
 } from "@/api/friendLinkController";
 import "./styles.css";
 import "@ant-design/v5-patch-for-react-19";
+import { formatDateTime } from "@/utils";
+import type { FormInstance } from "antd";
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -143,14 +152,16 @@ const FriendLinkManagement: React.FC = () => {
       isSpecial: record.isSpecial,
       sortOrder: record.sortOrder,
       status: record.status,
+      statusLabel: record.statusLabel || "",
+      socialLinks: record.socialLinks || [],
     });
     // 设置现有头像到文件列表
     if (record.avatar) {
       setFileList([
         {
-          uid: '-1',
-          name: 'avatar.jpg',
-          status: 'done',
+          uid: "-1",
+          name: "avatar.jpg",
+          status: "done",
           url: record.avatar,
         },
       ]);
@@ -191,7 +202,6 @@ const FriendLinkManagement: React.FC = () => {
       } else {
         response = (await addFriendLink({
           ...values,
-          socialLinks: [], // 暂时为空数组
         })) as any;
       }
 
@@ -260,6 +270,15 @@ const FriendLinkManagement: React.FC = () => {
       ),
     },
     {
+      title: "社交",
+      dataIndex: "socialLinks",
+      key: "socialLinks",
+      width: 300,
+      render: (_: any, record) => (
+        <SocialLinksCell links={record.socialLinks} />
+      ),
+    },
+    {
       title: "特殊标记",
       dataIndex: "isSpecial",
       key: "isSpecial",
@@ -269,6 +288,17 @@ const FriendLinkManagement: React.FC = () => {
           status={isSpecial ? "success" : "default"}
           text={isSpecial ? "特殊" : "普通"}
         />
+      ),
+    },
+    {
+      title: "状态",
+      dataIndex: "status",
+      key: "status",
+      width: 100,
+      render: (status: number) => (
+        <Tag color={status === 1 ? "blue" : "gold"}>
+          {status === 1 ? "正常" : "待审核"}
+        </Tag>
       ),
     },
     {
@@ -307,6 +337,8 @@ const FriendLinkManagement: React.FC = () => {
       key: "createdTime",
       width: 150,
       sorter: true,
+      render: (createdTime: string) =>
+        createdTime ? formatDateTime(createdTime) : "-",
     },
     {
       title: "操作",
@@ -412,6 +444,7 @@ const FriendLinkManagement: React.FC = () => {
         onCancel={() => setIsModalVisible(false)}
         width={600}
         destroyOnHidden
+        zIndex={2000}
       >
         <Form
           form={form}
@@ -494,9 +527,150 @@ const FriendLinkManagement: React.FC = () => {
               <Option value={0}>禁用</Option>
             </Select>
           </Form.Item>
+
+          <Form.Item name="statusLabel" label="状态标签">
+            <Select placeholder="请选择状态标签">
+              <Option value="">无</Option>
+              <Option value="VIP">VIP</Option>
+              <Option value="PREMIUM">PREMIUM</Option>
+            </Select>
+          </Form.Item>
+
+          {/* 社交链接 */}
+          <Form.Item label="社交链接">
+            <SocialLinksEditor form={form} />
+          </Form.Item>
         </Form>
       </Modal>
     </div>
+  );
+};
+
+// 社交链接编辑器组件
+const SocialLinksEditor: React.FC<{ form: FormInstance }> = ({ form }) => {
+  const [socialLinks, setSocialLinks] = useState<any[]>([]);
+
+  // 初始化社交链接
+  useEffect(() => {
+    const initialValues = form.getFieldsValue();
+    if (initialValues.socialLinks && initialValues.socialLinks.length > 0) {
+      setSocialLinks(initialValues.socialLinks);
+    }
+  }, [form]);
+
+  // 添加社交链接
+  const addSocialLink = () => {
+    const newLinks = [...socialLinks, { iconType: 'github', iconUrl: '' }];
+    setSocialLinks(newLinks);
+    form.setFieldsValue({ socialLinks: newLinks });
+  };
+
+  // 更新社交链接
+  const updateSocialLink = (index: number, field: string, value: string) => {
+    const newLinks = [...socialLinks];
+    newLinks[index] = { ...newLinks[index], [field]: value };
+    setSocialLinks(newLinks);
+    form.setFieldsValue({ socialLinks: newLinks });
+  };
+
+  // 删除社交链接
+  const removeSocialLink = (index: number) => {
+    const newLinks = socialLinks.filter((_, i) => i !== index);
+    setSocialLinks(newLinks);
+    form.setFieldsValue({ socialLinks: newLinks });
+  };
+
+  // 图标选项
+  const iconOptions = [
+    { value: 'github', label: 'GitHub' },
+    { value: 'wechat', label: '微信' },
+    { value: 'qq', label: 'QQ' },
+    { value: 'x', label: 'X (Twitter)' },
+  ];
+
+  return (
+    <div className="social-links-editor">
+      <List
+        dataSource={socialLinks}
+        renderItem={(link, index) => (
+          <List.Item className="social-link-item">
+            <div className="social-link-form">
+              <Select
+                value={link.iconType}
+                onChange={(value) => updateSocialLink(index, 'iconType', value)}
+                style={{ width: 120, marginRight: 8 }}
+                options={iconOptions}
+              />
+              <Input
+                placeholder="请输入链接地址"
+                value={link.iconUrl}
+                onChange={(e) => updateSocialLink(index, 'iconUrl', e.target.value)}
+                style={{ flex: 1, marginRight: 8 }}
+              />
+              <Button
+                danger
+                onClick={() => removeSocialLink(index)}
+              >
+                删除
+              </Button>
+            </div>
+          </List.Item>
+        )}
+      />
+      <Button
+        type="dashed"
+        onClick={addSocialLink}
+        block
+        style={{ marginTop: 8 }}
+      >
+        添加社交链接
+      </Button>
+    </div>
+  );
+};
+
+// 社交链接展示单元格组件
+const SocialLinksCell: React.FC<{ links?: Array<{ iconType: string; iconUrl: string }> }> = ({ links }) => {
+  if (!links || links.length === 0) {
+    return <span style={{ color: '#999' }}>-</span>;
+  }
+
+  const iconMeta: Record<string, { label: string; color: string; textColor?: string; icon: React.ReactNode }> = {
+    github: { label: 'GitHub', color: '#24292e', textColor: '#fff', icon: <GithubOutlined /> },
+    wechat: { label: '微信', color: '#1AAD19', textColor: '#fff', icon: <WechatOutlined /> },
+    qq: { label: 'QQ', color: '#12B7F5', textColor: '#fff', icon: <QqOutlined /> },
+    x: { label: 'X', color: '#000000', textColor: '#fff', icon: <XOutlined /> },
+  };
+
+  return (
+    <Space className="social-links-cell" size={8} wrap>
+      {links
+        .filter(item => Boolean(item.iconUrl))
+        .map((item, idx) => {
+          const meta = iconMeta[item.iconType] || { label: item.iconType, color: '#999', textColor: '#fff', icon: <LinkOutlined /> };
+          return (
+            <Tooltip title={item.iconUrl} key={`${item.iconType}-${idx}`}>
+              <a href={item.iconUrl} target="_blank" rel="noopener noreferrer">
+                <Tag
+                  color={meta.color}
+                  icon={meta.icon}
+                  style={{
+                    color: meta.textColor || '#fff',
+                    border: 'none',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: 6,
+                    padding: '4px 10px',
+                    fontWeight: 500,
+                  }}
+                >
+                  {meta.label}
+                </Tag>
+              </a>
+            </Tooltip>
+          );
+        })}
+    </Space>
   );
 };
 

@@ -1,309 +1,335 @@
 .friends-page {
-  min-height: 100vh;
-  position: relative;
-  overflow-x: hidden;
-  padding: 40px 20px;
-}
-
-.friends-page::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: 
-    radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 40% 40%, rgba(120, 119, 198, 0.2) 0%, transparent 50%);
-  pointer-events: none;
+    padding: 24px;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .links-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 40px 20px;
-  position: relative;
-  z-index: 1;
+    width: 100%;
 }
 
-/* 页面头部 */
+/* 页面头部样式 */
 .page-header {
-  text-align: center;
-  margin-bottom: 60px;
-  padding: 40px 0;
+    text-align: center;
+    margin-bottom: 32px;
 }
 
 .page-title {
-  font-size: 3.5rem !important;
-  font-weight: 700 !important;
-  margin-bottom: 20px !important;
-  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-  animation: title-glow 3s ease-in-out infinite alternate;
+    font-size: 28px;
+    font-weight: 600;
+    color: #1f2d3d;
+    margin-bottom: 16px !important;
 }
 
 .page-description {
-  color: #000000 !important;
-  font-size: 1.2rem !important;
-  max-width: 600px;
-  margin: 0 auto !important;
-  line-height: 1.6;
-  text-shadow: none;
+    font-size: 16px;
+    color: #666;
+    max-width: 600px;
+    margin: 0 auto !important;
+    line-height: 1.6;
 }
 
-/* 搜索区域 */
+/* 搜索区域样式 */
 .search-section {
-  margin-bottom: 50px;
-  display: flex;
-  justify-content: center;
+    margin-bottom: 32px;
+    display: flex;
+    justify-content: center;
 }
 
 .search-container {
-  position: relative;
-  max-width: 500px;
-  width: 100%;
+    width: 100%;
+    max-width: 500px;
 }
 
-.search-input {
-  width: 100%;
-  padding: 16px 24px;
-  border: none;
-  border-radius: 50px;
-  font-size: 16px;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
-  outline: none;
+.search-input-antd {
+    border-radius: 8px !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    transition: all 0.3s;
 }
 
-.search-input:focus {
-  background: rgba(255, 255, 255, 1);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
-  transform: translateY(-2px);
+.search-input-antd:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.search-input::placeholder {
-  color: #999;
+.search-input-antd:focus, .search-input-antd:focus-within {
+    box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
 }
 
-/* 友链网格 */
+/* 友链网格样式 */
 .friends-grid {
-  margin-bottom: 80px;
+    margin-bottom: 40px;
 }
 
 .friend-col {
-  display: flex;
-  justify-content: center;
+    display: flex;
 }
 
-/* 分页信息区域 */
-.pagination-info {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 16px;
-  color: #666;
-  font-size: 14px;
+/* 现代化申请友链卡片样式 */
+.apply-section {
+    margin-top: 40px;
+    display: flex;
+    justify-content: center;
 }
 
-/* 错误提示区域 */
-.error-section {
-  margin: 20px 0;
+.apply-card-modern {
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border: 1px solid #f0f0f0;
+    max-width: 600px;
+    width: 100%;
+    transition: all 0.3s ease;
 }
 
-/* 加载状态 */
-.loading-section {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 60px 20px;
-  color: #666;
+.apply-card-modern:hover {
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px);
 }
 
+.apply-card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.apply-title-modern {
+    font-size: 22px !important;
+    font-weight: 600 !important;
+    color: #1f2d3d !important;
+    margin: 0 !important;
+}
+
+.apply-description-modern {
+    font-size: 15px;
+    color: #555;
+    margin-bottom: 24px !important;
+    line-height: 1.6;
+}
+
+.apply-requirements-modern {
+    background: #fafafa;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 24px;
+}
+
+.requirements-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.requirements-header h4 {
+    font-size: 17px;
+    font-weight: 600;
+    color: #1f2d3d;
+    margin: 0;
+}
+
+.requirements-count {
+    font-size: 14px;
+    color: #1890ff;
+    font-weight: 500;
+    background: rgba(24, 144, 255, 0.1);
+    padding: 2px 8px;
+    border-radius: 12px;
+}
+
+.requirement-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.requirement-item-modern {
+    padding: 8px 0;
+}
+
+.requirement-text {
+    font-size: 14px;
+    color: #333;
+    line-height: 1.5;
+}
+
+.requirement-item-modern .ant-checkbox-wrapper {
+    align-items: flex-start;
+}
+
+.requirement-item-modern .ant-checkbox-wrapper:hover .requirement-text {
+    color: #1890ff;
+}
+
+.apply-button-modern {
+    height: 46px;
+    font-size: 16px;
+    font-weight: 500;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #1890ff, #52c41a);
+    border: none;
+    box-shadow: 0 4px 12px rgba(24, 144, 255, 0.3);
+    transition: all 0.3s;
+}
+
+.apply-button-modern:hover:not(:disabled) {
+    box-shadow: 0 6px 16px rgba(24, 144, 255, 0.4);
+    transform: translateY(-1px);
+}
+
+.apply-button-modern:disabled {
+    background: #f5f5f5;
+    color: #999;
+    box-shadow: none;
+}
+
+.apply-note {
+    text-align: center;
+    margin-top: 16px;
+}
+
+.apply-note span {
+    font-size: 13px;
+    color: #888;
+    line-height: 1.5;
+}
+
+/* 弹窗样式 */
+.apply-modal .ant-modal-content {
+    border-radius: 12px;
+}
+
+.apply-modal .ant-modal-header {
+    border-radius: 12px 12px 0 0;
+    background: #fafafa;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.apply-modal .ant-modal-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1f2d3d;
+}
+
+/* 加载状态样式 */
+.loading-section,
 .load-more-section {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  color: #666;
-}
-
-.no-more-section {
-  text-align: center;
-  padding: 20px;
+    text-align: center;
+    padding: 40px 0;
 }
 
 .manual-load-more {
-  text-align: center;
-  margin: 20px 0;
+    margin: 20px 0;
 }
 
-/* 申请友链区域 */
-.apply-section {
-  display: flex;
-  justify-content: center;
-}
-
-.apply-card {
-  max-width: 800px;
-  width: 100%;
-  border-radius: 20px !important;
-  background: rgba(255, 255, 255, 0.95) !important;
-  backdrop-filter: blur(10px);
-  border: none !important;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1) !important;
-  overflow: hidden;
-}
-
-.apply-card .ant-card-body {
-  padding: 40px !important;
-}
-
-.apply-title {
-  color: #333 !important;
-  text-align: center;
-  margin-bottom: 20px !important;
-  font-size: 2rem !important;
-  font-weight: 600 !important;
-}
-
-.apply-description {
-  text-align: center;
-  color: #666 !important;
-  font-size: 1.1rem !important;
-  margin-bottom: 30px !important;
-  line-height: 1.6;
-}
-
-.apply-requirements {
-  margin-bottom: 30px;
-}
-
-.apply-requirements h4 {
-  color: #333;
-  font-size: 1.2rem;
-  margin-bottom: 15px;
-  font-weight: 600;
-}
-
-.apply-requirements ul {
-  list-style: none;
-  padding: 0;
-}
-
-.apply-requirements li {
-  color: #555;
-  padding: 8px 0;
-  padding-left: 24px;
-  position: relative;
-  line-height: 1.5;
-}
-
-.apply-requirements li::before {
-  content: '✓';
-  position: absolute;
-  left: 0;
-  color: #52c41a;
-  font-weight: bold;
-}
-
-.contact-info {
-  background: linear-gradient(135deg, #f6f9fc 0%, #e9f4ff 100%);
-  padding: 24px;
-  border-radius: 12px;
-  border-left: 4px solid #1890ff;
-}
-
-.contact-info p {
-  margin: 8px 0;
-  color: #333;
-  line-height: 1.6;
-}
-
-.contact-info strong {
-  color: #1890ff;
-  font-size: 1.1rem;
-}
-
-/* 动画效果 */
-@keyframes title-glow {
-  0% {
-    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-  }
-  100% {
-    text-shadow: 
-      0 4px 8px rgba(0, 0, 0, 0.3),
-      0 0 20px rgba(255, 255, 255, 0.5),
-      0 0 30px rgba(255, 255, 255, 0.3);
-  }
+.no-more-section {
+    margin: 20px 0;
 }
 
 /* 响应式设计 */
-@media (max-width: 1200px) {
-  .links-container {
-    padding: 30px 15px;
-  }
-}
-
 @media (max-width: 768px) {
-  .page-title {
-    font-size: 2.5rem !important;
-  }
-  
-  .page-description {
-    font-size: 1rem !important;
-    padding: 0 20px;
-  }
-  
-  .search-input {
-    padding: 14px 20px;
-    font-size: 14px;
-  }
-  
-  .apply-card .ant-card-body {
-    padding: 24px !important;
-  }
-  
-  .apply-title {
-    font-size: 1.5rem !important;
-  }
-  
-  .apply-description {
-    font-size: 1rem !important;
-  }
-  
-  .contact-info {
-    padding: 16px;
-  }
-  
-  .pagination-info {
-    flex-direction: column;
-    gap: 8px;
-  }
-  
-  .loading-section {
-    padding: 40px 20px;
-  }
+    .friends-page {
+        padding: 16px;
+    }
+
+    .page-header {
+        margin-bottom: 24px;
+    }
+
+    .page-title {
+        font-size: 24px;
+        margin-bottom: 12px !important;
+    }
+
+    .page-description {
+        font-size: 14px;
+    }
+
+    .search-section {
+        margin-bottom: 24px;
+    }
+
+    .search-container {
+        max-width: 100%;
+    }
+
+    .apply-section {
+        margin-top: 32px;
+    }
+
+    .apply-card-modern {
+        padding: 20px;
+    }
+
+    .apply-title-modern {
+        font-size: 20px !important;
+    }
+
+    .apply-description-modern {
+        font-size: 14px;
+        margin-bottom: 20px !important;
+    }
+
+    .apply-requirements-modern {
+        padding: 16px;
+    }
+
+    .requirements-header h4 {
+        font-size: 16px;
+    }
+
+    .requirement-text {
+        font-size: 13px;
+    }
+
+    .apply-button-modern {
+        height: 42px;
+        font-size: 15px;
+    }
+
+    .apply-note span {
+        font-size: 12px;
+    }
 }
 
 @media (max-width: 480px) {
-  .links-container {
-    padding: 20px 10px;
-  }
-  
-  .page-header {
-    padding: 20px 0;
-    margin-bottom: 40px;
-  }
-  
-  .page-title {
-    font-size: 2rem !important;
-  }
-  
-  .friends-grid {
-    margin-bottom: 50px;
-  }
+    .friends-page {
+        padding: 12px;
+    }
+
+    .page-title {
+        font-size: 22px;
+    }
+
+    .page-description {
+        font-size: 13px;
+    }
+
+    .apply-card-modern {
+        padding: 16px;
+    }
+
+    .apply-title-modern {
+        font-size: 18px !important;
+    }
+
+    .apply-description-modern {
+        font-size: 13px;
+    }
+
+    .apply-requirements-modern {
+        padding: 12px;
+    }
+
+    .requirements-header h4 {
+        font-size: 15px;
+    }
+
+    .requirement-text {
+        font-size: 12px;
+    }
+
+    .apply-button-modern {
+        height: 40px;
+        font-size: 14px;
+    }
 }

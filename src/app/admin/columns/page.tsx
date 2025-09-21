@@ -232,10 +232,16 @@ const ColumnManagement: React.FC = () => {
     setModalVisible(true);
   };
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (id: number | undefined) => {
+    // 检查id是否有效
+    if (!id || id <= 0) {
+      message.error("无效的专栏ID");
+      return;
+    }
+    
     try {
       // @ts-ignore 生成的 deleteColumn 类型签名与此处使用不匹配，忽略类型检查
-      const response = (await deleteColumn(id)) as any;
+      const response = (await deleteColumn({ columnId: id })) as any;
       if (response?.code === 0) {
         message.success("专栏删除成功");
         fetchColumns(); // 重新获取数据
@@ -255,12 +261,12 @@ const ColumnManagement: React.FC = () => {
         const response = await updateColumn({
           id: editingColumn.id,
           ...values,
-        });
-        if (response.data?.code === 0) {
+        }) as any;
+        if (response.code === 0) {
           message.success("专栏更新成功");
-          fetchColumns(); // 重新获取数据
+          fetchColumns();
         } else {
-          message.error(response.data?.message || "更新失败");
+          message.error(response?.message || "更新失败");
         }
       } else {
         // 新增专栏
@@ -420,8 +426,12 @@ const ColumnManagement: React.FC = () => {
             title="确定要删除这个专栏吗？"
             description="删除后专栏下的所有文章关联也会被移除"
             onConfirm={() => {
-              // @ts-ignore id 可能为 undefined，这里忽略类型检查
-              handleDelete(record.id);
+              // 确保传入有效的ID
+              if (record.id && record.id > 0) {
+                handleDelete(record.id);
+              } else {
+                message.error("无效的专栏ID");
+              }
             }}
             okText="确定"
             cancelText="取消"

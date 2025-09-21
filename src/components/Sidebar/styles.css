@@ -27,6 +27,11 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
+.user-details{
+  display: flex;
+  flex-direction: column;
+}
+
 .user-badge {
   position: absolute;
   bottom: -2px;
@@ -45,7 +50,6 @@
 .user-subtitle {
   display: block;
   font-size: 13px;
-  margin-bottom: 16px;
 }
 
 .user-actions {

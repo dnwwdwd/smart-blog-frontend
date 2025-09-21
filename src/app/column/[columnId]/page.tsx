@@ -18,7 +18,7 @@ interface Props {
   }>;
 }
 
-export default async function ColumnDetailPage({ params }: Props) {
+const ColumnDetailPage = async ({ params }: Props) => {
   const { columnId } = await params;
   let column: API.ColumnVo | null = null;
   let columnArticles: API.ArticleVo[] = [];
@@ -26,7 +26,7 @@ export default async function ColumnDetailPage({ params }: Props) {
     const columnRes = await getColumnById({ columnId: Number(columnId) });
     column = (columnRes.data ?? null) as API.ColumnVo | null;
   } catch (e) {
-    console.log(e);
+    console.warn("获取专栏详情失败:", e);
   }
 
   try {
@@ -37,7 +37,7 @@ export default async function ColumnDetailPage({ params }: Props) {
     const pageData = (pageRes.data ?? {}) as API.PageArticleVo;
     columnArticles = pageData.records ?? [];
   } catch (e) {
-    console.log(e);
+    console.warn("获取专栏文章列表失败:", e);
   }
 
   if (!column) {
@@ -88,12 +88,6 @@ export default async function ColumnDetailPage({ params }: Props) {
                     prefix={<CalendarOutlined />}
                     valueStyle={{ fontSize: "16px" }}
                   />
-                  {/*<Statistic*/}
-                  {/*  title="阅读量"*/}
-                  {/*  value={column.viewCount}*/}
-                  {/*  prefix={<EyeOutlined />}*/}
-                  {/*  valueStyle={{ fontSize: "16px" }}*/}
-                  {/*/>*/}
                 </div>
               </div>
             </div>
@@ -116,4 +110,6 @@ export default async function ColumnDetailPage({ params }: Props) {
       </Row>
     </div>
   );
-}
+};
+
+export default ColumnDetailPage;

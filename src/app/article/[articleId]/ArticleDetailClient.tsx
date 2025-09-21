@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Alert, Card, Col, Divider, Row, Space, Tag } from "antd";
 import {
   CalendarOutlined,
@@ -9,7 +9,7 @@ import {
 } from "@ant-design/icons";
 import ReactMarkdown, { Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
-import rehypeSanitize from "rehype-sanitize";
+import rehypeRaw from "rehype-raw";
 import Title from "antd/es/typography/Title";
 import Paragraph from "antd/es/typography/Paragraph";
 import Sidebar from "@/components/Sidebar/page";
@@ -20,9 +20,16 @@ import RewardModal from "@/components/RewardModal";
 import { useLoading } from "@/contexts/LoadingContext";
 import { formatDate } from "@/utils";
 
+type TocItem = {
+  key: string;
+  href: string;
+  title: string;
+  level: number;
+};
+
 interface ArticleDetailClientProps {
   article: any;
-  tocItems: any[];
+  tocItems: TocItem[];
 }
 
 export default function ArticleDetailClient({ article, tocItems }: ArticleDetailClientProps) {
@@ -33,9 +40,6 @@ export default function ArticleDetailClient({ article, tocItems }: ArticleDetail
     finishPageTransition();
   }, [finishPageTransition]);
 
-  // 生成目录 - 确保 content 存在
-  const headingCounts = new Map<string, number>();
-
   if (!article) {
     return (
       <div style={{ textAlign: "center", padding: "100px 20px" }}>
@@ -45,9 +49,11 @@ export default function ArticleDetailClient({ article, tocItems }: ArticleDetail
     );
   }
 
+  const headingCounts = new Map<string, number>();
+
   return (
     <div className="article-detail-page">
-       <div className="article-detail-container">
+      <div className="article-detail-container">
         <Row gutter={[24, 24]}>
           {/* 左侧文章内容 */}
           <Col xs={24} lg={16}>
@@ -95,7 +101,7 @@ export default function ArticleDetailClient({ article, tocItems }: ArticleDetail
               <div className="article-detail-body">
                 <ReactMarkdown
                   remarkPlugins={[remarkGfm]}
-                  rehypePlugins={[rehypeSanitize]}
+                  rehypePlugins={[rehypeRaw]}
                   components={{
                     h1: ({ children, ...props }) => {
                       const text = extractText(children);
@@ -223,15 +229,7 @@ export default function ArticleDetailClient({ article, tocItems }: ArticleDetail
             <div className="article-detail-sidebar">
               <Card title="📋 目录" style={{ marginBottom: 16 }} className="toc-card">
                 {tocItems.length > 0 ? (
-                  <nav className="custom-toc" aria-label="文章目录">
-                    <ul>
-                      {tocItems.map((item) => (
-                        <li key={item.key} className={`toc-level-${item.level}`}>
-                          <a href={item.href}>{item.title}</a>
-                        </li>
-                      ))}
-                    </ul>
-                  </nav>
+                  <ArticleOutline tocItems={tocItems} />
                 ) : (
                   <p>暂无目录</p>
                 )}
@@ -266,3 +264,132 @@ const slugify = (text: string) =>
     .replace(/[^\p{L}\p{N}\s\-_]/gu, "") // keep letters/numbers/space/-/_
     .replace(/\s+/g, "-")
     .replace(/-+/g, "-");
+
+const ArticleOutline: React.FC<{ tocItems: TocItem[] }> = ({ tocItems }) => {
+  const [activeHash, setActiveHash] = useState<string>(() => tocItems[0]?.href ?? "");
+
+  useEffect(() => {
+    if (!tocItems.length) return;
+    if (typeof window !== "undefined" && window.location.hash) {
+      return;
+    }
+    setActiveHash(tocItems[0]?.href ?? "");
+  }, [tocItems]);
+
+  const scrollToHash = useCallback((hash: string, updateHistory = true) => {
+    if (typeof window === "undefined") return;
+    if (!hash) return;
+
+    const raw = hash.startsWith("#") ? hash.slice(1) : hash;
+    const decodedId = decodeURIComponent(raw);
+    const target = document.getElementById(decodedId);
+
+    if (!target) return;
+
+    target.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" });
+
+    if (updateHistory && window.location.hash !== `#${decodedId}`) {
+      window.history.pushState(null, "", `#${decodedId}`);
+    }
+
+    setActiveHash(`#${decodedId}`);
+  }, []);
+
+  useEffect(() => {
+    if (!tocItems.length || typeof window === "undefined") return;
+
+    const headings = tocItems
+      .map((item) => document.getElementById(item.href.replace(/^#/, "")))
+      .filter((el): el is HTMLElement => Boolean(el));
+
+    if (!headings.length) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const inView = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => (a.target as HTMLElement).offsetTop - (b.target as HTMLElement).offsetTop);
+
+        if (inView.length > 0) {
+          const id = inView[0].target.id;
+          setActiveHash(`#${id}`);
+        } else {
+          const first = headings[0];
+          if (first) {
+            const rect = first.getBoundingClientRect();
+            if (rect.top > 0) {
+              setActiveHash(`#${first.id}`);
+            }
+          }
+        }
+      },
+      {
+        rootMargin: "-72px 0px -60% 0px",
+        threshold: [0, 0.2, 0.4],
+      }
+    );
+
+    headings.forEach((heading) => observer.observe(heading));
+
+    return () => {
+      headings.forEach((heading) => observer.unobserve(heading));
+      observer.disconnect();
+    };
+  }, [tocItems]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const hash = window.location.hash;
+    if (hash) {
+      const handle = window.requestAnimationFrame(() => {
+        scrollToHash(hash, false);
+      });
+      setActiveHash(hash);
+      return () => window.cancelAnimationFrame(handle);
+    }
+  }, [tocItems, scrollToHash]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const handler = () => {
+      const hash = window.location.hash;
+      if (hash) {
+        scrollToHash(hash, false);
+      }
+    };
+
+    window.addEventListener("hashchange", handler);
+    return () => window.removeEventListener("hashchange", handler);
+  }, [scrollToHash]);
+
+  if (!tocItems.length) {
+    return null;
+  }
+
+  return (
+    <nav className="custom-toc" aria-label="文章目录">
+      <ul>
+        {tocItems.map((item) => {
+          const isActive = activeHash === item.href || activeHash === decodeURI(item.href);
+          const itemClass = `toc-level-${item.level}${isActive ? " active" : ""}`;
+          const linkClass = isActive ? "active" : undefined;
+          return (
+            <li key={item.key} className={itemClass}>
+              <a
+                href={item.href}
+                className={linkClass}
+                onClick={(event) => {
+                  event.preventDefault();
+                  scrollToHash(item.href);
+                }}
+              >
+                {item.title}
+              </a>
+            </li>
+          );
+        })}
+      </ul>
+    </nav>
+  );
+};

@@ -91,13 +91,6 @@
   align-items: center;
 }
 
-.search-input,
-.search-input.ant-input,
-.search-input.ant-input-affix-wrapper {
-  width: 200px;
-  margin: 0 !important;
-}
-
 .user-button {
   font-weight: 500;
 }
@@ -232,4 +225,46 @@
 .mobile-logout {
   border-radius: 20px;
   height: 40px;
+}
+
+/* AI Chat 图标按钮 */
+.ai-chat-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: #f5f7ff;
+  border: 1px solid #eef2ff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ai-chat-trigger:hover {
+  background: #e6f0ff;
+  box-shadow: 0 4px 12px rgba(22, 119, 255, 0.15);
+}
+
+.ai-chat-trigger svg {
+  width: 22px;
+  height: 22px;
+}
+
+/* 移动端：扩大可点击区域并与其它动作对齐 */
+@media (max-width: 768px) {
+  .ai-chat-trigger {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+  }
+}
+
+/* Drawer 顶部右侧放置聊天入口 */
+.mobile-actions .ai-chat-drawer-btn {
+  height: 40px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #1677ff 0%, #4096ff 100%);
+  color: #fff;
+  border: none;
 }

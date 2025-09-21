@@ -1,311 +1,154 @@
-.global-loading-overlay {
+/* Elegant Global Loading - by Trae assistant */
+:root {
+  --gl-primary: #1677ff;
+  --gl-fg: #1f1f1f;
+  --gl-fg-muted: #595959;
+  --gl-bg: #ffffff;
+  --gl-card: #ffffff;
+  --gl-shadow: 0 10px 30px rgba(0,0,0,.08);
+}
+
+/* Overlay */
+.gl-overlay {
+  inset: 0;
+  position: absolute;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+.gl-fullscreen {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(8px);
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  background: var(--gl-bg);
   z-index: 9999;
-  animation: fadeIn 0.3s ease-in-out;
 }
 
-.global-loading-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+/* Card */
+.gl-card {
+  width: min(92vw, 560px);
+  border-radius: 16px;
+  background: var(--gl-card);
+  box-shadow: var(--gl-shadow);
+  padding: clamp(20px, 3.5vw, 32px);
+  display: grid;
+  gap: 14px;
+  justify-items: center;
   text-align: center;
-  max-width: 400px;
-  padding: 40px 20px;
 }
 
-/* 网站图标样式 */
-.loading-icon {
-  margin-bottom: 24px;
+/* Spinner */
+.gl-spinner {
+  position: relative;
+  width: clamp(64px, 12vw, 88px);
+  height: clamp(64px, 12vw, 88px);
+}
+.gl-spinner-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background:
+    conic-gradient(from 0deg, var(--gl-primary) 0 90deg, transparent 90deg 360deg);
+  -webkit-mask:
+    radial-gradient(circle at 50% 50%, #0000 60%, #000 61%),
+    radial-gradient(circle at 50% 50%, #000 64%, #0000 65%);
+  mask:
+    radial-gradient(circle at 50% 50%, #0000 60%, #000 61%),
+    radial-gradient(circle at 50% 50%, #000 64%, #0000 65%);
+  animation: gl-spin 1.1s linear infinite;
+  filter: drop-shadow(0 4px 10px rgba(22,119,255,.25));
+}
+.gl-logo {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
 }
 
-.icon-animation {
-  animation: iconFloat 3s ease-in-out infinite;
-}
-
-.site-icon {
-  width: 64px;
-  height: 64px;
-  filter: drop-shadow(0 4px 12px rgba(24, 144, 255, 0.2));
-}
-
-.icon-circle {
-  animation: iconRotate 4s linear infinite;
-  transform-origin: center;
-}
-
-.icon-lines {
-  animation: iconPulse 2s ease-in-out infinite;
-}
-
-.icon-dot {
-  animation: iconBounce 1.5s ease-in-out infinite;
-}
-
-/* 网站标题样式 */
-.loading-title {
-  font-size: 28px;
+/* Typography */
+.gl-title {
+  margin-top: 2px;
+  font-size: clamp(18px, 2.4vw, 22px);
   font-weight: 600;
-  color: #262626;
-  margin: 0 0 32px 0;
-  letter-spacing: 0.5px;
-  animation: titleGlow 2s ease-in-out infinite alternate;
+  color: var(--gl-fg);
+}
+.gl-sub {
+  font-size: clamp(13px, 1.8vw, 14px);
+  color: var(--gl-fg-muted);
 }
 
-/* 加载动画样式 */
-.loading-animation {
-  margin-bottom: 32px;
-}
-
-.loading-dots {
-  display: flex;
-  gap: 8px;
-  justify-content: center;
-}
-
-.dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #1890ff;
-  animation: dotBounce 1.4s ease-in-out infinite both;
-}
-
-.dot-1 {
-  animation-delay: -0.32s;
-}
-
-.dot-2 {
-  animation-delay: -0.16s;
-}
-
-.dot-3 {
-  animation-delay: 0s;
-}
-
-/* 进度条样式 */
-.loading-progress {
+/* Progress */
+.gl-progress {
   width: 100%;
-  max-width: 300px;
+  margin-top: 4px;
 }
-
-.progress-bar {
-  margin-bottom: 12px;
-}
-
-.progress-bar .ant-progress-bg {
-  transition: width 0.3s ease;
-  border-radius: 3px;
-  box-shadow: 0 0 8px rgba(24, 144, 255, 0.3);
-}
-
-.progress-bar .ant-progress-outer {
-  border-radius: 3px;
+.gl-bar {
+  height: 4px;
+  width: 100%;
+  background: linear-gradient(90deg, rgba(22,119,255,.18), rgba(22,119,255,.08));
+  border-radius: 999px;
+  position: relative;
   overflow: hidden;
 }
-
-.progress-text {
-  font-size: 14px;
-  color: #8c8c8c;
-  font-weight: 500;
-  animation: textFade 2s ease-in-out infinite alternate;
+.gl-bar::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  width: var(--gl-p, 0%);
+  background: linear-gradient(90deg, #1677ff, #69b1ff);
+  transition: width .25s ease;
+}
+/* 不确定进度动画 */
+.gl-indeterminate::after {
+  width: 30% !important;
+  animation: gl-ind 1.2s ease-in-out infinite;
 }
 
-/* 动画定义 */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+.gl-progress-text {
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--gl-fg-muted);
 }
 
-@keyframes iconFloat {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-8px);
-  }
+/* Hint */
+.gl-hint {
+  margin-top: 4px;
+  font-size: 12px;
+  color: #faad14;
+  background: #fffbe6;
+  border: 1px solid #ffe58f;
+  padding: 6px 10px;
+  border-radius: 8px;
 }
 
-@keyframes iconRotate {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Failure */
+.gl-fail {
+  display: grid;
+  gap: 12px;
+  justify-items: center;
 }
+.gl-fail-icon { filter: drop-shadow(0 6px 16px rgba(22,119,255,.25)); }
+.gl-actions { display: flex; gap: 10px; margin-top: 4px; }
 
-@keyframes iconPulse {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.6;
-  }
-}
-
-@keyframes iconBounce {
-  0%, 100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.2);
-  }
-}
-
-@keyframes titleGlow {
-  from {
-    text-shadow: 0 0 10px rgba(24, 144, 255, 0.3);
-  }
-  to {
-    text-shadow: 0 0 20px rgba(24, 144, 255, 0.6);
-  }
-}
-
-@keyframes dotBounce {
-  0%, 80%, 100% {
-    transform: scale(0.8);
-    opacity: 0.5;
-  }
-  40% {
-    transform: scale(1.2);
-    opacity: 1;
-  }
-}
-
-@keyframes textFade {
-  from {
-    opacity: 0.7;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-/* 响应式设计 */
+/* Mobile tweaks */
 @media (max-width: 768px) {
-  .global-loading-container {
-    padding: 32px 16px;
-  }
-  
-  .site-icon {
-    width: 56px;
-    height: 56px;
-  }
-  
-  .loading-title {
-    font-size: 24px;
-    margin-bottom: 24px;
-  }
-  
-  .loading-animation {
-    margin-bottom: 24px;
-  }
-  
-  .loading-progress {
-    max-width: 280px;
-  }
+  :root { --gl-shadow: 0 8px 24px rgba(0,0,0,.08); }
+  .gl-card { width: min(96vw, 520px); border-radius: 14px; }
+  .gl-progress-text { font-size: 12px; }
 }
-
 @media (max-width: 480px) {
-  .global-loading-container {
-    padding: 24px 12px;
-  }
-  
-  .site-icon {
-    width: 48px;
-    height: 48px;
-  }
-  
-  .loading-title {
-    font-size: 20px;
-    margin-bottom: 20px;
-  }
-  
-  .loading-animation {
-    margin-bottom: 20px;
-  }
-  
-  .loading-progress {
-    max-width: 240px;
-  }
-  
-  .progress-text {
-    font-size: 12px;
-  }
+  .gl-card { width: 100%; border-radius: 12px; padding: 18px; }
 }
 
-/* @media (prefers-color-scheme: dark) {
-  .global-loading-overlay {
-    background: rgba(0, 0, 0, 0.95);
+/* Dark scheme */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --gl-fg: #e8e8e8;
+    --gl-fg-muted: #bfbfbf;
+    --gl-bg: #0f1113;
+    --gl-card: #111418;
   }
-  
-  .loading-title {
-    color: #ffffff;
-  }
-  
-  .progress-text {
-    color: #bfbfbf;
-  }
-  
-  .site-icon .icon-circle,
-  .site-icon .icon-lines,
-  .site-icon .icon-dot {
-    stroke: #40a9ff;
-    fill: #40a9ff;
-  }
-  
-  .dot {
-    background: #40a9ff;
-  }
-} */
-
-/* 减少动画效果（用户偏好） */
-@media (prefers-reduced-motion: reduce) {
-  .icon-animation,
-  .icon-circle,
-  .icon-lines,
-  .icon-dot,
-  .loading-title,
-  .dot,
-  .progress-text {
-    animation: none;
-  }
-  
-  .global-loading-overlay {
-    animation: none;
-  }
+  .gl-hint { background: #2a2617; border-color: #504522; color: #d8bd14; }
 }
 
-/* 高对比度模式 */
-@media (prefers-contrast: high) {
-  .global-loading-overlay {
-    background: rgba(255, 255, 255, 1);
-    backdrop-filter: none;
-  }
-  
-  .loading-title {
-    color: #000000;
-    text-shadow: none;
-  }
-  
-  .progress-text {
-    color: #000000;
-  }
-  
-  .site-icon {
-    filter: none;
-  }
-}
+/* Animations */
+@keyframes gl-spin { to { transform: rotate(360deg); } }
+@keyframes gl-ind { 0% { left: -30%; } 50% { left: 50%; } 100% { left: 100%; } }

@@ -1,6 +1,5 @@
 "use server";
 import React from 'react';
-import {Metadata} from 'next';
 import {Col, Row, Statistic} from 'antd';
 import {FileTextOutlined, TagOutlined} from '@ant-design/icons';
 import TagArticleListClient from '@/components/TagArticleListClient';
@@ -8,16 +7,20 @@ import Sidebar from '@/components/Sidebar/page';
 import './styles.css';
 import Title from "antd/es/typography/Title";
 import Paragraph from "antd/es/typography/Paragraph";
+import { getTag } from '@/api/tagController';
 
 async function getTagInfo(tagId: string) {
-  return {
-    id: parseInt(tagId),
-    name: `标签 ${tagId}`,
-    description: `这是标签 ${tagId} 的描述信息`,
-    articleCount: 0,
-    followCount: 0,
-    color: '#1890ff'
-  };
+  try {
+    const numericId = Number(tagId);
+    if (Number.isNaN(numericId)) {
+      return null;
+    }
+    const res = (await getTag({ tagId: numericId })) as any;
+    return res?.data ?? null;
+  } catch (error) {
+    console.warn('获取标签详情失败', error);
+    return null;
+  }
 }
 
 interface Props {
@@ -28,16 +31,6 @@ interface Props {
 
 export async function generateStaticParams() {
     return [];
-}
-
-export async function generateMetadata({params}: Props): Promise<Metadata> {
-    const {tagId} = await params;
-    const tag = await getTagInfo(tagId);
-
-    return {
-        title: `${tag.name} - 汉堡博客`,
-        description: tag.description,
-    };
 }
 
 export default async function TagDetailPage({params}: Props) {
@@ -62,17 +55,19 @@ export default async function TagDetailPage({params}: Props) {
                     {/* 标签信息 */}
                     <div className="tag-header">
                         <div className="tag-info">
-                            <div className="tag-icon" style={{backgroundColor: tag.color}}>
+                            <div className="tag-icon" style={{backgroundColor: tag.color || '#1890ff'}}>
                                 <TagOutlined/>
                             </div>
                             <div className="tag-content">
                                 <Title level={1} className="tag-title">{tag.name}</Title>
-                                <Paragraph className="tag-description">{tag.description}</Paragraph>
+                                {tag.description && (
+                                  <Paragraph className="tag-description">{tag.description}</Paragraph>
+                                )}
 
                                 <div className="tag-stats">
                                     <Statistic
                                         title="文章数"
-                                        value={tag.articleCount}
+                                        value={tag.articleCount ?? 0}
                                         prefix={<FileTextOutlined/>}
                                         valueStyle={{fontSize: '18px', color: '#1890ff'}}
                                     />

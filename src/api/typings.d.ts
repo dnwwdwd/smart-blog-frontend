@@ -143,6 +143,13 @@ declare namespace API {
     message?: string;
   };
 
+  // 新增：评论分页响应类型
+  type BaseResponsePageCommentAdminVo = {
+    code?: number;
+    data?: PageCommentAdminVo;
+    message?: string;
+  };
+
   type BaseResponseString = {
     code?: number;
     data?: string;
@@ -206,6 +213,15 @@ declare namespace API {
     columnName?: string;
   };
 
+  // 新增：评论管理分页请求
+  type CommentRequest = {
+    current?: number;
+    pageSize?: number;
+    sortField?: string;
+    articleId?: number;
+    searchKeyword?: string;
+  };
+
   type ColumnVo = {
     id?: number;
     name?: string;
@@ -219,7 +235,7 @@ declare namespace API {
   };
 
   type CommentDto = {
-    articleId: number;
+    articleId: number | string; // 支持字符串类型以避免大整数精度丢失
     nickname: string;
     email: string;
     content: string;
@@ -236,6 +252,23 @@ declare namespace API {
     content?: string;
     avatar?: string;
     createTime?: string;
+  };
+
+  // 新增：评论后台管理展示对象
+  type CommentAdminVo = {
+    id?: number;
+    articleId?: number;
+    articleTitle?: string;
+    parentId?: number;
+    nickname?: string;
+    userEmail?: string;
+    userWebsite?: string;
+    userAvatar?: string;
+    content?: string;
+    ipAddress?: string;
+    userAgent?: string;
+    createTime?: string;
+    userId?: number;
   };
 
   type completionParams = {
@@ -325,7 +358,7 @@ declare namespace API {
   };
 
   type getCommentParams = {
-    articleId: number;
+    articleId: number | string; // 支持字符串类型以避免大整数精度丢失
   };
 
   type getTagParams = {
@@ -423,6 +456,21 @@ declare namespace API {
     pages?: number;
   };
 
+  // 新增：评论分页对象类型
+  type PageCommentAdminVo = {
+    records?: CommentAdminVo[];
+    total?: number;
+    size?: number;
+    current?: number;
+    orders?: OrderItem[];
+    optimizeCountSql?: PageCommentAdminVo;
+    searchCount?: PageCommentAdminVo;
+    optimizeJoinOfCountSql?: boolean;
+    maxLimit?: number;
+    countId?: string;
+    pages?: number;
+  };
+
   type SocialLink = {
     id?: number;
     friendLinkId?: number;
@@ -475,5 +523,49 @@ declare namespace API {
     userAccount: string;
     userPassword: string;
     checkPassword: string;
+  };
+
+  // 网站设置配置相关类型
+  type SettingConfig = {
+    id?: number;
+    siteName?: string;
+    siteDescription?: string;
+    siteKeywords?: string;
+    siteLogo?: string;
+    favicon?: string;
+    aboutTitle?: string;
+    aboutContent?: string;
+    aboutImage?: string;
+    seoTitle?: string;
+    seoDescription?: string;
+    seoKeywords?: string;
+    githubUrl?: string;
+    twitterUrl?: string;
+    linkedinUrl?: string;
+    emailContact?: string;
+    wechatQrUrl?: string;
+    wechatPayQrUrl?: string;
+    alipayQrUrl?: string;
+    enableComments?: boolean;
+    enableSearch?: boolean;
+    enableDarkMode?: boolean;
+    articlesPerPage?: number;
+    googleAnalyticsId?: string;
+    baiduAnalyticsId?: string;
+    aiChatShortcut?: string;
+    createTime?: string;
+    updateTime?: string;
+  };
+
+  type BaseResponseSettingConfig = {
+    code?: number;
+    data?: SettingConfig;
+    message?: string;
+  };
+
+  type BaseResponseBoolean = {
+    code?: number;
+    data?: boolean;
+    message?: string;
   };
 }

@@ -159,3 +159,16 @@ export async function updateArticle(
     ...(options || {}),
   });
 }
+
+// 新增：删除文章接口，兼容后端按路径参数或请求体两种风格
+export async function deleteArticle(
+  idOrParams: number | { articleId: number },
+  options?: { [key: string]: any }
+) {
+  const id = typeof idOrParams === 'number' ? idOrParams : idOrParams.articleId;
+  // 后端若实现为 /article/delete/{id} POST
+  return request<API.BaseResponseVoid>(`/article/delete/${id}`, {
+    method: "POST",
+    ...(options || {}),
+  });
+}

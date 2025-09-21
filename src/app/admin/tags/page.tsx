@@ -23,7 +23,7 @@ import {
   TagOutlined
 } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/es/table';
-import { getTagPage } from '@/api/tagController';
+import { getTagPage, deleteTag } from '@/api/tagController';
 import './styles.css';
 import { formatDate } from '@/utils';
 
@@ -123,10 +123,27 @@ const TagManagement: React.FC = () => {
     setModalVisible(true);
   };
 
-  const handleDelete = (id: number | undefined) => {
-    if (!id) return;
-    setTags(tags.filter(tag => tag.id !== id));
-    message.success('标签删除成功');
+  const handleDelete = async (id: number | undefined) => {
+    // 检查id是否有效
+    if (!id || id <= 0) {
+      message.error("无效的标签ID");
+      return;
+    }
+    
+    setLoading(true);
+    try {
+      const res: any = await deleteTag({ tagId: id });
+      if (res?.code === 0) {
+        message.success('标签删除成功');
+        await fetchTags();
+      } else {
+        message.error(res?.message || '标签删除失败');
+      }
+    } catch (e: any) {
+      message.error(e?.message || '标签删除失败，请稍后重试');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleSubmit = async (values: any) => {
@@ -275,7 +292,14 @@ const TagManagement: React.FC = () => {
           <Popconfirm
             title="确定要删除这个标签吗？"
             description="删除后相关文章的标签关联也会被移除"
-            onConfirm={() => handleDelete(record.id)}
+            onConfirm={() => {
+              // 确保传入有效的ID
+              if (record.id && record.id > 0) {
+                handleDelete(record.id);
+              } else {
+                message.error("无效的标签ID");
+              }
+            }}
             okText="确定"
             cancelText="取消"
           >

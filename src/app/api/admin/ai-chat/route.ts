@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
   const encoder = new TextEncoder()
   const stream = new ReadableStream<Uint8Array>({
     async start(controller) {
-      const text = `Echo: ${prompt} `
+      const text = ` ${prompt} `
       for (const ch of text) {
         controller.enqueue(encoder.encode(ch))
         await new Promise(r => setTimeout(r, 25))

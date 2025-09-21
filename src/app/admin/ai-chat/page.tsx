@@ -742,37 +742,49 @@ export default function AdminAIChatPage() {
                     const isAssistant = m.role === "assistant";
                     const isLast = idx === messages.length - 1;
                     const showCursor = isLastAssistantStreaming && isLast;
-                    const onClickStop = showCursor ? () => handleStop() : undefined;
+
+                    // 当处于流式阶段且当前是最后一条助手消息时，不渲染其气泡，改为在下方统一显示加载指示
+                    if (isAssistant && isLastAssistantStreaming && isLast) {
+                      return null;
+                    }
+
+                    const onClickStop = false ? () => {} : undefined;
                     return (
-                      <div key={m.id} className={`ai-chat-msg ${isAssistant ? "assistant" : "user"}`} onClick={onClickStop} style={showCursor ? { cursor: "pointer" } : undefined} title={showCursor ? "点击停止回复" : undefined}>
-                        <img className="avatar" src={isAssistant ? aiAvatar : userAvatar} alt="avatar" />
-                        <div className="bubble">
-                          {isAssistant ? (
-                            <>
-                              <ReactMarkdown
-                                remarkPlugins={[remarkGfm]}
-                                rehypePlugins={[rehypeHighlight, rehypeSanitize]}
-                                components={{
-                                  code: ({ className, children, ...props }) => (
-                                    <code className={className} {...props}>{children}</code>
-                                  ),
-                                  p: ({ children }) => <p style={{ margin: "0 0 0.6em 0" }}>{children}</p>,
-                                }}
-                              >
-                                {m.content}
-                              </ReactMarkdown>
-                              {showCursor ? <span className="cursor">▍</span> : null}
-                            </>
-                          ) : (
-                            <pre style={{ margin: 0, whiteSpace: "pre-wrap" }}>
+                      <div key={m.id}
+                      className={`ai-chat-msg ${isAssistant ? "assistant" : "user"}`}
+                      >
+                      <div className="bubble">
+                        {isAssistant ? (
+                          <>
+                            <ReactMarkdown
+                              remarkPlugins={[remarkGfm] as any}
+                              rehypePlugins={[rehypeHighlight] as any}
+                              components={{
+                                code: ({ className, children, ...props }) => (
+                                  <code className={className} {...props}>{children}</code>
+                                ),
+                                p: ({ children }) => <p style={{ margin: "0 0 0.6em 0" }}>{children}</p>,
+                              }}
+                            >
                               {m.content}
-                              {showCursor ? <span className="cursor">▍</span> : null}
-                            </pre>
-                          )}
-                        </div>
+                            </ReactMarkdown>
+                          </>
+                        ) : (
+                          <div style={{ margin: 0, whiteSpace: "pre-wrap" }}>
+                            {m.content}
+                          </div>
+                        )}
                       </div>
-                    );
-                  })}
+                    </div>
+                  );
+                })}
+                {/* 流式阶段：在列表底部显示加载效果（与 Modal 一致） */}
+                {isLastAssistantStreaming && (
+                  <div className="ai-chat-loading">
+                    <Spin size="small" />
+                    <span>AI 正在生成...</span>
+                  </div>
+                )}
                 </>
               );
             })()

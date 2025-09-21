@@ -346,6 +346,10 @@
   padding-left: 5px;
 }
 
+.custom-toc li.active > a {
+  color: #1890ff;
+}
+
 .custom-toc .toc-level-1 > a,
 .custom-toc .toc-level-1 a {
   font-weight: 600;
@@ -367,6 +371,15 @@
 
 .custom-toc .toc-level-4 {
   padding-left: 36px;
+}
+
+.article-detail-body h1[id],
+.article-detail-body h2[id],
+.article-detail-body h3[id],
+.article-detail-body h4[id],
+.article-detail-body h5[id],
+.article-detail-body h6[id] {
+  scroll-margin-top: 96px;
 }
 
 /* 响应式设计 */

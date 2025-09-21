@@ -1,0 +1,169 @@
+/* 胶囊型 Tab 样式，贴合提供的图片效果 */
+.home-pillbar-section {
+  margin-bottom: 24px;
+}
+
+/* 空状态容器，保证和瀑布流区域宽度一致 */
+.masonry-empty { padding: 24px 0; }
+
+.home-pillbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  background: #fff;
+  border-radius: 999px; /* 全圆角 */
+  border: 1px solid #e6e6e6;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+  position: sticky;
+  top: 8px;
+  z-index: 5;
+}
+
+/* 左右滚动按钮 */
+.home-pillbar .scroll-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  color: #111827;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.home-pillbar .scroll-btn.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* 专栏项列表（横向平铺） */
+.pillbar-list {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+  gap: 6px;
+}
+
+/* 胶囊按钮 */
+.pillbar-list .pill {
+  height: 36px;
+  padding: 0 14px;
+  border-radius: 999px;
+  background: #fff;
+  color: #111827;
+  border: 1px solid #e5e7eb;
+  font-size: 14px;
+  white-space: nowrap;
+  transition: all .18s ease-in-out;
+}
+.pillbar-list .pill:hover {
+  background: #f0f7ff;      /* 悬停高亮：淡蓝底 */
+  border-color: #91caff;    /* 蓝色边框 */
+  color: #1677ff;           /* 蓝色文字 */
+}
+.pillbar-list .pill.is-selected,
+.pillbar-list .pill[aria-selected='true'] {
+  background: #1677ff;  /* 被选中：实心蓝底 */
+  border-color: #1677ff;
+  color: #fff;          /* 白字 */
+  font-weight: 600;
+  box-shadow: 0 2px 6px rgba(22, 119, 255, 0.25);
+}
+.pillbar-list .pill.is-selected:hover,
+.pillbar-list .pill[aria-selected='true']:hover {
+  filter: brightness(0.98); /* 轻微按压感 */
+}
+.pillbar-list .pill:focus-visible {
+  outline: 2px solid #91caff; /* 无障碍可见焦点 */
+  outline-offset: 2px;
+}
+
+/* 更多入口，与截图中右侧箭头后的“更多”匹配 */
+.pill-more {
+  padding: 0 10px;
+  height: 32px;
+  line-height: 32px;
+  color: #64748b;
+  text-decoration: none;
+}
+.pill-more:hover { color: #334155; }
+
+/* 瀑布流容器：最多 2 列，随宽度自适应 */
+.masonry {
+  margin-top: 16px;
+  column-gap: 16px;
+  /* 控制整体可读宽度，保证两列卡片宽度适中 */
+  max-width: 1040px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.masonry .masonry-node {
+  break-inside: avoid;
+  margin-bottom: 16px;
+}
+
+@media (min-width: 1200px) {
+  .masonry { column-count: 2; }
+}
+@media (min-width: 768px) and (max-width: 1199px) {
+  .masonry { column-count: 2; }
+}
+@media (max-width: 767px) {
+  .masonry { column-count: 1; }
+}
+
+/* 底部加载提示与哨兵 */
+.articles-loader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0 8px;
+  font-size: 13px;
+  color: #64748b;
+}
+
+.loading-line {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #475569;
+}
+
+.loader-end {
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.articles-sentinel {
+  width: 100%;
+  height: 1px;
+}
+
+/* 专栏分页加载遮罩 */
+.pillbar-loading {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,0.6);
+  border-radius: 999px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .home-pillbar {
+    background: rgba(255,255,255,0.06);
+    border-color: rgba(255,255,255,0.08);
+  }
+  .home-pillbar .scroll-btn { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.1); color: #e5e7eb; }
+  .pillbar-list .pill { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.1); color: #e5e7eb; }
+  .pillbar-list .pill:hover { background: rgba(22,119,255,0.15); border-color: rgba(22,119,255,0.55); color: #69b1ff; }
+  .pillbar-list .pill.is-selected, .pillbar-list .pill[aria-selected='true'] { background: #1668dc; border-color: #1668dc; color: #fff; }
+  .pill-more { color: #cbd5e1; }
+  .articles-loader { color: #cbd5e1; }
+  .loading-line { color: #e2e8f0; }
+  .loader-end { color: #94a3ff; }
+}

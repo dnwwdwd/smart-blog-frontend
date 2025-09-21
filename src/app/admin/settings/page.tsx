@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import type { UploadFile, UploadProps } from "antd";
 import {
   Button,
@@ -13,6 +13,7 @@ import {
   Switch,
   Tabs,
   Upload,
+  Alert
 } from "antd";
 import {
   ReloadOutlined,
@@ -21,102 +22,162 @@ import {
 } from "@ant-design/icons";
 import "./styles.css";
 import "@ant-design/v5-patch-for-react-19";
+import { useSiteSettingsStore } from "@/stores/siteSettingsStore";
 
 const { TextArea } = Input;
 const { Option } = Select;
 
 interface SiteSettings {
-  // 基础信息
   siteName: string;
   siteDescription: string;
   siteKeywords: string;
   siteLogo?: string;
   favicon?: string;
-  
-  // 关于页面
   aboutTitle: string;
   aboutContent: string;
   aboutImage?: string;
-  
-  // SEO 设置
   seoTitle: string;
   seoDescription: string;
   seoKeywords: string;
-  
-  // 社交媒体
   githubUrl?: string;
   twitterUrl?: string;
   linkedinUrl?: string;
   emailContact?: string;
-  
-  // 功能设置
+  wechatQrUrl?: string;
+  wechatPayQrUrl?: string;
+  alipayQrUrl?: string;
   enableComments: boolean;
   enableSearch: boolean;
   enableDarkMode: boolean;
   articlesPerPage: number;
-  
-  // 统计设置
   googleAnalyticsId?: string;
   baiduAnalyticsId?: string;
+  aiChatShortcut?: string;
 }
+
+// 捕获快捷键的只读输入组件：按下组合键自动生成形如 Ctrl+Alt+K 的字符串
+const ShortcutInput: React.FC<{ value?: string; onChange?: (v?: string) => void; placeholder?: string }>
+  = ({ value, onChange, placeholder }) => {
+  const normalize = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
+    const parts: string[] = [];
+    const isMac = typeof navigator !== 'undefined' && /mac/i.test(navigator.platform);
+
+    if (e.ctrlKey) parts.push('Ctrl');
+    if (e.metaKey) parts.push(isMac ? 'Cmd' : 'Meta');
+    if (e.altKey) parts.push(isMac ? 'Option' : 'Alt');
+    if (e.shiftKey) parts.push('Shift');
+
+    // 过滤修饰键本身作为主键的情况
+    const k = (e.key || '').toLowerCase();
+    const isModifier = ['control','ctrl','meta','cmd','command','alt','option','shift'].includes(k);
+    if (!isModifier) {
+      let main = e.key;
+      // 统一主键显示：单字符转大写，空格命名为 Space
+      if (main.length === 1) main = main.toUpperCase();
+      if (main === ' ') main = 'Space';
+      // 修正常见键名
+      if (main === 'ArrowUp' || main === 'ArrowDown' || main === 'ArrowLeft' || main === 'ArrowRight') {
+        // 保持原样
+      }
+      parts.push(main);
+    }
+
+    return parts.join('+');
+  }, []);
+
+  const onKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
+    // 避免事件冒泡到全局快捷键处理
+    e.stopPropagation();
+
+    // 功能键处理
+    if (e.key === 'Backspace' || e.key === 'Delete') {
+      e.preventDefault();
+      onChange?.("");
+      return;
+    }
+    if (e.key === 'Escape') {
+      e.currentTarget.blur();
+      return;
+    }
+
+    // 组合键生成
+    e.preventDefault();
+    const combo = normalize(e);
+    if (combo) onChange?.(combo);
+  }, [normalize, onChange]);
+
+  return (
+    <Input
+      readOnly
+      value={value}
+      onKeyDown={onKeyDown}
+      placeholder={placeholder || "按下组合键，例如 Alt+K 或 Ctrl+Shift+J"}
+      onChange={() => { /* readOnly，忽略原生输入 */ }}
+    />
+  );
+};
 
 const SystemSettings: React.FC = () => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState('basic');
-  
-  // 模拟当前设置数据
-  const [settings, setSettings] = useState<SiteSettings>({
-    siteName: 'Smart Blog',
-    siteDescription: '一个智能的博客系统',
-    siteKeywords: '博客,技术,分享,学习',
-    aboutTitle: '关于我们',
-    aboutContent: '这里是关于页面的内容介绍...',
-    seoTitle: 'Smart Blog - 智能博客系统',
-    seoDescription: '一个基于 Next.js 和 Ant Design 构建的现代化博客系统',
-    seoKeywords: '博客,Next.js,React,技术分享',
-    enableComments: true,
-    enableSearch: true,
-    enableDarkMode: true,
-    articlesPerPage: 10
-  });
-  
+  const [activeTab, setActiveTab] = useState("basic");
+
+  const { settings, loading: settingsLoading, error, fetchSiteSettings, saveSiteSettings } =
+    useSiteSettingsStore();
+
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [aboutImageList, setAboutImageList] = useState<UploadFile[]>([]);
   const [faviconList, setFaviconList] = useState<UploadFile[]>([]);
 
+  useEffect(() => {
+    // 若无全局设置，进入页面时拉取一次
+    if (!settings) {
+      fetchSiteSettings();
+    } else {
+      // settings 已存在时同步到表单
+      setTimeout(() => {
+        form.setFieldsValue(settings as any);
+      }, 0);
+    }
+  }, [settings, fetchSiteSettings, form]);
+
   const handleSubmit = async (values: SiteSettings) => {
     setLoading(true);
     try {
-      // 这里应该调用API保存设置
-      console.log('保存设置:', values);
-      setSettings(values);
-      message.success('设置保存成功');
+      const settingData: API.SettingConfig = { ...(values as any) };
+      const ok = await saveSiteSettings(settingData);
+      if (ok) {
+        message.success("设置保存成功");
+      } else {
+        message.error("保存失败");
+      }
     } catch (error) {
-      message.error('保存失败，请重试');
+      message.error("保存失败，请重试");
     } finally {
       setLoading(false);
     }
   };
 
   const handleReset = () => {
-    form.setFieldsValue(settings);
-    message.info('已重置为当前保存的设置');
+    if (settings) {
+      form.setFieldsValue(settings as any);
+      message.info("已重置为当前保存的设置");
+    }
   };
 
   const uploadProps: UploadProps = {
     beforeUpload: (file) => {
-      const isImage = file.type.startsWith('image/');
+      const isImage = file.type.startsWith("image/");
       if (!isImage) {
-        message.error('只能上传图片文件!');
+        message.error("只能上传图片文件!");
         return false;
       }
       const isLt2M = file.size / 1024 / 1024 < 2;
       if (!isLt2M) {
-        message.error('图片大小不能超过 2MB!');
+        message.error("图片大小不能超过 2MB!");
         return false;
       }
-      return false; // 阻止自动上传
+      return false;
     },
     onChange: (info) => {
       setFileList(info.fileList);
@@ -137,6 +198,34 @@ const SystemSettings: React.FC = () => {
     },
   };
 
+  // 根据 store 的 loading / error 精确反馈 UI，避免永远“加载中”。
+  if (!settings) {
+    if (settingsLoading) {
+      return <div>加载中...</div>;
+    }
+    return (
+      <div className="system-settings">
+        <Card>
+          <div className="page-header">
+            <h1>系统设置</h1>
+          </div>
+          <Alert
+            type="error"
+            showIcon
+            message="加载站点设置失败"
+            description={error || "未获取到站点设置，请检查后端服务或登录状态。"}
+            style={{ marginBottom: 16 }}
+          />
+          <Space>
+            <Button icon={<ReloadOutlined />} onClick={() => fetchSiteSettings()}>
+              重试加载
+            </Button>
+          </Space>
+        </Card>
+      </div>
+    );
+  }
+
   return (
     <div className="system-settings">
       <Card>
@@ -146,13 +235,13 @@ const SystemSettings: React.FC = () => {
             <Button icon={<ReloadOutlined />} onClick={handleReset}>
               重置
             </Button>
-            <Button 
-              type="primary" 
-              icon={<SaveOutlined />} 
-              loading={loading}
+            <Button
+              type="primary"
+              icon={<SaveOutlined />}
               onClick={() => form.submit()}
+              loading={loading}
             >
-              保存设置
+              保存
             </Button>
           </Space>
         </div>
@@ -160,124 +249,51 @@ const SystemSettings: React.FC = () => {
         <Form
           form={form}
           layout="vertical"
-          initialValues={settings}
           onFinish={handleSubmit}
-          className="settings-form"
+          initialValues={settings as any}
         >
-          <Tabs 
-            activeKey={activeTab} 
+          {/* 网站信息等 Tab 使用 items API */}
+          <Tabs
+            activeKey={activeTab}
             onChange={setActiveTab}
             items={[
               {
                 key: 'basic',
-                label: '基础设置',
+                label: '网站信息',
                 children: (
                   <div className="tab-content">
-                    <Form.Item 
-                      label="网站名称" 
-                      name="siteName" 
-                      rules={[{ required: true, message: '请输入网站名称' }]}
+                    <Form.Item
+                      label="站点名称"
+                      name="siteName"
+                      rules={[{ required: true, message: "请输入站点名称" }]}
                     >
-                      <Input placeholder="请输入网站名称" />
+                      <Input placeholder="请输入站点名称" />
                     </Form.Item>
-
-                    <Form.Item 
-                      label="网站描述" 
-                      name="siteDescription"
-                      rules={[{ required: true, message: '请输入网站描述' }]}
-                    >
-                      <TextArea 
-                        placeholder="请输入网站描述" 
-                        rows={3} 
-                        maxLength={200}
-                        showCount
-                      />
+                    <Form.Item label="站点描述" name="siteDescription">
+                      <Input placeholder="请输入站点描述" />
                     </Form.Item>
-
-                    <Form.Item label="网站关键词" name="siteKeywords">
-                      <Input placeholder="请输入网站关键词，用逗号分隔" />
-                    </Form.Item>
-
-                    <Form.Item label="网站Logo">
-                      <Upload
-                        {...uploadProps}
-                        fileList={fileList}
-                        listType="picture-card"
-                        maxCount={1}
-                      >
-                        {fileList.length === 0 && (
-                          <div>
-                            <UploadOutlined />
-                            <div style={{ marginTop: 8 }}>上传Logo</div>
-                          </div>
-                        )}
-                      </Upload>
-                      <div className="upload-tip">建议尺寸：200x60px，支持 PNG、JPG 格式</div>
-                    </Form.Item>
-
-                    <Form.Item label="网站图标 (Favicon)">
-                      <Upload
-                        {...faviconProps}
-                        fileList={faviconList}
-                        listType="picture-card"
-                        maxCount={1}
-                      >
-                        {faviconList.length === 0 && (
-                          <div>
-                            <UploadOutlined />
-                            <div style={{ marginTop: 8 }}>上传图标</div>
-                          </div>
-                        )}
-                      </Upload>
-                      <div className="upload-tip">建议尺寸：32x32px，支持 ICO、PNG 格式</div>
+                    <Form.Item label="站点关键词" name="siteKeywords">
+                      <Input placeholder="请输入站点关键词，逗号分隔" />
                     </Form.Item>
                   </div>
-                )
+                ),
               },
               {
                 key: 'about',
                 label: '关于页面',
                 children: (
                   <div className="tab-content">
-                    <Form.Item 
-                      label="关于页面标题" 
-                      name="aboutTitle"
-                      rules={[{ required: true, message: '请输入关于页面标题' }]}
-                    >
-                      <Input placeholder="请输入关于页面标题" />
+                    <Form.Item label="关于页标题" name="aboutTitle">
+                      <Input placeholder="例如：关于 Smart Blog" />
                     </Form.Item>
-
-                    <Form.Item 
-                      label="关于页面内容" 
-                      name="aboutContent"
-                      rules={[{ required: true, message: '请输入关于页面内容' }]}
-                    >
-                      <TextArea 
-                        placeholder="请输入关于页面内容，支持 Markdown 格式" 
-                        rows={10}
-                        maxLength={2000}
-                        showCount
-                      />
+                    <Form.Item label="关于页内容" name="aboutContent">
+                      <TextArea placeholder="关于页面简介内容" rows={4} />
                     </Form.Item>
-
-                    <Form.Item label="关于页面配图">
-                      <Upload
-                        {...aboutImageProps}
-                        fileList={aboutImageList}
-                        listType="picture-card"
-                        maxCount={1}
-                      >
-                        {aboutImageList.length === 0 && (
-                          <div>
-                            <UploadOutlined />
-                            <div style={{ marginTop: 8 }}>上传配图</div>
-                          </div>
-                        )}
-                      </Upload>
-                      <div className="upload-tip">建议尺寸：800x400px，支持 PNG、JPG 格式</div>
+                    <Form.Item label="关于页头像/头图 URL" name="aboutImage">
+                      <Input placeholder="请输入图片链接" />
                     </Form.Item>
                   </div>
-                )
+                ),
               },
               {
                 key: 'seo',
@@ -285,69 +301,82 @@ const SystemSettings: React.FC = () => {
                 children: (
                   <div className="tab-content">
                     <Form.Item label="SEO 标题" name="seoTitle">
-                      <Input placeholder="请输入 SEO 标题" maxLength={60} showCount />
+                      <Input placeholder="请输入 SEO 标题" />
                     </Form.Item>
-
                     <Form.Item label="SEO 描述" name="seoDescription">
-                      <TextArea 
-                        placeholder="请输入 SEO 描述" 
-                        rows={3} 
-                        maxLength={160} 
-                        showCount 
-                      />
+                      <Input placeholder="请输入 SEO 描述" />
                     </Form.Item>
-
                     <Form.Item label="SEO 关键词" name="seoKeywords">
-                      <Input placeholder="请输入 SEO 关键词，用逗号分隔" />
+                      <Input placeholder="请输入 SEO 关键词" />
                     </Form.Item>
                   </div>
-                )
+                ),
               },
               {
                 key: 'social',
                 label: '社交媒体',
                 children: (
                   <div className="tab-content">
-                    <Form.Item label="GitHub 链接" name="githubUrl">
+                    <Form.Item label="GitHub" name="githubUrl">
                       <Input placeholder="https://github.com/username" />
                     </Form.Item>
-
-                    <Form.Item label="Twitter 链接" name="twitterUrl">
-                      <Input placeholder="https://twitter.com/username" />
+                    <Form.Item label="Twitter / X" name="twitterUrl">
+                      <Input placeholder="https://x.com/username" />
                     </Form.Item>
-
-                    <Form.Item label="LinkedIn 链接" name="linkedinUrl">
-                      <Input placeholder="https://linkedin.com/in/username" />
-                    </Form.Item>
-
                     <Form.Item label="联系邮箱" name="emailContact">
-                      <Input placeholder="contact@example.com" type="email" />
+                      <Input placeholder="you@example.com" />
+                    </Form.Item>
+                    <Form.Item label="微信二维码" name="wechatQrUrl">
+                      <Input placeholder="图片链接或上传后地址" />
+                    </Form.Item>
+                    <Form.Item label="微信收款码" name="wechatPayQrUrl">
+                      <Input placeholder="图片链接或上传后地址" />
+                    </Form.Item>
+                    <Form.Item label="支付宝收款码" name="alipayQrUrl">
+                      <Input placeholder="图片链接或上传后地址" />
                     </Form.Item>
                   </div>
-                )
+                ),
               },
               {
                 key: 'features',
                 label: '功能设置',
                 children: (
-                  <div className="tab-content">
-                    <Form.Item label="评论功能" name="enableComments" valuePropName="checked">
-                      <Switch checkedChildren="开启" unCheckedChildren="关闭" />
+                  <>
+                    <Form.Item
+                      label="启用评论"
+                      name="enableComments"
+                      valuePropName="checked"
+                    >
+                      <Switch />
                     </Form.Item>
-
-                    <Form.Item label="搜索功能" name="enableSearch" valuePropName="checked">
-                      <Switch checkedChildren="开启" unCheckedChildren="关闭" />
+                    <Form.Item
+                      label="启用搜索"
+                      name="enableSearch"
+                      valuePropName="checked"
+                    >
+                      <Switch />
                     </Form.Item>
-
-                    <Form.Item label="深色模式" name="enableDarkMode" valuePropName="checked">
-                      <Switch checkedChildren="开启" unCheckedChildren="关闭" />
+                    <Form.Item
+                      label="启用暗色模式"
+                      name="enableDarkMode"
+                      valuePropName="checked"
+                    >
+                      <Switch />
                     </Form.Item>
-
-                    <Form.Item label="每页文章数量" name="articlesPerPage">
-                      <InputNumber min={5} max={50} placeholder="10" />
+                    <Form.Item label="每页文章数" name="articlesPerPage">
+                      <InputNumber min={1} max={100} />
                     </Form.Item>
-                  </div>
-                )
+                    <Form.Item
+                      label="AI 聊天快捷键"
+                      name="aiChatShortcut"
+                      tooltip="在输入框中直接按下组合键（Backspace 清空，Esc 取消）。Mac 会显示为 Cmd/Option。"
+                      rules={[{ max: 40, message: '长度不要超过 40 个字符' }]}
+                    >
+                      <ShortcutInput placeholder="按下组合键，例如 Alt+K 或 Ctrl+Shift+J" />
+                    </Form.Item>
+                  </>
+                ),
               },
               {
                 key: 'analytics',
@@ -355,20 +384,14 @@ const SystemSettings: React.FC = () => {
                 children: (
                   <div className="tab-content">
                     <Form.Item label="Google Analytics ID" name="googleAnalyticsId">
-                      <Input placeholder="G-XXXXXXXXXX" />
+                      <Input placeholder="G-XXXXXXX" />
                     </Form.Item>
-
                     <Form.Item label="百度统计 ID" name="baiduAnalyticsId">
-                      <Input placeholder="请输入百度统计 ID" />
+                      <Input placeholder="XXXXXXXX" />
                     </Form.Item>
-
-                    <div className="analytics-tip">
-                      <p>📊 统计代码将自动添加到网站页面中</p>
-                      <p>🔒 统计 ID 信息将被安全存储</p>
-                    </div>
                   </div>
-                )
-              }
+                ),
+              },
             ]}
           />
         </Form>

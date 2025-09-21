@@ -1,100 +1,107 @@
 .friend-link-management {
-    padding: 24px;
-    background: #f5f5f5;
-    min-height: 100vh;
-}
-
-.friend-links-container {
-    padding: 24px;
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.friend-links-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 24px;
+  padding: 24px;
 }
 
 .page-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
 }
 
-.friend-links-title {
-    font-size: 24px;
-    font-weight: 600;
-    color: #262626;
-    margin: 0;
+.page-header h2 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
 }
 
-.friend-links-search {
-    margin-bottom: 16px;
+.search-card {
+  margin-bottom: 24px;
 }
 
-.friend-links-table {
-    margin-top: 16px;
-}
-
-.friend-links-actions {
-    display: flex;
-    gap: 8px;
-}
-
-.friend-link-status {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-}
-
-.friend-link-status.active {
-    color: #52c41a;
-}
-
-.friend-link-status.inactive {
-    color: #ff4d4f;
-}
-
-.friend-link-logo {
-    width: 32px;
-    height: 32px;
-    border-radius: 4px;
-    object-fit: cover;
+.friend-link-name {
+  font-weight: 500;
 }
 
 .friend-link-url {
-    color: #1890ff;
-    text-decoration: none;
+  color: #1890ff;
+  text-decoration: none;
 }
 
 .friend-link-url:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
-.modal-form-item {
-    margin-bottom: 16px;
+/* 社交链接编辑器样式 */
+.social-links-editor {
+  width: 100%;
 }
 
-.modal-form-item:last-child {
-    margin-bottom: 0;
+.social-link-item {
+  padding: 8px 0 !important;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.social-link-form {
+  display: flex;
+  width: 100%;
+  align-items: center;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .friend-link-management {
+    padding: 16px;
+  }
+  
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  
+  .friend-link-url {
+    font-size: 13px;
+  }
+  
+  .social-link-form {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .friend-link-management {
+    padding: 12px;
+  }
+  
+  .page-header h2 {
+    font-size: 20px;
+  }
+  
+  .friend-link-name {
+    font-size: 14px;
+  }
+}
+
+/* 友链管理-社交链接单元格样式 */
+.social-links-cell .ant-tag {
+  border-radius: 999px;
+  box-shadow: 0 8px 20px -12px rgba(0,0,0,0.25);
+}
+
+.social-links-cell a {
+  text-decoration: none;
+}
+
+/* 让单元格在窄屏时也能换行显示 */
+.ant-table-cell .social-links-cell {
+  max-width: 420px;
 }
 
 @media (max-width: 768px) {
-    .friend-links-container {
-        padding: 16px;
-    }
-
-    .friend-links-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 16px;
-    }
-
-    .friend-links-search {
-        width: 100%;
-    }
+  .ant-table-cell .social-links-cell {
+    max-width: 240px;
+  }
 }

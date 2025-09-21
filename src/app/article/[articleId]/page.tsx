@@ -1,25 +1,10 @@
 "use server";
 import React from "react";
-import { Alert, Card, Col, Divider, Row, Space, Tag } from "antd";
-import {
-  CalendarOutlined,
-  ClockCircleOutlined,
-  EyeOutlined,
-  OpenAIOutlined,
-} from "@ant-design/icons";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
 import Title from "antd/es/typography/Title";
-import Paragraph from "antd/es/typography/Paragraph";
-import Sidebar from "@/components/Sidebar/page";
-import ArticleList from "@/components/ArticleList/page";
-import CommentSection from "@/components/CommentSection/page";
-import CodeBlock from "@/components/CodeBlock/page";
-import RewardModal from "@/components/RewardModal";
 import ArticleDetailClient from "./ArticleDetailClient";
+import { getArticleVoById } from "@/api/articleController";
 import "./styles.css";
 import "highlight.js/styles/github-dark.css";
-import { getArticleVoById } from "@/api/articleController";
 import { formatDate } from "@/utils";
 
 interface ArticlePageProps {
@@ -28,7 +13,7 @@ interface ArticlePageProps {
   }>;
 }
 
-export default async function ArticlePage({ params }: ArticlePageProps) {
+const ArticlePage = async ({ params }: ArticlePageProps) => {
   const { articleId } = await params;
   let article: any = null;
 
@@ -45,13 +30,11 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     const res = await getArticleVoById({ articleId });
     article = res.data;
   } catch (error) {
-    console.log(error);
+    console.warn("获取文章详情失败:", error);
   }
 
   // 生成目录 - 确保 content 存在
   const tocItems = article?.content ? generateTOC(article.content) : [];
-  // 同步渲染期间统计各标题出现次数，用于生成唯一 slug，确保与 TOC 对齐
-  const headingCounts = new Map<string, number>();
 
   if (!article) {
     return (
@@ -68,7 +51,9 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
       tocItems={tocItems}
     />
   );
-}
+};
+
+export default ArticlePage;
 
 // 生成 slug 的工具方法
 const extractText = (node: React.ReactNode): string => {
@@ -87,7 +72,8 @@ const slugify = (text: string) =>
     .trim()
     .toLowerCase()
     .replace(/<[^>]*>/g, "") // remove html tags if any
-    .replace(/[^\p{L}\p{N}\s\-_]/gu, "") // keep letters/numbers/space/-/_
+    // keep: ASCII letters/digits/underscore/space/hyphen + common CJK/Hiragana/Katakana/Hangul ranges
+    .replace(/[^\w\s\-\u4E00-\u9FFF\u3040-\u30FF\uAC00-\uD7AF]/g, "")
     .replace(/\s+/g, "-")
     .replace(/-+/g, "-");
 
@@ -141,14 +127,12 @@ const generateTOC = (content: string) => {
     // Setext 标题：上一行是文本，下一行是 === 或 ---
     if (i + 1 < lines.length) {
       const underline = lines[i + 1];
-      if (/^\s*=+\s*$/.test(underline)) {
-        // h1
+      if(/^\s*=+\s*$/.test(underline)){
         const raw = line.trim();
         if (raw) pushItem(raw, 1);
-        i++; // 跳过下划线行
+        i++;
         continue;
-      } else if (/^\s*-+\s*$/.test(underline)) {
-        // h2
+      } else if(/^\s*-+\s*$/.test(underline)){
         const raw = line.trim();
         if (raw) pushItem(raw, 2);
         i++;

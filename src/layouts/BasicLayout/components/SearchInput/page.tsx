@@ -18,17 +18,8 @@ export const SearchInput = (props: Props) => {
             className="searchInput"
             key="SearchOutlined"
             aria-hidden
-            style={{
-                display: 'flex',
-                alignItems: 'center',
-                marginInlineEnd: 24,
-            }}
         >
             <Input.Search
-                style={{
-                    borderRadius: 4,
-                    marginInlineEnd: 12,
-                }}
                 prefix={
                     <SearchOutlined/>
                 }

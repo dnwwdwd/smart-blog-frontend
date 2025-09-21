@@ -6,10 +6,8 @@
   padding: 0 0 24px;
 }
 
-/* 顶部英雄区 */
 .home-hero {
-  background: transparent; /* 原线性渐变背景，移除 */
-  border-bottom: 1px solid #e6f4ff;
+  background: transparent;
 }
 
 .home-hero-inner {
@@ -39,12 +37,6 @@
   width: 100%;
   margin: 0 auto;
   padding: 0 24px; /* 与专栏页 columns-container 对齐 */
-}
-
-.home-header {
-  margin: 16px 0 24px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid #f0f0f0;
 }
 
 /* 复用通用 ArticlesPageClient 的布局类名 */

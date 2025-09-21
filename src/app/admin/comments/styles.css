@@ -1,0 +1,56 @@
+.admin-page {
+    padding: 12px;
+}
+
+.admin-card {
+    border-radius: 8px;
+}
+
+.toolbar {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+}
+
+.search-input {
+    max-width: 320px;
+    width: 100%;
+}
+
+.user-cell {
+    display: flex;
+    flex-direction: column;
+}
+
+.user-cell .email {
+    color: rgba(0, 0, 0, 0.45);
+    font-size: 12px;
+}
+
+.comment-content {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.article-title {
+    max-width: 280px;
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #1D82F3;
+}
+
+/* 移动端优化 */
+@media (max-width: 768px) {
+    .toolbar {
+        flex-direction: column;
+    }
+
+    .search-input {
+        max-width: 100%;
+    }
+}

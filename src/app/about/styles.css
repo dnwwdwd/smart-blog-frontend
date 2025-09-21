@@ -1,295 +1,365 @@
 .about-page {
-  min-height: 100vh;
-  padding: 24px 0;
-}
-
-.about-container {
-  max-width: 1200px;
+  max-width: 1080px;
   margin: 0 auto;
-  padding: 0 24px;
-}
-
-/* 个人信息卡片 */
-.profile-card {
-  margin-bottom: 24px;
-  border-radius: 12px;
-}
-
-.profile-header {
-  display: flex;
-  gap: 32px;
-  align-items: flex-start;
-}
-
-.profile-avatar {
-  flex-shrink: 0;
-}
-
-.profile-info {
-  flex: 1;
-}
-
-.profile-name {
-  margin-bottom: 8px !important;
-  color: #1a1a1a;
-  font-weight: 700;
-}
-
-.profile-title {
-  font-size: 18px;
-  color: #1890ff;
-  font-weight: 500;
-  display: block;
-  margin-bottom: 16px;
-}
-
-.profile-bio {
-  color: #666;
-  line-height: 1.6;
-  margin-bottom: 20px !important;
-}
-
-.profile-contact {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  margin-bottom: 20px;
-}
-
-.contact-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: #666;
-  font-size: 14px;
-}
-
-.social-links {
-  display: flex;
-  gap: 16px;
-}
-
-.social-links a {
-  color: #666;
-  font-size: 20px;
-  transition: color 0.3s ease;
-}
-
-.social-links a:hover {
-  color: #1890ff;
-}
-
-/* 统计数据 */
-.stats-section {
-  margin-bottom: 24px;
-}
-
-.stat-card {
-  border-radius: 12px;
-  transition: transform 0.3s ease;
-}
-
-.stat-card:hover {
-  transform: translateY(-2px);
-}
-
-.stat-content {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.stat-icon {
-  font-size: 24px;
-  color: #1890ff;
-}
-
-.stat-info {
-  flex: 1;
-}
-
-.stat-number {
-  font-size: 24px;
-  font-weight: 700;
-  color: #1a1a1a;
-  line-height: 1;
-}
-
-.stat-label {
-  font-size: 12px;
-  color: #666;
-  margin-top: 4px;
-}
-
-/* 内容区域 */
-.content-section {
-  margin-bottom: 24px;
-}
-
-.timeline-card,
-.skills-card {
-  border-radius: 12px;
-  height: 100%;
-}
-
-.section-title {
-  margin-bottom: 24px !important;
-  color: #1a1a1a;
-  font-weight: 600;
-}
-
-/* 时间线样式 */
-.custom-timeline {
-  margin-top: 16px;
-}
-
-.timeline-content {
-  padding-left: 8px;
-}
-
-.timeline-time {
-  color: #1890ff;
-  font-size: 12px;
-  font-weight: 500;
-}
-
-.timeline-title {
-  margin: 4px 0 2px 0 !important;
-  color: #1a1a1a;
-  font-weight: 600;
-}
-
-.timeline-company {
-  color: #666;
-  font-size: 14px;
-  font-weight: 500;
-}
-
-.timeline-description {
-  margin: 8px 0 0 0 !important;
-  color: #666;
-  font-size: 13px;
-  line-height: 1.5;
-}
-
-/* 技能样式 */
-.skills-list {
+  padding: 56px 20px 80px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 56px;
 }
 
-.skill-item {
-  width: 100%;
-}
-
-.skill-header {
-  display: flex;
-  justify-content: space-between;
+.about-hero {
+  display: grid;
+  gap: 32px;
+  grid-template-columns: minmax(0, 1fr) 220px;
   align-items: center;
-  margin-bottom: 8px;
+  padding: 36px;
+  border-radius: 28px;
+  background: linear-gradient(135deg, #f5f7ff 0%, #ffffff 100%);
+  border: 1px solid rgba(24, 144, 255, 0.08);
+  box-shadow: 0 20px 60px -40px rgba(24, 144, 255, 0.6);
 }
 
-.skill-name {
-  font-weight: 500;
-  color: #1a1a1a;
+.about-hero__text h1 {
+  margin: 12px 0 18px;
+  font-size: 40px;
+  font-weight: 700;
+  color: #14213d;
 }
 
-.skill-percentage {
-  color: #666;
-  font-size: 12px;
+.about-hero__text p {
+  margin: 0;
+  color: #415a77;
+  line-height: 1.7;
+  font-size: 16px;
 }
 
-.skill-progress {
-  height: 8px;
+.about-hero__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #2563eb;
 }
 
-/* 成就卡片 */
-.achievements-card {
-  border-radius: 12px;
-}
-
-.achievements-list {
+.about-hero__actions {
+  margin-top: 28px;
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
 }
 
-.achievement-tag {
-  padding: 8px 16px;
+.about-hero__actions a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  border-radius: 999px;
+  font-weight: 600;
   font-size: 14px;
-  border-radius: 20px;
-  border: 1px solid #bae6fd;
-  color: #0369a1;
-  margin: 0;
+  text-decoration: none;
+  transition: all 0.2s ease;
 }
 
-/* 响应式设计 */
-@media (max-width: 1024px) {
-  .about-container {
-    padding: 0 16px;
+.about-hero__actions a:first-child {
+  background: #2563eb;
+  color: #fff;
+  box-shadow: 0 12px 30px -15px rgba(37, 99, 235, 0.7);
+}
+
+.about-hero__actions a.ghost {
+  background: rgba(37, 99, 235, 0.08);
+  color: #2563eb;
+}
+
+.about-hero__actions a:hover {
+  transform: translateY(-1px);
+}
+
+.about-hero__avatar img,
+.about-hero__avatar span > img { /* next/image may render img inside a span */
+  object-fit: cover;
+  border-radius: 18px;
+}
+
+.about-section {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.about-section__title {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 650;
+  color: #14213d;
+}
+
+.about-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.about-card {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.06), rgba(96, 165, 250, 0.1));
+  border-radius: 20px;
+  border: 1px solid rgba(37, 99, 235, 0.1);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  color: #1e293b;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.about-card--minimal {
+  background: #fff;
+  border: 1px solid rgba(148, 163, 184, 0.15);
+  box-shadow: 0 12px 30px -20px rgba(13, 23, 44, 0.45);
+  gap: 16px;
+}
+
+.about-card__icon {
+  font-size: 28px;
+}
+
+.about-card h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.about-card p {
+  margin: 0;
+  line-height: 1.6;
+  font-size: 14px;
+  color: #4a5568;
+}
+
+.about-card ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 14px;
+  color: #475569;
+}
+
+.about-timeline {
+  margin: 0;
+  padding: 4px 0 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  position: relative;
+}
+
+.about-timeline::before {
+  content: "";
+  position: absolute;
+  left: 10px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(180deg, rgba(37, 99, 235, 0.2), rgba(37, 99, 235, 0));
+}
+
+.about-timeline li {
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+  padding-left: 24px;
+}
+
+.about-timeline__time {
+  font-size: 13px;
+  font-weight: 600;
+  color: #2563eb;
+  letter-spacing: 0.02em;
+}
+
+.about-timeline h3 {
+  margin: 0 0 6px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.about-timeline p {
+  margin: 0;
+  color: #475569;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.about-pill-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.about-pill-list li {
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: rgba(37, 99, 235, 0.08);
+  color: #1d4ed8;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.about-section--footer {
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 28px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.12), rgba(37, 99, 235, 0.05));
+  border: 1px solid rgba(37, 99, 235, 0.15);
+}
+
+.about-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.about-links a {
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: #fff;
+  color: #2563eb;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 14px;
+  border: 1px solid rgba(37, 99, 235, 0.18);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.about-links a:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 30px -20px rgba(37, 99, 235, 0.6);
+}
+
+@media (max-width: 992px) {
+  .about-hero {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .about-hero__actions {
+    justify-content: center;
+  }
+
+  .about-hero__avatar {
+    max-width: 220px;
+    margin: 0 auto;
+  }
+
+  .about-timeline li {
+    grid-template-columns: 100px minmax(0, 1fr);
   }
 }
 
 @media (max-width: 768px) {
   .about-page {
-    padding: 16px 0;
+    padding: 32px 16px 64px;
+    gap: 40px;
   }
-  
-  .about-container {
-    padding: 0 12px;
+
+  .about-hero {
+    padding: 28px 20px;
   }
-  
-  .profile-header {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    gap: 20px;
+
+  .about-hero__text h1 {
+    font-size: 32px;
   }
-  
-  .profile-contact {
-    justify-content: center;
+
+  .about-card-grid {
+    grid-template-columns: 1fr;
   }
-  
-  .social-links {
-    justify-content: center;
+
+  .about-timeline {
+    gap: 18px;
   }
-  
-  .stat-content {
-    flex-direction: column;
-    text-align: center;
-    gap: 8px;
-  }
-  
-  .timeline-content {
+
+  .about-timeline li {
+    grid-template-columns: 1fr;
     padding-left: 0;
+  }
+
+  .about-timeline::before {
+    left: 0;
+  }
+
+  .about-section--footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .about-links {
+    width: 100%;
+  }
+
+  .about-links a {
+    flex: 1 1 48%;
+    text-align: center;
   }
 }
 
-@media (max-width: 480px) {
-  .profile-name {
-    font-size: 24px !important;
+@media (prefers-color-scheme: dark) {
+  .about-page {
+    color: #e2e8f0;
   }
-  
-  .profile-title {
-    font-size: 16px;
+
+  .about-hero {
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.25), rgba(17, 24, 39, 0.9));
+    border-color: rgba(59, 130, 246, 0.2);
+    box-shadow: none;
   }
-  
-  .profile-contact {
-    flex-direction: column;
-    gap: 12px;
+
+  .about-hero__text h1 {
+    color: #e2e8f0;
   }
-  
-  .stat-number {
-    font-size: 20px;
+
+  .about-hero__text p {
+    color: #cbd5f5;
   }
-  
-  .achievements-list {
-    gap: 8px;
+
+  .about-card {
+    background: rgba(59, 130, 246, 0.15);
+    border-color: rgba(59, 130, 246, 0.3);
+    color: #e2e8f0;
   }
-  
-  .achievement-tag {
-    font-size: 12px;
-    padding: 6px 12px;
+
+  .about-card--minimal {
+    background: rgba(15, 23, 42, 0.85);
+    border-color: rgba(59, 130, 246, 0.25);
+  }
+
+  .about-card p,
+  .about-card ul,
+  .about-timeline p {
+    color: #cbd5f5;
+  }
+
+  .about-section--footer {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.18), rgba(15, 23, 42, 0.95));
+    border-color: rgba(59, 130, 246, 0.25);
+  }
+
+  .about-links a {
+    background: rgba(15, 23, 42, 0.9);
+    color: #93c5fd;
+    border-color: rgba(59, 130, 246, 0.35);
   }
 }

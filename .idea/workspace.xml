@@ -4,50 +4,80 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5bbedd87-77e4-4b9e-8dcb-f82810a3040f" name="更改" comment="feat: implement the function of user info storage">
-      <change afterPath="$PROJECT_DIR$/.idea/shelf/_2025_8_16_09_50____.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/MarsCodeWorkspaceAppSettings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/MarsCodeWorkspaceAppSettings.xml" afterDir="false" />
+    <list default="true" id="5bbedd87-77e4-4b9e-8dcb-f82810a3040f" name="更改" comment="fix: avoid mandatory login">
+      <change afterPath="$PROJECT_DIR$/docs/Spring AI使用Elasticsearch作为向量数据库.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/postcss.config.cjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/assets/ai_chat_icon.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/assets/apply_link.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/assets/avatar.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/assets/logo.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/api/settingController.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/admin/comments/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/admin/comments/styles.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/admin/dashboard/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/AIChatIcon/index.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/AIChatModal/index.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/AllTagsSidebar/index.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/AllTagsSidebar/styles.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/ColumnTabs/index.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/ColumnTabs/styles.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/HomeArticlesClient/index.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/HomeColumnBar/index.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/HomeColumnBar/styles.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/HomeHero/index.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/RecommendedArticlesSidebar/index.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/RecommendedArticlesSidebar/styles.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/stores/siteSettingsStore.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/api/articleController.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/articleController.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/api/commentController.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/commentController.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/friendLinkController.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/friendLinkController.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/api/typings.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/typings.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/admin/articles/create/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/admin/articles/create/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/admin/articles/create/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/admin/articles/create/styles.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/about/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/about/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/about/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/about/styles.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/admin/ai-chat/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/admin/ai-chat/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/admin/ai-chat/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/admin/ai-chat/styles.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/app/admin/articles/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/admin/articles/page.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/app/admin/columns/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/admin/columns/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/admin/friend-link/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/admin/friend-link/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/admin/friend-link/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/admin/friend-link/styles.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/admin/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/admin/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/admin/settings/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/admin/settings/page.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/app/admin/tags/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/admin/tags/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/api/admin/ai-chat/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/api/admin/ai-chat/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/article/[articleId]/ArticleDetailClient.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/article/[articleId]/ArticleDetailClient.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/article/[articleId]/HashScroll.tsx" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/app/article/[articleId]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/article/[articleId]/page.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/app/article/[articleId]/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/article/[articleId]/styles.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/articles/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/articles/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/articles/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/articles/styles.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/columns/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/columns/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/columns/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/columns/styles.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/globals.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/globals.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/login/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/login/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/column/[columnId]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/column/[columnId]/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/links/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/links/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/links/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/links/styles.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/tags/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/tags/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/tags/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/tags/styles.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/styles.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/tag/[tagId]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/tag/[tagId]/page.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/ArticleCard/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ArticleCard/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/ArticleList/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ArticleList/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/CodeBlock/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/CodeBlock/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/CodeBlock/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/CodeBlock/styles.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/ArticleCard/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ArticleCard/styles.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/CommentSection/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/CommentSection/page.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/CommentSection/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/CommentSection/styles.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/FrontNavigation/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/FrontNavigation/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/MdEditor/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/MdEditor/index.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/MdEditor/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/MdEditor/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/RelatedArticles/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/RelatedArticles/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/FrontNavigation/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/FrontNavigation/styles.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/GlobalLoading/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/GlobalLoading/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/GlobalLoading/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/GlobalLoading/styles.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/RewardModal/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/RewardModal/page.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/SearchModal/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/SearchModal/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/TagsPageClient/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/TagsPageClient/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/SearchModal/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/SearchModal/styles.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Sidebar/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Sidebar/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Sidebar/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Sidebar/styles.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/layouts/AdminLayout/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/AdminLayout/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/layouts/AdminLayout/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/AdminLayout/styles.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/layouts/BasicLayout/components/SearchInput/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/BasicLayout/components/SearchInput/index.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/layouts/BasicLayout/components/SearchInput/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/BasicLayout/components/SearchInput/page.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/layouts/BasicLayout/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/BasicLayout/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/layouts/BasicLayout/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/BasicLayout/styles.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/stores/authStore.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/stores/authStore.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/libs/request.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/libs/request.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -83,42 +113,46 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/hejiajun/Documents/study/projects/smart-blog/smart-blog-frontend/src/components&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.standard&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.standard&quot;: &quot;&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;npm.dev.executor&quot;: &quot;Run&quot;,
-    &quot;npm.openapi.executor&quot;: &quot;Run&quot;,
-    &quot;prettierjs.PrettierConfiguration.Package&quot;: &quot;/Users/hejiajun/Documents/study/projects/smart-blog/smart-blog-frontend/node_modules/prettier&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;settings.javascript.prettier&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;/Users/hejiajun/Documents/study/projects/smart-blog/smart-blog-frontend/node_modules/typescript/lib&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "/Users/hejiajun/Documents/study/projects/smart-blog/smart-blog-frontend/public/assets",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.standard": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.standard": "",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "npm.dev.executor": "Run",
+    "npm.openapi.executor": "Run",
+    "npm.start.executor": "Run",
+    "prettierjs.PrettierConfiguration.Package": "/Users/hejiajun/Documents/study/projects/smart-blog/smart-blog-frontend/node_modules/prettier",
+    "settings.editor.selected.configurable": "settings.javascript.prettier",
+    "ts.external.directory.path": "/Users/hejiajun/Documents/study/projects/smart-blog/smart-blog-frontend/node_modules/typescript/lib",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/src/components" />
       <recent name="$PROJECT_DIR$/public/assets" />
-      <recent name="$PROJECT_DIR$/src/layouts/BasicLayout" />
-      <recent name="$PROJECT_DIR$/config" />
+      <recent name="$PROJECT_DIR$/.next/standalone" />
+      <recent name="$PROJECT_DIR$/.next/standalone/.next" />
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/src/components" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/.next/standalone/.next" />
+      <recent name="$PROJECT_DIR$/.next/standalone" />
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/src/layouts/BasicLayout/components" />
     </key>
   </component>
-  <component name="RunManager" selected="npm.openapi">
+  <component name="RunManager" selected="npm.dev">
     <configuration name="dev" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
       <package-json value="$PROJECT_DIR$/package.json" />
       <command value="run" />
@@ -139,10 +173,21 @@
       <envs />
       <method v="2" />
     </configuration>
+    <configuration name="start" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="start" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="npm.openapi" />
         <item itemvalue="npm.dev" />
+        <item itemvalue="npm.start" />
+        <item itemvalue="npm.openapi" />
       </list>
     </recent_temporary>
   </component>
@@ -172,6 +217,9 @@
       <workItem from="1756012984968" duration="811000" />
       <workItem from="1756022682691" duration="16057000" />
       <workItem from="1756905119459" duration="5000" />
+      <workItem from="1757135433468" duration="16457000" />
+      <workItem from="1757855131902" duration="10242000" />
+      <workItem from="1758292681900" duration="25269000" />
     </task>
     <task id="LOCAL-00001" summary="feat: implement homepage layout with hero section and navigation&#10;feat: add search modal component with multi-tab functionality&#10;feat: create article, column, and tag listing pages&#10;feat: implement infinite scroll for content pagination&#10;feat: add responsive design for mobile and desktop&#10;feat: create about page with system information&#10;feat: implement comment system for articles&#10;feat: add friend links management&#10;feat: create admin layout and basic structure&#10;fix: resolve search modal API data access path issues&#10;fix: center search input in modal dialog&#10;fix: adjust column card width for better display&#10;style: remove background colors from homepage and about page&#10;refactor: optimize search logic to query data only on tab switch&#10;fix: prevent horizontal scrollbar in search result items">
       <option name="closed" value="true" />
@@ -189,7 +237,63 @@
       <option name="project" value="LOCAL" />
       <updated>1755432230399</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="feat: popular articles component, infinite loading component, beautify the style of code-block, navigation of article outline">
+      <option name="closed" value="true" />
+      <created>1757217895078</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1757217895078</updated>
+    </task>
+    <task id="LOCAL-00004" summary="feat: develop AI chat page">
+      <option name="closed" value="true" />
+      <created>1757256179468</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1757256179468</updated>
+    </task>
+    <task id="LOCAL-00005" summary="feat: add infinite loading client, reward function, AI chat request">
+      <option name="closed" value="true" />
+      <created>1757256305039</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1757256305039</updated>
+    </task>
+    <task id="LOCAL-00006" summary="feat: add article upload status monitoring and improve UI styles">
+      <option name="closed" value="true" />
+      <created>1757858883555</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1757858883555</updated>
+    </task>
+    <task id="LOCAL-00007" summary="chore: update API endpoint">
+      <option name="closed" value="true" />
+      <created>1757858911660</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1757858911660</updated>
+    </task>
+    <task id="LOCAL-00008" summary="chore: add config for deployment">
+      <option name="closed" value="true" />
+      <created>1757858961752</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1757858961752</updated>
+    </task>
+    <task id="LOCAL-00009" summary="fix: avoid mandatory login">
+      <option name="closed" value="true" />
+      <created>1758034006501</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1758034006502</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -209,6 +313,13 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="feat: implement homepage layout with hero section and navigation&#10;feat: add search modal component with multi-tab functionality&#10;feat: create article, column, and tag listing pages&#10;feat: implement infinite scroll for content pagination&#10;feat: add responsive design for mobile and desktop&#10;feat: create about page with system information&#10;feat: implement comment system for articles&#10;feat: add friend links management&#10;feat: create admin layout and basic structure&#10;fix: resolve search modal API data access path issues&#10;fix: center search input in modal dialog&#10;fix: adjust column card width for better display&#10;style: remove background colors from homepage and about page&#10;refactor: optimize search logic to query data only on tab switch&#10;fix: prevent horizontal scrollbar in search result items" />
     <MESSAGE value="feat: implement the function of user info storage" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: implement the function of user info storage" />
+    <MESSAGE value="feat: popular articles component, infinite loading component, beautify the style of code-block, navigation of article outline" />
+    <MESSAGE value="feat: develop AI chat page" />
+    <MESSAGE value="feat: add infinite loading client, reward function, AI chat request" />
+    <MESSAGE value="feat: add article upload status monitoring and improve UI styles" />
+    <MESSAGE value="chore: update API endpoint" />
+    <MESSAGE value="chore: add config for deployment" />
+    <MESSAGE value="fix: avoid mandatory login" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix: avoid mandatory login" />
   </component>
 </project>

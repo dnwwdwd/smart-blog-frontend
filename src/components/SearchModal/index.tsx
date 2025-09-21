@@ -378,7 +378,6 @@ const SearchModal: React.FC<SearchModalProps> = ({
           prefix={<SearchOutlined />}
           value={keyword}
           onChange={(e) => setKeyword(e.target.value)}
-          className="search-input"
           autoFocus
         />
 

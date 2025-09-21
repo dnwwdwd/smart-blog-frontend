@@ -11,11 +11,13 @@ import {
   SettingOutlined,
   TagsOutlined,
   UploadOutlined,
+  CommentOutlined,
 } from "@ant-design/icons";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { useAuthStore } from "@/stores/authStore";
+import { useFetchSiteSettings } from "@/stores/siteSettingsStore";
 import "./styles.css";
 import "@ant-design/v5-patch-for-react-19";
 
@@ -32,10 +34,9 @@ const AdminLayout: React.FC<Props> = ({ children }) => {
   const pathname = usePathname();
   const router = useRouter();
   
-  // 获取登录状态
   const { isLoggedIn, checkLogin } = useAuthStore();
+  const fetchSiteSettings = useFetchSiteSettings();
   
-  // 登录验证逻辑：在挂载时先向后端校验一次会话
   useEffect(() => {
     let ignore = false;
     (async () => {
@@ -50,25 +51,26 @@ const AdminLayout: React.FC<Props> = ({ children }) => {
     };
   }, [checkLogin]);
   
-  // 根据状态跳转
   useEffect(() => {
-    if (checking) return; // 等待检查完成
+    if (checking) return;
     if (!isLoggedIn) {
       message.warning("您还未登录");
       router.push("/login");
+    } else {
+      // 登录通过后拉取站点设置
+      fetchSiteSettings();
     }
-  }, [checking, isLoggedIn, router]);
+  }, [checking, isLoggedIn, router, fetchSiteSettings]);
   
-  // 如果未登录或正在检查，不渲染后台内容
   if (checking || !isLoggedIn) {
     return null;
   }
 
   const menuItems = [
     {
-      key: '/admin',
+      key: '/admin/dashboard',
       icon: <DashboardOutlined />,
-      label: <Link href="/admin">仪表盘</Link>,
+      label: <Link href="/admin/dashboard">仪表盘</Link>,
     },
     {
       key: 'articles',
@@ -102,7 +104,12 @@ const AdminLayout: React.FC<Props> = ({ children }) => {
       icon: <BookOutlined />,
       label: <Link href="/admin/columns">专栏管理</Link>,
     },
-        {
+    {
+      key: '/admin/comments',
+      icon: <CommentOutlined />,
+      label: <Link href="/admin/comments">评论管理</Link>,
+    },
+    {
       key: '/admin/friend-link',
       icon: <LinkOutlined />,
       label: <Link href="/admin/friend-link">友链管理</Link>,
@@ -144,7 +151,6 @@ const AdminLayout: React.FC<Props> = ({ children }) => {
 
   return (
     <Layout className="admin-layout">
-      {/* 桌面端侧边栏 */}
       <Sider
         trigger={null}
         collapsible
@@ -162,7 +168,6 @@ const AdminLayout: React.FC<Props> = ({ children }) => {
         {sidebarContent}
       </Sider>
 
-      {/* 移动端抽屉 */}
       <Drawer
         title="后台管理"
         placement="left"

@@ -116,13 +116,15 @@
 }
 
 /* 管理后台内容区域适配 */
-.admin-layout .ant-layout {
-  margin-left: 0;
-  transition: margin-left 0.2s;
-}
-
-.admin-layout .ant-layout-sider-collapsed + .ant-layout {
-  margin-left: 0;
+@media (min-width: 992px) {
+  /* 侧边栏为 fixed，使用 ~ 选择器给后续的内容布局整体让出宽度 */
+  .admin-layout .ant-layout-sider ~ .ant-layout {
+    margin-left: 250px;
+    transition: margin-left 0.2s;
+  }
+  .admin-layout .ant-layout-sider.ant-layout-sider-collapsed ~ .ant-layout {
+    margin-left: 80px;
+  }
 }
 
 /* 修复侧边栏与内容区域的空白问题 */
