@@ -7,17 +7,14 @@
   margin: 0 auto;
   cursor: pointer;
   border-radius: 16px;
-  background: linear-gradient(135deg, 
-    rgba(255, 255, 255, 0.9) 0%, 
-    rgba(248, 250, 255, 0.8) 50%, 
-    rgba(240, 245, 255, 0.9) 100%);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.1),
-    0 4px 16px rgba(0, 0, 0, 0.05);
-  transition: transform 0.3s ease-out, box-shadow 0.3s ease-out, opacity 0.3s ease-out;
-  animation: gentle-float 8s ease-in-out infinite;
+  background: linear-gradient(135deg,
+    rgba(255, 255, 255, 0.98) 0%,
+    rgba(255, 236, 242, 0.9) 100%);
+  border: 1px solid rgba(255, 200, 210, 0.4);
+  box-shadow: none;
+  transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+  transform-origin: top center;
+  animation: pendulum-sway 6s ease-in-out infinite;
   overflow: hidden;
   will-change: transform;
   transform: translateZ(0);
@@ -25,54 +22,17 @@
 
 /* 悬停效果 */
 .friend-link-card:hover {
-  transform: translate3d(0, -12px, 0) scale(1.03);
-  box-shadow: 
-    0 20px 60px rgba(0, 0, 0, 0.15),
-    0 8px 32px rgba(0, 0, 0, 0.1);
-  animation-play-state: paused;
-}
-
-.friend-link-card:hover::before {
-  opacity: 1;
-}
-
-/* 悬停光晕效果 */
-.friend-link-card::before {
-  content: '';
-  position: absolute;
-  top: -2px;
-  left: -2px;
-  right: -2px;
-  bottom: -2px;
-  background: linear-gradient(45deg, 
-    rgba(102, 126, 234, 0.3), 
-    rgba(118, 75, 162, 0.3), 
-    rgba(255, 182, 193, 0.3),
-    rgba(102, 126, 234, 0.3));
-  border-radius: 18px;
-  z-index: -1;
-  opacity: 0;
-  transition: opacity 0.4s ease;
-  filter: blur(8px);
+  animation: none;
+  transform: rotate(0deg) scale(1.06);
 }
 
 /* 特殊卡片金色效果 */
-.friend-link-card.special {
-  background: linear-gradient(135deg, 
-    rgba(255, 248, 220, 0.95) 0%, 
-    rgba(255, 239, 153, 0.9) 50%, 
-    rgba(255, 215, 0, 0.1) 100%);
-  border: 2px solid rgba(255, 215, 0, 0.4);
-  animation: special-glow 3s ease-in-out infinite alternate;
-}
-
-.friend-link-card.special::before {
-  background: linear-gradient(45deg, 
-    rgba(255, 215, 0, 0.6), 
-    rgba(255, 239, 153, 0.6), 
-    rgba(255, 248, 220, 0.6),
-    rgba(255, 215, 0, 0.6));
-  opacity: 0.7;
+.friend-link-card.has-status {
+  background: linear-gradient(130deg,
+    rgba(255, 231, 156, 0.96) 0%,
+    rgba(255, 215, 187, 0.92) 45%,
+    rgba(255, 201, 236, 0.9) 100%);
+  border-color: rgba(255, 194, 120, 0.65);
 }
 
 /* 状态标签 */
@@ -80,42 +40,15 @@
   position: absolute;
   top: 12px;
   left: 12px;
-  background: linear-gradient(45deg, #667eea, #764ba2);
-  color: white;
+  background: #F4D657;
+  color: #6b4f00;
   padding: 4px 12px;
   border-radius: 12px;
   font-size: 11px;
   font-weight: 600;
   z-index: 2;
-  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+  box-shadow: none;
   animation: label-pulse 3s ease-in-out infinite;
-}
-
-/* 右上角图标 */
-.corner-icon {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  width: 24px;
-  height: 24px;
-  background: rgba(255, 255, 255, 0.9);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #ffd700;
-  font-size: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease-out, background-color 0.3s ease-out, color 0.3s ease-out;
-  z-index: 2;
-  will-change: transform;
-  transform: translateZ(0);
-}
-
-.corner-icon:hover {
-  transform: translateZ(0) scale(1.2) rotate(180deg);
-  background: #ffd700;
-  color: white;
 }
 
 /* 头像区域 */
@@ -154,9 +87,7 @@
 
 .friend-link-card:hover .friend-avatar {
   transform: translateZ(0) rotate(3deg);
-  box-shadow: 
-    0 12px 32px rgba(0, 0, 0, 0.2),
-    0 6px 16px rgba(0, 0, 0, 0.15);
+  box-shadow: none;
 }
 
 /* 内容区域 */
@@ -219,7 +150,7 @@
   font-size: 14px;
   cursor: pointer;
   transition: transform 0.3s ease-out, background-color 0.3s ease-out, color 0.3s ease-out, box-shadow 0.3s ease-out;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: none;
   will-change: transform;
   transform: translateZ(0);
 }
@@ -256,31 +187,21 @@
 }
 
 /* 动画效果 */
-@keyframes gentle-float {
-  0%, 100% {
-    transform: translate3d(0, 0, 0) rotate(0deg);
+@keyframes pendulum-sway {
+  0% {
+    transform: rotate(-3deg);
   }
   25% {
-    transform: translate3d(0, -4px, 0) rotate(0.5deg);
+    transform: rotate(-1.5deg);
   }
   50% {
-    transform: translate3d(0, -2px, 0) rotate(0deg);
+    transform: rotate(3deg);
   }
   75% {
-    transform: translate3d(0, -3px, 0) rotate(-0.5deg);
-  }
-}
-
-@keyframes special-glow {
-  0% {
-    box-shadow: 
-      0 8px 32px rgba(255, 215, 0, 0.2),
-      0 4px 16px rgba(255, 215, 0, 0.1);
+    transform: rotate(1.5deg);
   }
   100% {
-    box-shadow: 
-      0 12px 48px rgba(255, 215, 0, 0.4),
-      0 6px 24px rgba(255, 215, 0, 0.2);
+    transform: rotate(-3deg);
   }
 }
 

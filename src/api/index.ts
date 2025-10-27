@@ -10,6 +10,7 @@ import * as commentController from "./commentController";
 import * as columnController from "./columnController";
 import * as liaotianjiekou from "./chatController";
 import * as articleController from "./articleController";
+import * as rewardController from "./rewardController";
 export default {
   userController,
   tagController,
@@ -19,4 +20,5 @@ export default {
   columnController,
   liaotianjiekou,
   articleController,
+  rewardController,
 };

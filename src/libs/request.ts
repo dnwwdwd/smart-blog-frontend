@@ -1,24 +1,14 @@
 import axios from "axios";
 import { message } from "antd";
+import {
+  apiClientBaseUrl,
+  apiServerBaseUrl,
+} from "../../config/apiConfig";
 
 const isServer = typeof window === "undefined";
-const isProd = process.env.NODE_ENV === "production";
 
-let clientBaseURL: string;
-if (isProd) {
-  clientBaseURL = "http://localhost:8888/api";
-} else {
-  clientBaseURL = process.env.NEXT_PUBLIC_API_BASE_URL || "/api";
-}
-
-const serverTarget = (
-  isProd
-    ? "http://localhost:8888"
-    : process.env.INTERNAL_API_BASE_URL ||
-      process.env.NEXT_PUBLIC_API_TARGET ||
-      "http://localhost:8888"
-).replace(/\/$/, "");
-const serverBaseURL = `${serverTarget}/api`;
+const clientBaseURL = apiClientBaseUrl;
+const serverBaseURL = apiServerBaseUrl;
 
 const myAxios = axios.create({
   baseURL: isServer ? serverBaseURL : clientBaseURL,

@@ -1,154 +1,281 @@
-/* Elegant Global Loading - by Trae assistant */
 :root {
-  --gl-primary: #1677ff;
-  --gl-fg: #1f1f1f;
-  --gl-fg-muted: #595959;
-  --gl-bg: #ffffff;
-  --gl-card: #ffffff;
-  --gl-shadow: 0 10px 30px rgba(0,0,0,.08);
+  --gl-primary: #5f75ff;
+  --gl-text: #1d2345;
+  --gl-text-muted: #5c6287;
+  --gl-radius: 24px;
 }
 
-/* Overlay */
 .gl-overlay {
-  inset: 0;
   position: absolute;
-  display: grid;
-  place-items: center;
-  padding: 24px;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(16px, 5vw, 40px);
+  overflow: hidden;
 }
+
 .gl-fullscreen {
   position: fixed;
-  background: var(--gl-bg);
+  background: radial-gradient(circle at 15% 20%, rgba(143, 160, 255, 0.25), transparent 55%),
+              radial-gradient(circle at 85% 25%, rgba(111, 220, 255, 0.18), transparent 55%),
+              #f3f5ff;
   z-index: 9999;
 }
 
-/* Card */
+.gl-backdrop {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at 20% 20%, rgba(95, 117, 255, 0.15), transparent 55%),
+    radial-gradient(circle at 80% 30%, rgba(111, 220, 255, 0.12), transparent 50%),
+    #f5f7ff;
+}
+
 .gl-card {
-  width: min(92vw, 560px);
-  border-radius: 16px;
-  background: var(--gl-card);
-  box-shadow: var(--gl-shadow);
-  padding: clamp(20px, 3.5vw, 32px);
+  position: relative;
+  width: min(500px, 90vw);
+  border-radius: var(--gl-radius);
+  padding: clamp(32px, 6vw, 48px);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(249, 251, 255, 0.92));
+  box-shadow:
+    0 32px 80px rgba(54, 74, 158, 0.24),
+    0 12px 32px rgba(54, 74, 158, 0.12),
+    inset 0 0 0 1px rgba(134, 149, 255, 0.15);
   display: grid;
-  gap: 14px;
+  gap: 24px;
   justify-items: center;
   text-align: center;
+  backdrop-filter: blur(24px);
 }
 
-/* Spinner */
-.gl-spinner {
-  position: relative;
-  width: clamp(64px, 12vw, 88px);
-  height: clamp(64px, 12vw, 88px);
+.gl-hero {
+  display: grid;
+  gap: 16px;
+  justify-items: center;
 }
-.gl-spinner-ring {
-  position: absolute;
-  inset: 0;
-  border-radius: 999px;
-  background:
-    conic-gradient(from 0deg, var(--gl-primary) 0 90deg, transparent 90deg 360deg);
-  -webkit-mask:
-    radial-gradient(circle at 50% 50%, #0000 60%, #000 61%),
-    radial-gradient(circle at 50% 50%, #000 64%, #0000 65%);
-  mask:
-    radial-gradient(circle at 50% 50%, #0000 60%, #000 61%),
-    radial-gradient(circle at 50% 50%, #000 64%, #0000 65%);
-  animation: gl-spin 1.1s linear infinite;
-  filter: drop-shadow(0 4px 10px rgba(22,119,255,.25));
-}
-.gl-logo {
-  position: absolute;
-  inset: 0;
+
+.gl-logo-wrap {
+  width: 92px;
+  height: 92px;
+  border-radius: 24px;
+  background: #fff;
   display: grid;
   place-items: center;
+  box-shadow: 0 10px 40px rgba(51, 67, 138, 0.2);
 }
 
-/* Typography */
+.gl-logo-wrap img {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+}
+
 .gl-title {
-  margin-top: 2px;
-  font-size: clamp(18px, 2.4vw, 22px);
-  font-weight: 600;
-  color: var(--gl-fg);
-}
-.gl-sub {
-  font-size: clamp(13px, 1.8vw, 14px);
-  color: var(--gl-fg-muted);
+  font-size: clamp(20px, 2.6vw, 24px);
+  font-weight: 650;
+  letter-spacing: 0.4px;
+  color: var(--gl-text);
 }
 
-/* Progress */
+.gl-sub {
+  font-size: clamp(13px, 2vw, 15px);
+  color: var(--gl-text-muted);
+}
+
 .gl-progress {
   width: 100%;
-  margin-top: 4px;
+  display: grid;
+  gap: 12px;
 }
-.gl-bar {
-  height: 4px;
+
+.gl-progress-track {
   width: 100%;
-  background: linear-gradient(90deg, rgba(22,119,255,.18), rgba(22,119,255,.08));
+  height: 6px;
   border-radius: 999px;
-  position: relative;
+  background: rgba(95, 117, 255, 0.15);
   overflow: hidden;
 }
-.gl-bar::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  width: var(--gl-p, 0%);
-  background: linear-gradient(90deg, #1677ff, #69b1ff);
-  transition: width .25s ease;
+
+.gl-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #5f75ff, #7f99ff);
+  transition: width 0.3s ease;
 }
-/* 不确定进度动画 */
-.gl-indeterminate::after {
-  width: 30% !important;
-  animation: gl-ind 1.2s ease-in-out infinite;
+
+.gl-progress-indeterminate {
+  width: 30%;
+  animation: gl-indeterminate 1.2s ease-in-out infinite;
 }
 
 .gl-progress-text {
-  margin-top: 8px;
   font-size: 12px;
-  color: var(--gl-fg-muted);
+  color: var(--gl-text-muted);
+  letter-spacing: 0.2px;
 }
 
-/* Hint */
 .gl-hint {
-  margin-top: 4px;
+  padding: 8px 14px;
+  border-radius: 12px;
+  background: rgba(255, 246, 210, 0.75);
+  border: 1px solid rgba(255, 214, 102, 0.5);
+  color: #926400;
   font-size: 12px;
-  color: #faad14;
-  background: #fffbe6;
-  border: 1px solid #ffe58f;
-  padding: 6px 10px;
-  border-radius: 8px;
 }
 
-/* Failure */
 .gl-fail {
   display: grid;
-  gap: 12px;
+  gap: 14px;
   justify-items: center;
 }
-.gl-fail-icon { filter: drop-shadow(0 6px 16px rgba(22,119,255,.25)); }
-.gl-actions { display: flex; gap: 10px; margin-top: 4px; }
 
-/* Mobile tweaks */
-@media (max-width: 768px) {
-  :root { --gl-shadow: 0 8px 24px rgba(0,0,0,.08); }
-  .gl-card { width: min(96vw, 520px); border-radius: 14px; }
-  .gl-progress-text { font-size: 12px; }
-}
-@media (max-width: 480px) {
-  .gl-card { width: 100%; border-radius: 12px; padding: 18px; }
+.gl-fail-icon {
+  width: clamp(72px, 12vw, 84px);
+  height: clamp(72px, 12vw, 84px);
+  border-radius: 28px;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(circle at 30% 30%, rgba(255, 112, 112, 0.18), rgba(255, 112, 112, 0));
 }
 
-/* Dark scheme */
+.gl-fail .gl-title {
+  color: #cc3737;
+}
+
+.gl-fail .gl-sub {
+  color: #6a6e86;
+}
+
+.gl-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.gl-actions .ant-btn {
+  min-width: 110px;
+  border-radius: 12px;
+}
+
+@media (max-width: 640px) {
+  :root {
+    --gl-radius: 22px;
+  }
+
+  .gl-card {
+    gap: 16px;
+    padding: 20px;
+  }
+
+  .gl-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .gl-actions .ant-btn {
+    width: 100%;
+  }
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
-    --gl-fg: #e8e8e8;
-    --gl-fg-muted: #bfbfbf;
-    --gl-bg: #0f1113;
-    --gl-card: #111418;
+    --gl-primary: #8da2ff;
+    --gl-primary-dark: #5f75ff;
+    --gl-text: #f1f4ff;
+    --gl-text-muted: #b6bce8;
+    --gl-surface: rgba(18, 23, 45, 0.92);
   }
-  .gl-hint { background: #2a2617; border-color: #504522; color: #d8bd14; }
+
+  .gl-fullscreen {
+    background: radial-gradient(circle at 25% 18%, rgba(97, 115, 255, 0.35), transparent 60%),
+                radial-gradient(circle at 80% 25%, rgba(88, 198, 255, 0.24), transparent 55%),
+                #080a16;
+  }
+
+  .gl-card {
+    background: linear-gradient(135deg, rgba(17, 24, 48, 0.92), rgba(15, 20, 40, 0.9));
+    box-shadow:
+      0 28px 70px rgba(6, 14, 48, 0.52),
+      inset 0 0 0 1px rgba(87, 106, 233, 0.14);
+  }
+
+  .gl-bar {
+    background: linear-gradient(90deg, rgba(143, 161, 255, 0.16), rgba(143, 161, 255, 0.08));
+  }
+
+  .gl-bar::after {
+    background: linear-gradient(90deg, #91a4ff, #73c5ff);
+  }
+
+  .gl-hint {
+    background: rgba(255, 214, 102, 0.12);
+    border-color: rgba(255, 214, 102, 0.28);
+    color: #ffd766;
+  }
 }
 
-/* Animations */
-@keyframes gl-spin { to { transform: rotate(360deg); } }
-@keyframes gl-ind { 0% { left: -30%; } 50% { left: 50%; } 100% { left: 100%; } }
+@keyframes gl-wave-expand {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(1.4);
+    opacity: 0;
+  }
+}
+
+@keyframes gl-logo-float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes gl-indeterminate {
+  0% {
+    transform: translateX(-40%);
+  }
+  50% {
+    transform: translateX(60%);
+  }
+  100% {
+    transform: translateX(120%);
+  }
+}
+
+@keyframes gl-glow {
+  0%,
+  100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+@keyframes gl-orb-float {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(12px, 18px, 0) scale(1.06);
+  }
+}
+
+@keyframes gl-orb-pulse {
+  0%,
+  100% {
+    transform: scale(0.92);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.85;
+  }
+}

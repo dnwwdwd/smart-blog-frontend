@@ -4,13 +4,15 @@ import { message } from "antd";
 
 // 用户信息接口
 export interface UserInfo {
-  id: string;
-  username: string;
-  userAvatar: string;
-  token: string;
-  userRole: string;
-  createTime: string;
-  updateTime: string;
+  id: string | number;
+  userAccount?: string;
+  username?: string;
+  userAvatar?: string;
+  profile?: string;
+  token?: string;
+  userRole?: string;
+  createTime?: string;
+  updateTime?: string;
 }
 
 // 认证状态接口
@@ -61,7 +63,14 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
       const res = (await getLoginUser()) as any;
       console.log("check login" + JSON.stringify(res));
       if (res?.code === 0 && res?.data) {
-        set({ user: res.data as UserInfo, isLoggedIn: true });
+        const currentToken = get().user?.token;
+        const nextUser: UserInfo = {
+          ...(res.data as Record<string, unknown>),
+        } as UserInfo;
+        if (!nextUser.token && currentToken) {
+          nextUser.token = currentToken;
+        }
+        set({ user: nextUser, isLoggedIn: true });
         return true;
       }
       set({ user: null, isLoggedIn: false });

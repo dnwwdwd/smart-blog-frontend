@@ -18,15 +18,15 @@ declare namespace API {
 
   type ArticleDto = {
     id?: number;
-    title: string;
-    content: string;
+    title?: string;
+    content?: string;
     excerpt?: string;
-    coverImage: string;
+    coverImage?: string;
     seoTitle?: string;
     seoDescription?: string;
     seoKeywords?: string[];
-    tags: string[];
-    columnIds: number[];
+    tags?: string[];
+    columnIds?: number[];
     status: number;
   };
 
@@ -35,6 +35,12 @@ declare namespace API {
     pageSize?: number;
     sortField?: string;
     title?: string;
+    keyword?: string;
+    status?: number;
+    columnId?: number;
+    tagId?: number;
+    publishStartTime?: number;
+    publishEndTime?: number;
   };
 
   type ArticleVo = {
@@ -87,9 +93,21 @@ declare namespace API {
     message?: string;
   };
 
+  type BaseResponseListArticleVo = {
+    code?: number;
+    data?: ArticleVo[];
+    message?: string;
+  };
+
   type BaseResponseListCommentVo = {
     code?: number;
     data?: CommentVo[];
+    message?: string;
+  };
+
+  type BaseResponseListRewardMessageVo = {
+    code?: number;
+    data?: RewardMessageVo[];
     message?: string;
   };
 
@@ -97,6 +115,23 @@ declare namespace API {
   type BaseResponseListLong = {
     code?: number;
     data?: number[];
+    message?: string;
+  };
+
+  type UploadBatchFileVo = {
+    articleId?: number;
+    order?: number;
+    fileName?: string;
+  };
+
+  type UploadBatchResponse = {
+    batchId?: string;
+    files?: UploadBatchFileVo[];
+  };
+
+  type BaseResponseUploadBatchResponse = {
+    code?: number;
+    data?: UploadBatchResponse;
     message?: string;
   };
 
@@ -137,6 +172,12 @@ declare namespace API {
     message?: string;
   };
 
+  type BaseResponsePageRewardMessage = {
+    code?: number;
+    data?: PageRewardMessage;
+    message?: string;
+  };
+
   type BaseResponsePageTagVo = {
     code?: number;
     data?: PageTagVo;
@@ -172,6 +213,14 @@ declare namespace API {
     files: string[];
   };
 
+  type reviewRewardMessageParams = {
+    id: number;
+  };
+
+  type listApprovedRewardMessagesParams = {
+    limit?: number;
+  };
+
   type ChatConversation = {
     id?: number;
     name?: string;
@@ -197,6 +246,54 @@ declare namespace API {
     coverImage?: string;
     createTime?: string;
     updateTime?: string;
+  };
+
+  type RewardMessage = {
+    id?: number;
+    nickname?: string;
+    email?: string;
+    website?: string;
+    message?: string;
+    amount?: number;
+    status?: number;
+    reviewRemark?: string;
+    reviewTime?: string;
+    createTime?: string;
+    updateTime?: string;
+  };
+
+  type RewardMessageCreateRequest = {
+    nickname: string;
+    email: string;
+    website?: string;
+    message: string;
+    amount: number;
+  };
+
+  type RewardMessageQueryRequest = {
+    current?: number;
+    pageSize?: number;
+    sortField?: string;
+    status?: number;
+    keyword?: string;
+  };
+
+  type RewardMessageReviewRequest = {
+    status: number;
+    reviewRemark?: string;
+  };
+
+  type RewardMessageVo = {
+    id?: number;
+    nickname?: string;
+    email?: string;
+    website?: string;
+    message?: string;
+    amount?: number;
+    status?: number;
+    reviewRemark?: string;
+    reviewTime?: string;
+    createTime?: string;
   };
 
   type ColumnDto = {
@@ -357,6 +454,11 @@ declare namespace API {
     columnId: number;
   };
 
+  type getRecommendArticlesParams = {
+    articleId: number;
+    limit?: number;
+  };
+
   type getCommentParams = {
     articleId: number | string; // 支持字符串类型以避免大整数精度丢失
   };
@@ -388,7 +490,9 @@ declare namespace API {
   type LoginUserVO = {
     id?: number;
     username?: string;
+    userAccount?: string;
     userAvatar?: string;
+    profile?: string;
     token?: string;
     userRole?: string;
     createTime?: string;
@@ -436,6 +540,20 @@ declare namespace API {
     orders?: OrderItem[];
     optimizeCountSql?: PageFriendLinkVo;
     searchCount?: PageFriendLinkVo;
+    optimizeJoinOfCountSql?: boolean;
+    maxLimit?: number;
+    countId?: string;
+    pages?: number;
+  };
+
+  type PageRewardMessage = {
+    records?: RewardMessage[];
+    total?: number;
+    size?: number;
+    current?: number;
+    orders?: OrderItem[];
+    optimizeCountSql?: PageRewardMessage;
+    searchCount?: PageRewardMessage;
     optimizeJoinOfCountSql?: boolean;
     maxLimit?: number;
     countId?: string;
@@ -525,6 +643,25 @@ declare namespace API {
     checkPassword: string;
   };
 
+  type UserUpdateRequest = {
+    username?: string;
+    userAvatar?: string;
+    profile?: string;
+    userAccount?: string;
+    currentPassword?: string;
+    newPassword?: string;
+  };
+
+  type UserUpdateResponse = {
+    needLogout?: boolean;
+  };
+
+  type PublicUserVO = {
+    username?: string;
+    userAvatar?: string;
+    profile?: string;
+  };
+
   // 网站设置配置相关类型
   type SettingConfig = {
     id?: number;
@@ -545,6 +682,7 @@ declare namespace API {
     emailContact?: string;
     wechatQrUrl?: string;
     wechatPayQrUrl?: string;
+    wechatOfficialQrUrl?: string;
     alipayQrUrl?: string;
     enableComments?: boolean;
     enableSearch?: boolean;
@@ -560,6 +698,18 @@ declare namespace API {
   type BaseResponseSettingConfig = {
     code?: number;
     data?: SettingConfig;
+    message?: string;
+  };
+
+  type BaseResponsePublicUserVO = {
+    code?: number;
+    data?: PublicUserVO;
+    message?: string;
+  };
+
+  type BaseResponseUserUpdateResponse = {
+    code?: number;
+    data?: UserUpdateResponse;
     message?: string;
   };
 

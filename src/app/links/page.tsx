@@ -6,13 +6,10 @@ import {
   Checkbox,
   Col,
   Empty,
-  Form,
   Input,
   message,
-  Modal,
   Row,
   Spin,
-  Space,
 } from "antd";
 import Image from "next/image";
 import { SearchOutlined } from "@ant-design/icons";
@@ -21,7 +18,7 @@ import { useFriendLinks, useInfiniteScroll } from "@/hooks/useFriendLinks";
 import "./styles.css";
 import Title from "antd/es/typography/Title";
 import Paragraph from "antd/es/typography/Paragraph";
-import { applyFriendLink } from "@/api/friendLinkController";
+import FriendLinkApplyModal from "@/components/FriendLinkApplyModal";
 
 export default function FriendsPage() {
   const {
@@ -32,12 +29,9 @@ export default function FriendsPage() {
     searchKeyword,
     setSearchKeyword,
     loadMore,
-    refresh,
-    pagination,
   } = useFriendLinks(8);
 
-  const [form] = Form.useForm();
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [applyModalVisible, setApplyModalVisible] = useState(false);
   const [checkedRequirements, setCheckedRequirements] = useState<boolean[]>([
     false,
     false,
@@ -45,7 +39,6 @@ export default function FriendsPage() {
     false,
     false,
   ]);
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // 启用无限滚动
   useInfiniteScroll(loadMore, hasMore, loadingMore);
@@ -71,34 +64,7 @@ export default function FriendsPage() {
       message.warning("请先勾选所有申请要求");
       return;
     }
-    setIsModalVisible(true);
-  };
-
-  // 提交申请友链
-  const handleApplySubmit = async (values: any) => {
-    setIsSubmitting(true);
-    try {
-      // 使用申请接口，后端会自动设置状态为0（待审核）
-      const requestData = {
-        ...values,
-        socialLinks: [],
-      };
-
-      const response: any = await applyFriendLink(requestData);
-      if (response?.code === 0) {
-        message.success("友链申请已提交，等待审核");
-        setIsModalVisible(false);
-        form.resetFields();
-        // 重置复选框
-        setCheckedRequirements([false, false, false, false, false]);
-      } else {
-        message.error(response?.message || "申请提交失败");
-      }
-    } catch (error) {
-      message.error("申请提交失败，请重试");
-    } finally {
-      setIsSubmitting(false);
-    }
+    setApplyModalVisible(true);
   };
 
   return (
@@ -118,13 +84,13 @@ export default function FriendsPage() {
         {/* 搜索框区域 */}
         <div className="search-section">
           <div className="search-container">
-            <Input
-              placeholder="搜索友链...（支持搜索名称）"
-              value={searchKeyword}
-              onChange={(e) => setSearchKeyword(e.target.value)}
-              prefix={<SearchOutlined />}
-              size="large"
-              className="search-input-antd"
+          <Input
+            placeholder="搜索友链...（支持搜索名称）"
+            value={searchKeyword}
+            onChange={handleSearchChange}
+            prefix={<SearchOutlined />}
+            size="large"
+            className="search-input-antd"
             />
           </div>
         </div>
@@ -325,68 +291,11 @@ export default function FriendsPage() {
       </div>
 
       {/* 申请友链弹窗 */}
-      <Modal
-        title="申请友链"
-        open={isModalVisible}
-        onCancel={() => setIsModalVisible(false)}
-        footer={null}
-        width={600}
-        className="apply-modal"
-      >
-        <Form form={form} layout="vertical" onFinish={handleApplySubmit}>
-          <Form.Item
-            name="name"
-            label="网站名称"
-            rules={[{ required: true, message: "请输入网站名称" }]}
-          >
-            <Input placeholder="请输入网站名称" />
-          </Form.Item>
-
-          <Form.Item
-            name="url"
-            label="网站地址"
-            rules={[
-              { required: true, message: "请输入网站地址" },
-              { type: "url", message: "请输入有效的URL地址" },
-            ]}
-          >
-            <Input placeholder="https://example.com" />
-          </Form.Item>
-
-          <Form.Item
-            name="avatar"
-            label="网站头像"
-            rules={[
-              { required: true, message: "请输入头像地址" },
-              { type: "url", message: "请输入有效的URL地址" },
-            ]}
-          >
-            <Input placeholder="https://example.com/avatar.jpg" />
-          </Form.Item>
-
-          <Form.Item
-            name="description"
-            label="网站描述"
-            rules={[{ required: true, message: "请输入网站描述" }]}
-          >
-            <Input.TextArea
-              placeholder="请输入网站描述"
-              rows={3}
-              maxLength={200}
-              showCount
-            />
-          </Form.Item>
-
-          <Form.Item>
-            <Space>
-              <Button type="primary" htmlType="submit" loading={isSubmitting}>
-                提交申请
-              </Button>
-              <Button onClick={() => setIsModalVisible(false)}>取消</Button>
-            </Space>
-          </Form.Item>
-        </Form>
-      </Modal>
+      <FriendLinkApplyModal
+        open={applyModalVisible}
+        onClose={() => setApplyModalVisible(false)}
+        onSuccess={() => setCheckedRequirements([false, false, false, false, false])}
+      />
     </div>
   );
 }

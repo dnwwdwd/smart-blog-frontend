@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { apiServerTarget } from "./config/apiConfig";
 
 const nextConfig: NextConfig = {
   experimental: {
@@ -15,14 +16,10 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: true,
   },
   async rewrites() {
-    const isProd = process.env.NODE_ENV === 'production';
-    const backend = isProd
-      ? 'http://blogbackend.hejiajun.icu'
-      : (process.env.NEXT_PUBLIC_API_TARGET || 'http://localhost:8888');
     return [
       {
         source: '/api/:path*',
-        destination: `${backend}/api/:path*`,
+        destination: `${apiServerTarget}/api/:path*`,
       },
     ];
   },

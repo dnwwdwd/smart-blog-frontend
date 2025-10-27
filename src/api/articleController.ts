@@ -11,7 +11,7 @@ export async function batchUpload(
   files.forEach((file) => {
     formData.append('files', file);
   });
-  return request<API.BaseResponseListLong>("/article/batch/upload", {
+  return request<API.BaseResponseUploadBatchResponse>("/article/batch/upload", {
     method: "POST",
     data: formData,
     ...(options || {}),
@@ -169,6 +169,19 @@ export async function deleteArticle(
   // 后端若实现为 /article/delete/{id} POST
   return request<API.BaseResponseVoid>(`/article/delete/${id}`, {
     method: "POST",
+    ...(options || {}),
+  });
+}
+
+/** 推荐文章 GET /article/recommend/${param0} */
+export async function getRecommendArticles(
+  params: API.getRecommendArticlesParams,
+  options?: { [key: string]: any }
+) {
+  const { articleId, limit } = params;
+  const query = typeof limit !== "undefined" ? `?limit=${limit}` : "";
+  return request<API.BaseResponseListArticleVo>(`/article/recommend/${articleId}${query}`, {
+    method: "GET",
     ...(options || {}),
   });
 }

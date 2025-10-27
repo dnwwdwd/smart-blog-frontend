@@ -1,11 +1,13 @@
 "use client";
 import React, { useState } from "react";
-import { Button, Modal, Tabs, QRCode, Form, Input, Space, Typography, message } from "antd";
+import { Button, Modal, Tabs, QRCode, Form, Input, Space, Typography, message, InputNumber } from "antd";
 import { HeartOutlined, WechatOutlined, AlipayOutlined, GiftOutlined } from "@ant-design/icons";
 import "./styles.css";
-import { useSiteSettings, useSiteSettingsLoading } from "@/stores/siteSettingsStore";
+import { useSiteSettings } from "@/stores/siteSettingsStore";
+import { submitRewardMessage } from "@/api/rewardController";
+import { useRewardMessageStore } from "@/stores/rewardMessageStore";
 
-const { Title, Text } = Typography;
+const { Text } = Typography;
 const { TextArea } = Input;
 
 interface RewardFormData {
@@ -13,16 +15,17 @@ interface RewardFormData {
   email: string;
   website?: string;
   message?: string;
+  amount: number;
 }
 
 const RewardModal: React.FC = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const [formResetKey, setFormResetKey] = useState(0);
   const [activeTab, setActiveTab] = useState<string>("wechat");
+  const [form] = Form.useForm<RewardFormData>();
+  const fetchApprovedMessages = useRewardMessageStore((state) => state.fetchApproved);
 
   const settings = useSiteSettings();
-  const loading = useSiteSettingsLoading();
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -30,19 +33,24 @@ const RewardModal: React.FC = () => {
 
   const handleCancel = () => {
     setIsModalVisible(false);
-    setFormResetKey((k) => k + 1);
     setActiveTab("wechat");
+    form.resetFields();
   };
 
   const handleSubmit = async (values: RewardFormData) => {
     setSubmitting(true);
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      message.success("感谢您的打赏支持！");
+      const res: any = await submitRewardMessage(values);
+      if (res?.code !== 0) {
+        message.error(res?.message || "提交失败，请稍后重试");
+        return;
+      }
+      message.success("感谢您的打赏支持！留言将待审核后展示。");
+      await fetchApprovedMessages();
       setIsModalVisible(false);
-      setFormResetKey((k) => k + 1);
       setActiveTab("wechat");
-    } catch (error) {
+      form.resetFields();
+    } catch {
       message.error("提交失败，请重试。");
     } finally {
       setSubmitting(false);
@@ -60,7 +68,7 @@ const RewardModal: React.FC = () => {
         open={isModalVisible}
         onCancel={handleCancel}
         footer={null}
-        destroyOnClose
+        destroyOnHidden
       >
         <Tabs activeKey={activeTab} onChange={setActiveTab}
           items={[
@@ -101,7 +109,7 @@ const RewardModal: React.FC = () => {
               label: <Space><GiftOutlined style={{ color: "#ff4d4f" }} />留言支持</Space>,
               children: (
                 <div className="message-tab">
-                  <Form key={formResetKey} layout="vertical" onFinish={handleSubmit} autoComplete="off">
+                  <Form form={form} layout="vertical" onFinish={handleSubmit} autoComplete="off">
                     <Form.Item name="nickname" label="昵称" rules={[{ required: true, message: "请输入您的昵称" }]}>
                       <Input placeholder="请输入您的昵称" />
                     </Form.Item>
@@ -110,6 +118,22 @@ const RewardModal: React.FC = () => {
                     </Form.Item>
                     <Form.Item name="website" label="网站（可选）">
                       <Input placeholder="请输入您的网站" />
+                    </Form.Item>
+                    <Form.Item
+                      name="amount"
+                      label="打赏金额"
+                      rules={[
+                        { required: true, message: "请输入打赏金额" },
+                        { type: "number", min: 0.01, message: "金额需大于0" },
+                      ]}
+                    >
+                      <InputNumber
+                        min={0.01}
+                        precision={2}
+                        prefix="¥"
+                        placeholder="请输入金额"
+                        style={{ width: "100%" }}
+                      />
                     </Form.Item>
                     <Form.Item name="message" label="留言" rules={[{ required: true, message: "请输入留言内容" }]}>
                       <TextArea rows={4} placeholder="写下您的支持和鼓励..." showCount maxLength={200} />

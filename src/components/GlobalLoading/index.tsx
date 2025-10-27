@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState, useCallback } from 'react';
 import { Button } from 'antd';
+import Image from 'next/image';
 import './styles.css';
 
 export type FailureRenderInfo = {
@@ -23,6 +24,7 @@ interface GlobalLoadingProps {
   failureRender?: React.ReactNode | ((info: FailureRenderInfo) => React.ReactNode); // 自定义失败渲染
   className?: string;
   style?: React.CSSProperties;
+  logoSrc?: string;
 }
 
 const defaultTips = [
@@ -44,6 +46,7 @@ const GlobalLoading: React.FC<GlobalLoadingProps> = ({
   failureRender,
   className,
   style,
+  logoSrc = '/assets/logo.svg',
 }) => {
   const [elapsed, setElapsed] = useState(0);
   const [isTimeout, setIsTimeout] = useState(false);
@@ -76,9 +79,13 @@ const GlobalLoading: React.FC<GlobalLoadingProps> = ({
     };
   }, [visible, timeout, tips.length, onTimeout]);
 
-  const handleRetry = () => {
-    onRetry ? onRetry() : window.location.reload();
-  };
+  const handleRetry = useCallback(() => {
+    if (onRetry) {
+      onRetry();
+    } else {
+      window.location.reload();
+    }
+  }, [onRetry]);
 
   const failureNode = useMemo(() => {
     const info: FailureRenderInfo = { timeout, elapsed, onRetry: handleRetry };
@@ -100,55 +107,62 @@ const GlobalLoading: React.FC<GlobalLoadingProps> = ({
         </div>
       </div>
     );
-  }, [failureRender, timeout, elapsed]);
+  }, [failureRender, timeout, elapsed, handleRetry]);
+
+  const overlayClass = useMemo(
+    () => ['gl-overlay', fullscreen ? 'gl-fullscreen' : '', className].filter(Boolean).join(' '),
+    [fullscreen, className],
+  );
+
+  const renderOverlay = useCallback(
+    (content: React.ReactNode, role: 'status' | 'alert' = 'status') => (
+      <div className={overlayClass} style={style}>
+        <div className="gl-backdrop" aria-hidden />
+        <div className="gl-card" role={role} aria-live={role === 'status' ? 'polite' : 'assertive'}>
+          {content}
+        </div>
+      </div>
+    ),
+    [overlayClass, style],
+  );
 
   if (!visible) return null;
 
   if (isTimeout) {
-    return (
-      <div className={`gl-overlay ${fullscreen ? 'gl-fullscreen' : ''} ${className || ''}`} style={style}>
-        <div className="gl-card">
-          {failureNode}
-        </div>
-      </div>
-    );
+    return renderOverlay(failureNode, 'alert');
   }
 
   const percent = typeof progress === 'number' ? Math.min(100, Math.max(0, progress)) : undefined;
 
-  return (
-    <div className={
-      `gl-overlay ${fullscreen ? 'gl-fullscreen' : ''} ${className || ''}`
-    } style={style}>
-      <div className="gl-card" role="status" aria-live="polite">
-        <div className="gl-spinner" aria-hidden>
-          <div className="gl-spinner-ring"/>
-          <div className="gl-logo">
-            <svg width="28" height="28" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="24" cy="24" r="18" stroke="var(--gl-primary)" strokeWidth="2" opacity=".6"/>
-              <path d="M16 24h16M16 28h10M16 20h12" stroke="var(--gl-primary)" strokeWidth="2" strokeLinecap="round"/>
-            </svg>
-          </div>
+  const mainContent = (
+    <>
+      <div className="gl-hero">
+        <div className="gl-logo-wrap" aria-hidden>
+          <Image src={logoSrc} alt="Site logo" width={72} height={72} priority />
         </div>
-
         <div className="gl-title">{title}</div>
         <div className="gl-sub">{subtitle}</div>
-
-        <div className="gl-progress">
-          <div className={`gl-bar ${percent === undefined ? 'gl-indeterminate' : ''}`}
-               style={percent !== undefined ? ({ ['--gl-p' as any]: `${percent}%` }) : undefined}
-          />
-          <div className="gl-progress-text">
-            {percent !== undefined ? `已加载 ${percent}%` : tips[tipIndex]}
-          </div>
-        </div>
-
-        {elapsed > 10000 && (
-          <div className="gl-hint">加载时间较长，请耐心等待…</div>
-        )}
       </div>
-    </div>
+
+      <div className="gl-progress">
+        <div className="gl-progress-track">
+          <div
+            className={`gl-progress-fill ${percent === undefined ? "gl-progress-indeterminate" : ""}`}
+            style={percent !== undefined ? { width: `${percent}%` } : undefined}
+          />
+        </div>
+        <div className="gl-progress-text">
+          {percent !== undefined ? `已加载 ${percent.toFixed(0)}%` : tips[tipIndex]}
+        </div>
+      </div>
+
+      {elapsed > 10000 && (
+        <div className="gl-hint">加载时间较长，请耐心等待…</div>
+      )}
+    </>
   );
+
+  return renderOverlay(mainContent);
 };
 
 export default GlobalLoading;

@@ -1,0 +1,21 @@
+.admin-page {
+    padding: 24px;
+    background: #f5f5f5;
+    min-height: 100vh;
+}
+
+.rewards-toolbar {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+}
+
+.rewards-toolbar .ant-input-search,
+.rewards-toolbar .ant-input-affix-wrapper {
+    max-width: 260px;
+}
+
+.rewards-stats-row .ant-card {
+    border-radius: 10px;
+}

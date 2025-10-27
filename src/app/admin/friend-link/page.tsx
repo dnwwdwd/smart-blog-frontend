@@ -1,6 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import type { UploadFile, UploadProps } from "antd";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   Avatar,
   Badge,
@@ -17,9 +16,6 @@ import {
   Switch,
   Table,
   Tag,
-  Upload,
-  List,
-  Popover,
   Tooltip,
 } from "antd";
 import {
@@ -44,7 +40,7 @@ import {
 import "./styles.css";
 import "@ant-design/v5-patch-for-react-19";
 import { formatDateTime } from "@/utils";
-import type { FormInstance } from "antd";
+import SocialLinksEditor from "@/components/SocialLinksEditor";
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -74,21 +70,21 @@ const FriendLinkManagement: React.FC = () => {
   );
   const [form] = Form.useForm();
   const [searchForm] = Form.useForm();
-  const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [pagination, setPagination] = useState({
     current: 1,
     pageSize: 10,
     total: 0,
   });
+  const { current: pageCurrent, pageSize } = pagination;
 
   // 获取友链列表
-  const fetchFriendLinks = async (params?: any) => {
+const fetchFriendLinks = useCallback(async (params?: any) => {
     setLoading(true);
     try {
       const searchValues = searchForm.getFieldsValue();
       const response = (await getFriendLinkPage({
-        current: pagination.current,
-        pageSize: pagination.pageSize,
+        current: params?.current ?? pageCurrent,
+        pageSize: params?.pageSize ?? pageSize,
         ...searchValues,
         ...params,
       })) as any;
@@ -108,17 +104,17 @@ const FriendLinkManagement: React.FC = () => {
       } else {
         message.error(response?.message || "获取友链列表失败");
       }
-    } catch (error) {
+    } catch {
       message.error("获取友链列表失败");
     } finally {
       setLoading(false);
     }
-  };
+  }, [pageCurrent, pageSize, searchForm]);
 
   // 初始化数据
   useEffect(() => {
     fetchFriendLinks();
-  }, []);
+  }, [fetchFriendLinks]);
 
   // 搜索
   const handleSearch = () => {
@@ -137,7 +133,6 @@ const FriendLinkManagement: React.FC = () => {
   const handleAdd = () => {
     setEditingRecord(null);
     form.resetFields();
-    setFileList([]);
     setIsModalVisible(true);
   };
 
@@ -156,18 +151,6 @@ const FriendLinkManagement: React.FC = () => {
       socialLinks: record.socialLinks || [],
     });
     // 设置现有头像到文件列表
-    if (record.avatar) {
-      setFileList([
-        {
-          uid: "-1",
-          name: "avatar.jpg",
-          status: "done",
-          url: record.avatar,
-        },
-      ]);
-    } else {
-      setFileList([]);
-    }
     setIsModalVisible(true);
   };
 
@@ -214,7 +197,7 @@ const FriendLinkManagement: React.FC = () => {
           response?.message || (editingRecord ? "更新失败" : "添加失败")
         );
       }
-    } catch (error) {
+    } catch {
       message.error(editingRecord ? "更新失败" : "添加失败");
     }
   };
@@ -537,94 +520,11 @@ const FriendLinkManagement: React.FC = () => {
           </Form.Item>
 
           {/* 社交链接 */}
-          <Form.Item label="社交链接">
-            <SocialLinksEditor form={form} />
+          <Form.Item label="社交链接" name="socialLinks">
+            <SocialLinksEditor />
           </Form.Item>
         </Form>
       </Modal>
-    </div>
-  );
-};
-
-// 社交链接编辑器组件
-const SocialLinksEditor: React.FC<{ form: FormInstance }> = ({ form }) => {
-  const [socialLinks, setSocialLinks] = useState<any[]>([]);
-
-  // 初始化社交链接
-  useEffect(() => {
-    const initialValues = form.getFieldsValue();
-    if (initialValues.socialLinks && initialValues.socialLinks.length > 0) {
-      setSocialLinks(initialValues.socialLinks);
-    }
-  }, [form]);
-
-  // 添加社交链接
-  const addSocialLink = () => {
-    const newLinks = [...socialLinks, { iconType: 'github', iconUrl: '' }];
-    setSocialLinks(newLinks);
-    form.setFieldsValue({ socialLinks: newLinks });
-  };
-
-  // 更新社交链接
-  const updateSocialLink = (index: number, field: string, value: string) => {
-    const newLinks = [...socialLinks];
-    newLinks[index] = { ...newLinks[index], [field]: value };
-    setSocialLinks(newLinks);
-    form.setFieldsValue({ socialLinks: newLinks });
-  };
-
-  // 删除社交链接
-  const removeSocialLink = (index: number) => {
-    const newLinks = socialLinks.filter((_, i) => i !== index);
-    setSocialLinks(newLinks);
-    form.setFieldsValue({ socialLinks: newLinks });
-  };
-
-  // 图标选项
-  const iconOptions = [
-    { value: 'github', label: 'GitHub' },
-    { value: 'wechat', label: '微信' },
-    { value: 'qq', label: 'QQ' },
-    { value: 'x', label: 'X (Twitter)' },
-  ];
-
-  return (
-    <div className="social-links-editor">
-      <List
-        dataSource={socialLinks}
-        renderItem={(link, index) => (
-          <List.Item className="social-link-item">
-            <div className="social-link-form">
-              <Select
-                value={link.iconType}
-                onChange={(value) => updateSocialLink(index, 'iconType', value)}
-                style={{ width: 120, marginRight: 8 }}
-                options={iconOptions}
-              />
-              <Input
-                placeholder="请输入链接地址"
-                value={link.iconUrl}
-                onChange={(e) => updateSocialLink(index, 'iconUrl', e.target.value)}
-                style={{ flex: 1, marginRight: 8 }}
-              />
-              <Button
-                danger
-                onClick={() => removeSocialLink(index)}
-              >
-                删除
-              </Button>
-            </div>
-          </List.Item>
-        )}
-      />
-      <Button
-        type="dashed"
-        onClick={addSocialLink}
-        block
-        style={{ marginTop: 8 }}
-      >
-        添加社交链接
-      </Button>
     </div>
   );
 };

@@ -1,21 +1,10 @@
 "use client";
 
-import React from "react";
-import {
-  Avatar,
-  Button,
-  Card,
-  Divider,
-  message,
-  Popover,
-  QRCode,
-  Space,
-  Tooltip,
-} from "antd";
+import React, { useEffect } from "react";
+import { Avatar, Button, Card, Divider, Popover, Space, Tooltip } from "antd";
 import {
   GithubOutlined,
   HeartOutlined,
-  LinkedinOutlined,
   MailOutlined,
   WechatOutlined,
   XOutlined,
@@ -23,42 +12,48 @@ import {
 import "./styles.css";
 import Title from "antd/es/typography/Title";
 import Paragraph from "antd/es/typography/Paragraph";
+import Image from "next/image";
 import {
   useSiteSettings,
   useSiteSettingsLoading,
 } from "@/stores/siteSettingsStore";
-import { useCurrentUser } from "@/stores/authStore";
-
-// Mock 赞助数据
-const sponsors = [
-  {
-    id: 1,
-    name: "Temp Mail",
-    description: "临时邮箱生成工具",
-    icon: "📧",
-    url: "#",
-  },
-  {
-    id: 2,
-    name: "孔乙己文学",
-    description: "文学创作平台",
-    icon: "📚",
-    url: "#",
-  },
-  { id: 3, name: "Yachen", description: "小程序开发", icon: "💻", url: "#" },
-];
+import { useRewardMessages, useRewardMessageLoading, useRewardMessageStore } from "@/stores/rewardMessageStore";
+import {
+  useAuthorProfile,
+  useAuthorProfileLoading,
+  useFetchAuthorProfile,
+} from "@/stores/authorProfileStore";
 
 export default function Sidebar() {
   const settings = useSiteSettings();
   const loading = useSiteSettingsLoading();
-  // removed user avatar for visitor view
+  const sponsorMessages = useRewardMessages();
+  const sponsorLoading = useRewardMessageLoading();
+  const fetchSponsorMessages = useRewardMessageStore((state) => state.fetchApproved);
+  const authorProfile = useAuthorProfile();
+  const authorLoading = useAuthorProfileLoading();
+  const fetchAuthorProfile = useFetchAuthorProfile();
 
-  if (loading) {
+  useEffect(() => {
+    fetchSponsorMessages();
+    if (!authorProfile) {
+      fetchAuthorProfile();
+    }
+  }, [fetchSponsorMessages, fetchAuthorProfile, authorProfile]);
+
+  if (loading || (authorLoading && !authorProfile)) {
     return <div className="sidebar">加载中...</div>;
   }
 
   const avatarSrc =
-    settings?.aboutImage || settings?.siteLogo || "/assets/avatar.svg";
+    authorProfile?.userAvatar ||
+    settings?.aboutImage ||
+    settings?.siteLogo ||
+    "/assets/avatar.svg";
+  const authorName =
+    authorProfile?.username || settings?.siteName || "Smart Blog";
+  const authorBio =
+    authorProfile?.profile || settings?.siteDescription || "分享科技与生活的美好";
 
   return (
     <div className="sidebar">
@@ -72,11 +67,11 @@ export default function Sidebar() {
 
           <div className="user-details">
             <Title level={4} style={{ textAlign: "center" }}>
-              {settings?.siteName || "Smart Blog"}
+              {authorName}
             </Title>
             <br />
             <span className="user-subtitle">
-              {settings?.siteDescription || "分享科技与生活的美好"}
+              {authorBio}
             </span>
           </div>
 
@@ -88,11 +83,12 @@ export default function Sidebar() {
                   placement="bottom"
                   content={
                     <div style={{ padding: 8 }}>
-                      <img
+                      <Image
                         src={settings.wechatQrUrl}
                         alt="WeChat QR"
                         width={200}
                         height={200}
+                        unoptimized
                       />
                     </div>
                   }
@@ -140,31 +136,36 @@ export default function Sidebar() {
       </Card>
 
       {/* 公众号推广 */}
-      <Card
-        className="promotion-card"
-        title={
-          <div className="card-title">
-            <WechatOutlined style={{ color: "#07c160", marginRight: 8 }} />
-            公众号
+      {settings?.wechatOfficialQrUrl && (
+        <Card
+          className="promotion-card"
+          title={
+            <div className="card-title">
+              <WechatOutlined style={{ color: "#07c160", marginRight: 8 }} />
+              公众号
+            </div>
+          }
+          styles={{ body: { padding: "20px", textAlign: "center" } }}
+        >
+          <div className="qr-section">
+            <div className="qr-placeholder">
+              <Image
+                src={settings.wechatOfficialQrUrl}
+                alt="公众号二维码"
+                width={140}
+                height={140}
+                style={{ objectFit: "cover" }}
+                unoptimized
+              />
+            </div>
+            <Paragraph
+              style={{ margin: "12px 0 0 0", fontSize: 13, color: "#666" }}
+            >
+              扫码关注公众号
+            </Paragraph>
           </div>
-        }
-        styles={{ body: { padding: "20px", textAlign: "center" } }}
-      >
-        <div className="qr-section">
-          <div className="qr-placeholder">
-            <QRCode
-              value="https://mp.weixin.qq.com/"
-              size={120}
-              style={{ margin: "0 auto" }}
-            />
-          </div>
-          <Paragraph
-            style={{ margin: "12px 0 0 0", fontSize: 13, color: "#666" }}
-          >
-            扫码关注公众号
-          </Paragraph>
-        </div>
-      </Card>
+        </Card>
+      )}
 
       {/* 正在赞助本站 */}
       <Card
@@ -183,20 +184,47 @@ export default function Sidebar() {
         styles={{ body: { padding: "16px 20px" } }}
       >
         <div className="sponsor-list">
-          {sponsors.map((sponsor, index) => (
-            <div key={sponsor.id}>
-              <div className="sponsor-item">
-                <div className="sponsor-icon">{sponsor.icon}</div>
-                <div className="sponsor-info">
-                  <div className="sponsor-name">{sponsor.name}</div>
-                  <div className="sponsor-desc">{sponsor.description}</div>
+          {sponsorLoading ? (
+            <span>加载赞助信息...</span>
+          ) : sponsorMessages.length === 0 ? (
+            <span style={{ fontSize: 12, color: "#666" }}>
+              赞助留言审核通过后将展示在此处
+            </span>
+          ) : (
+            sponsorMessages.map((sponsor, index) => (
+              <div key={sponsor.id || index}>
+                <div className="sponsor-item">
+                  <div className="sponsor-icon">💖</div>
+                  <div className="sponsor-info">
+                    <div className="sponsor-name">{sponsor.nickname}</div>
+                    <div className="sponsor-desc">
+                      {sponsor.message}
+                      {sponsor.website && (
+                        <div>
+                          <a
+                            href={sponsor.website}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{ fontSize: 12 }}
+                          >
+                            {sponsor.website}
+                          </a>
+                        </div>
+                      )}
+                      {typeof sponsor.amount === "number" && (
+                        <div style={{ marginTop: 4, fontWeight: 500 }}>
+                          支持金额：¥{Number(sponsor.amount).toFixed(2)}
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 </div>
+                {index < sponsorMessages.length - 1 && (
+                  <Divider style={{ margin: "12px 0" }} />
+                )}
               </div>
-              {index < sponsors.length - 1 && (
-                <Divider style={{ margin: "12px 0" }} />
-              )}
-            </div>
-          ))}
+            ))
+          )}
         </div>
 
         <div className="sponsor-footer">

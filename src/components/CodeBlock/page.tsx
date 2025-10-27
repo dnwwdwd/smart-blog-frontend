@@ -87,18 +87,48 @@ const CodeBlock: React.FC<CodeBlockProps> = React.memo(({
   // 优化复制功能 - 使用 useCallback 缓存
   const handleCopy = useCallback(async () => {
     if (!codeText) return;
-    
+
+    const messageKey = 'code-copy-feedback';
+    message.open({
+      key: messageKey,
+      type: 'loading',
+      content: '正在复制…',
+      duration: 0,
+    });
+
     try {
-      await navigator.clipboard.writeText(codeText);
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(codeText);
+      } else {
+        const textarea = document.createElement('textarea');
+        textarea.value = codeText;
+        textarea.setAttribute('readonly', 'true');
+        textarea.style.position = 'absolute';
+        textarea.style.left = '-9999px';
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+      }
+
       setCopied(true);
-      message.success('代码已复制到剪贴板');
-      
-      // 2秒后重置状态
-      setTimeout(() => {
+      message.open({
+        key: messageKey,
+        type: 'success',
+        content: '复制成功',
+        duration: 1.6,
+      });
+
+      window.setTimeout(() => {
         setCopied(false);
-      }, 2000);
+      }, 1600);
     } catch (err) {
-      message.error('复制失败，请手动复制');
+      message.open({
+        key: messageKey,
+        type: 'error',
+        content: '复制失败，请手动复制',
+        duration: 2.2,
+      });
     }
   }, [codeText]);
 

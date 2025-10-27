@@ -1,0 +1,49 @@
+.account-settings-page {
+  padding: 24px;
+  background: #f5f5f5;
+  min-height: 100vh;
+}
+
+.account-page-title {
+  margin-bottom: 24px !important;
+  color: #1a1a1a !important;
+}
+
+.account-card {
+  border-radius: 10px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+}
+
+.account-profile-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.account-username {
+  margin-bottom: 4px !important;
+}
+
+.account-user-account {
+  margin: 0 !important;
+}
+
+.account-tips {
+  font-size: 12px !important;
+  color: #8c8c8c !important;
+}
+
+@media (max-width: 768px) {
+  .account-settings-page {
+    padding: 16px;
+  }
+
+  .account-card {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  }
+
+  .account-profile-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

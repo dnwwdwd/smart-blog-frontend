@@ -1,6 +1,6 @@
 "use client";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Button, Input, Spin, Alert, message as antdMessage } from "antd";
+import { Button, Input, Spin, Alert, message as antdMessage, Tooltip } from "antd";
 import { SendOutlined, CloseOutlined, LoadingOutlined, DownOutlined } from "@ant-design/icons";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -8,6 +8,7 @@ import rehypeHighlight from "rehype-highlight";
 import rehypeSanitize from "rehype-sanitize";
 import rehypeRaw from "rehype-raw";
 import '@/app/admin/ai-chat/styles.css';
+import "./styles.css";
 import myAxios from "@/libs/request";
 
 const { TextArea } = Input;
@@ -299,56 +300,47 @@ const AIChatModal: React.FC<AIChatModalProps> = ({ open, onClose }) => {
     <div
       role="dialog"
       aria-modal="true"
-      aria-label="AI Chat"
-      style={{
-        position: "fixed",
-        inset: 0,
-        background: "rgba(0,0,0,0.45)",
-        zIndex: 1000,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: 16,
-      }}
+      aria-label="AI 助手聊天"
+      className="ai-chat-modal-mask"
       onClick={onClose}
     >
-      <div
-        className="ai-chat-page"
-        style={{
-          width: "min(1080px, 96vw)",
-          maxHeight: "90vh",
-          display: "grid",
-          gridTemplateColumns: "1fr",
-          margin: 0,
-        }}
-        onClick={(e) => e.stopPropagation()}
-      >
-
-        {/* Main */}
-        <div className="ai-chat-main" style={{ minHeight: 0, position: "relative" }}>
+      <div className="ai-chat-modal-panel" onClick={(e) => e.stopPropagation()}>
+        <div className="ai-chat-main">
           <div className="ai-chat-main-header">
-            <div className="ai-chat-header-left" style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <div className="ai-chat-header-left">
               <div className="ai-chat-title">AI 助手</div>
               {messages.length === 0 && (
-                <Alert className="ai-chat-header-alert" type="info" showIcon banner message="你好！我可以帮助你起草文章、润色内容或回答问题。" style={{ padding: "4px 8px", border: "none", background: "#f0f7ff" }} />
+                <Alert
+                  className="ai-chat-header-alert"
+                  type="info"
+                  showIcon
+                  banner
+                  message="你好！我可以帮助你起草文章、润色内容或回答问题。"
+                />
               )}
             </div>
             <div className="ai-chat-actions">
-              <Button type="text" className="ai-chat-close-btn" onClick={onClose} icon={<CloseOutlined />} />
+              <Tooltip title="关闭">
+                <Button
+                  type="text"
+                  className="ai-chat-close-btn"
+                  onClick={onClose}
+                  icon={<CloseOutlined />}
+                />
+              </Tooltip>
             </div>
           </div>
+
           <div className="ai-chat-messages" ref={messagesRef}>
             {messages.map((m) => {
-              // 当助手消息内容为空且处于流式阶段时，不渲染助手气泡，仅显示加载动画
               if (m.role === "assistant" && !m.content) return null;
-              const isUser = m.role === "user";
               return (
                 <div key={m.id} className={`ai-chat-msg ${m.role}`}>
-                  <div
-                    className="bubble"
-                    style={undefined}
-                  >
-                    <ReactMarkdown remarkPlugins={[remarkGfm] as any} rehypePlugins={[rehypeRaw as any, rehypeSanitize as any, rehypeHighlight as any]}>
+                  <div className="bubble">
+                    <ReactMarkdown
+                      remarkPlugins={[remarkGfm] as any}
+                      rehypePlugins={[rehypeRaw as any, rehypeSanitize as any, rehypeHighlight as any]}
+                    >
                       {m.content}
                     </ReactMarkdown>
                   </div>
@@ -363,24 +355,30 @@ const AIChatModal: React.FC<AIChatModalProps> = ({ open, onClose }) => {
             )}
           </div>
 
-          {/* 悬浮一键滑动到底部按钮（列表未在底部时显示） */}
           {!autoScroll && (
-            <Button
-              type="primary"
-              shape="circle"
-              size="large"
-              icon={<DownOutlined />}
-              onClick={scrollToBottom}
-              style={{ position: "absolute", right: 16, bottom: 96, zIndex: 1 }}
-              aria-label="滚动到底部"
-            />
+            <Tooltip title="滚动到底部">
+              <Button
+                type="primary"
+                shape="circle"
+                size="large"
+                className="ai-chat-scroll-bottom"
+                icon={<DownOutlined />}
+                onClick={scrollToBottom}
+                aria-label="滚动到底部"
+              />
+            </Tooltip>
           )}
 
           <div className="ai-chat-input ai-chat-input-row">
             <div className="ai-chat-textarea">
-              <TextArea value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={onKeyDown} autoSize={{ minRows: 2, maxRows: 6 }} placeholder="输入你的问题，Shift+Enter 换行" />
+              <TextArea
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={onKeyDown}
+                autoSize={{ minRows: 2, maxRows: 6 }}
+                placeholder="输入你的问题，Shift+Enter 换行"
+              />
             </div>
-            {/* 发送区：流式时隐藏按钮并展示可点击的 Loading 图标用以中断 */}
             {streaming ? (
               <div
                 role="button"
@@ -389,29 +387,26 @@ const AIChatModal: React.FC<AIChatModalProps> = ({ open, onClose }) => {
                 tabIndex={0}
                 onClick={handleAbort}
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
+                  if (e.key === "Enter" || e.key === " ") {
                     e.preventDefault();
                     handleAbort();
                   }
-                }}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 44,
-                  height: 44,
-                  marginLeft: 8,
-                  borderRadius: 8,
-                  cursor: 'pointer',
-                  color: '#1677ff',
-                  background: 'rgba(22,119,255,0.08)'
                 }}
                 className="ai-chat-abort-trigger"
               >
                 <LoadingOutlined spin />
               </div>
             ) : (
-              <Button type="primary" className="ai-chat-send-btn-inline" icon={<SendOutlined />} disabled={!input.trim()} onClick={handleSend} size="large">发送</Button>
+              <Button
+                type="primary"
+                className="ai-chat-send-btn-inline"
+                icon={<SendOutlined />}
+                disabled={!input.trim()}
+                onClick={handleSend}
+                size="large"
+              >
+                发送
+              </Button>
             )}
           </div>
         </div>

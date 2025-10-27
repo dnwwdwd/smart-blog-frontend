@@ -72,6 +72,7 @@
 
 .article-detail-meta-top {
   margin-bottom: 16px;
+  margin-top: 16px;
 }
 
 .article-detail-meta-top .meta-item {
@@ -79,6 +80,17 @@
   font-size: 14px;
   display: flex;
   align-items: center;
+}
+
+.article-detail-meta-top .article-meta-author {
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.article-author-bio {
+  margin: 8px 0 24px !important;
+  color: #595959 !important;
+  font-size: 14px !important;
 }
 
 .article-detail-title {
@@ -90,12 +102,11 @@
 }
 
 .article-detail-tags {
-  margin-bottom: 24px;
 }
 
 /* 文章正文 */
 .article-detail-body {
-  padding: 32px;
+  padding: 20px;
   line-height: 1.8;
   font-size: 16px;
   color: #333;

@@ -1,6 +1,5 @@
 "use client";
 import React, { useState, useEffect, useCallback } from "react";
-import type { UploadFile, UploadProps } from "antd";
 import {
   Button,
   Card,
@@ -8,24 +7,20 @@ import {
   Input,
   InputNumber,
   message,
-  Select,
   Space,
   Switch,
   Tabs,
-  Upload,
   Alert
 } from "antd";
 import {
   ReloadOutlined,
   SaveOutlined,
-  UploadOutlined,
 } from "@ant-design/icons";
 import "./styles.css";
 import "@ant-design/v5-patch-for-react-19";
 import { useSiteSettingsStore } from "@/stores/siteSettingsStore";
 
 const { TextArea } = Input;
-const { Option } = Select;
 
 interface SiteSettings {
   siteName: string;
@@ -125,9 +120,6 @@ const SystemSettings: React.FC = () => {
   const { settings, loading: settingsLoading, error, fetchSiteSettings, saveSiteSettings } =
     useSiteSettingsStore();
 
-  const [fileList, setFileList] = useState<UploadFile[]>([]);
-  const [aboutImageList, setAboutImageList] = useState<UploadFile[]>([]);
-  const [faviconList, setFaviconList] = useState<UploadFile[]>([]);
 
   useEffect(() => {
     // 若无全局设置，进入页面时拉取一次
@@ -151,7 +143,8 @@ const SystemSettings: React.FC = () => {
       } else {
         message.error("保存失败");
       }
-    } catch (error) {
+    } catch (err) {
+      console.error("保存站点设置失败", err);
       message.error("保存失败，请重试");
     } finally {
       setLoading(false);
@@ -163,39 +156,6 @@ const SystemSettings: React.FC = () => {
       form.setFieldsValue(settings as any);
       message.info("已重置为当前保存的设置");
     }
-  };
-
-  const uploadProps: UploadProps = {
-    beforeUpload: (file) => {
-      const isImage = file.type.startsWith("image/");
-      if (!isImage) {
-        message.error("只能上传图片文件!");
-        return false;
-      }
-      const isLt2M = file.size / 1024 / 1024 < 2;
-      if (!isLt2M) {
-        message.error("图片大小不能超过 2MB!");
-        return false;
-      }
-      return false;
-    },
-    onChange: (info) => {
-      setFileList(info.fileList);
-    },
-  };
-
-  const aboutImageProps: UploadProps = {
-    ...uploadProps,
-    onChange: (info) => {
-      setAboutImageList(info.fileList);
-    },
-  };
-
-  const faviconProps: UploadProps = {
-    ...uploadProps,
-    onChange: (info) => {
-      setFaviconList(info.fileList);
-    },
   };
 
   // 根据 store 的 loading / error 精确反馈 UI，避免永远“加载中”。
@@ -327,6 +287,9 @@ const SystemSettings: React.FC = () => {
                       <Input placeholder="you@example.com" />
                     </Form.Item>
                     <Form.Item label="微信二维码" name="wechatQrUrl">
+                      <Input placeholder="图片链接或上传后地址" />
+                    </Form.Item>
+                    <Form.Item label="公众号二维码" name="wechatOfficialQrUrl">
                       <Input placeholder="图片链接或上传后地址" />
                     </Form.Item>
                     <Form.Item label="微信收款码" name="wechatPayQrUrl">

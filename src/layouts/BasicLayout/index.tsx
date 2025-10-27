@@ -42,13 +42,9 @@ function BasicLayoutContent({children}: Props) {
         return () => { clearInterval(progressInterval); };
     }, [checkLogin]);
 
-    // 在前台路径拉取站点设置
     useEffect(() => {
-        const isAdminPath = pathname.startsWith('/admin');
-        if (!isAdminPath) {
-          fetchSiteSettings();
-        }
-    }, [pathname, fetchSiteSettings]);
+        fetchSiteSettings();
+    }, [fetchSiteSettings]);
 
     // 绑定全局快捷键打开/关闭 AI 弹窗（跨系统适配 Ctrl/Cmd、Alt/Option）
     useEffect(() => {
@@ -93,7 +89,8 @@ function BasicLayoutContent({children}: Props) {
         const ctrlMetaPressed = e.ctrlKey || e.metaKey; // Mac 下 ⌘ 也可匹配 Ctrl 需求
         const ctrlOk = req.needCtrlOrMeta ? ctrlMetaPressed : !ctrlMetaPressed;
         const shiftOk = req.needShift ? e.shiftKey : !e.shiftKey;
-        const mainOk = req.mainKey ? e.key.toLowerCase() === req.mainKey : false;
+        const eventKey = typeof e.key === 'string' ? e.key.toLowerCase() : '';
+        const mainOk = req.mainKey ? eventKey === req.mainKey : false;
         if (altOk && ctrlOk && shiftOk && mainOk) {
           e.preventDefault();
           setAiOpen((v) => !v);
@@ -109,12 +106,12 @@ function BasicLayoutContent({children}: Props) {
       const description = settings?.seoDescription || settings?.siteDescription || '一个智能的博客系统';
       const keywords = settings?.seoKeywords || settings?.siteKeywords || '博客,技术,分享,学习';
       const siteName = settings?.siteName || 'Smart Blog';
-      const favicon = settings?.favicon;
+      const favicon = settings?.favicon || '/assets/logo.svg';
       return { title, description, keywords, siteName, favicon };
     }, [settings]);
 
     if (!isClient || initialLoading) {
-        return <GlobalLoading visible={true} progress={initialProgress} title={settings?.siteName || 'Smart Blog'} subtitle={settings?.siteDescription || '页面加载中，请稍候'} />;
+        return <GlobalLoading visible={true} progress={initialProgress} title={settings?.siteName || 'Smart Blog'} subtitle={settings?.siteDescription || '页面加载中，请稍候'} logoSrc={settings?.siteLogo || '/assets/logo.svg'} />;
     }
 
     const isAdminPath = pathname.startsWith('/admin');
@@ -174,11 +171,11 @@ function BasicLayoutContent({children}: Props) {
               <meta name="twitter:description" content={seo.description} />
 
               {/* Favicon */}
-              {seo.favicon && <link rel="icon" href={seo.favicon} />}
+              <link rel="icon" href={seo.favicon} />
             </Head>
 
             {isLoading && (
-                <GlobalLoading visible={true} progress={progress} title={settings?.siteName || 'Smart Blog'} subtitle={settings?.siteDescription || '页面加载中，请稍候'} />
+                <GlobalLoading visible={true} progress={progress} title={settings?.siteName || 'Smart Blog'} subtitle={settings?.siteDescription || '页面加载中，请稍候'} logoSrc={settings?.siteLogo || '/assets/logo.svg'} />
             )}
             {content}
             <AIChatModal open={aiOpen} onClose={() => setAiOpen(false)} />

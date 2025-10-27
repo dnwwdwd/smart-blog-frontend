@@ -62,6 +62,9 @@
 
 .friend-col {
     display: flex;
+    justify-content: center;
+    perspective: 900px;
+    padding: 20px 30px;
 }
 
 /* 现代化申请友链卡片样式 */

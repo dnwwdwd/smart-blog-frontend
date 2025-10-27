@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   Button,
   Dropdown,
@@ -21,8 +21,9 @@ import {
   SendOutlined,
 } from "@ant-design/icons";
 import "./styles.css";
+import Head from "next/head";
+import { useSiteSettings } from "@/stores/siteSettingsStore";
 
-import { useAuthStore } from "@/stores/authStore";
 import {
   addChatConversation,
   deleteChatConversation,
@@ -33,11 +34,7 @@ import {
 import myAxios from "@/libs/request";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import rehypeHighlight from "rehype-highlight";
-import rehypeSanitize from "rehype-sanitize";
-import rehypeRaw from "rehype-raw";
-
-// import CodeBlock from "@/components/CodeBlock/page";
+import CodeBlock from "@/components/CodeBlock/page";
 
 interface ChatMessage {
   id: string;
@@ -100,11 +97,28 @@ export default function AdminAIChatPage() {
   const abortRef = useRef<AbortController | null>(null);
   const messagesRef = useRef<HTMLDivElement | null>(null);
   const [autoScroll, setAutoScroll] = useState(true);
-  const currentUser = useAuthStore((s) => s.user);
-  const userAvatar = currentUser?.userAvatar || "/assets/logo.png";
-  const aiAvatar = "/assets/logo.png";
   // 新增：抑制下一次会话切换时的历史加载，避免覆盖流式新增的消息
   const suppressNextHistoryLoadRef = useRef<string | null>(null);
+  const settings = useSiteSettings();
+  const siteName = settings?.siteName || "Smart Blog";
+  const markdownComponents = {
+    code({ inline, className, children, ...props }: any) {
+      const match = /language-(\w+)/.exec(className || "");
+      if (!inline) {
+        return (
+          <CodeBlock language={match ? match[1] : undefined}>
+            {String(children).replace(/\n$/, "")}
+          </CodeBlock>
+        );
+      }
+      return (
+        <code className={className} {...props}>
+          {children}
+        </code>
+      );
+    },
+    p: ({ children }: any) => <p style={{ margin: "0 0 0.6em 0" }}>{children}</p>,
+  };
 
   useEffect(() => {
     (async () => {
@@ -123,8 +137,8 @@ export default function AdminAIChatPage() {
           setLoadingHistory(false);
           return;
         }
-      } catch (e) {
-        // ignore
+      } catch {
+        // ignore and fallback to本地缓存
       }
       const list = loadConversations();
       setConversations(list);
@@ -155,7 +169,7 @@ export default function AdminAIChatPage() {
             saveMessages(activeId, mapped);
             return;
           }
-        } catch (e) {
+        } catch {
           // ignore
         }
       }
@@ -210,21 +224,6 @@ export default function AdminAIChatPage() {
       return next;
     });
   }, [activeId]);
-
-  const createConversationLocal = useCallback((title: string): Conversation => {
-    const conv: Conversation = {
-      id: `${Date.now()}`,
-      title: title || "新的对话",
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
-    };
-    const next = [conv, ...conversations];
-    setConversations(next);
-    saveConversations(next);
-    saveMessages(conv.id, []);
-    setActiveId(conv.id);
-    return conv;
-  }, [conversations]);
 
   async function streamAssistantAnswer(prompt: string, convId: string) {
     const controller = new AbortController();
@@ -458,7 +457,7 @@ export default function AdminAIChatPage() {
           antdMessage.error("创建对话失败");
           return;
         }
-      } catch (e) {
+      } catch {
         antdMessage.error("创建对话失败");
         return;
       }
@@ -500,7 +499,7 @@ export default function AdminAIChatPage() {
       } else {
         antdMessage.error("创建对话失败");
       }
-    } catch (e) {
+    } catch {
       antdMessage.error("创建对话失败");
     }
   };
@@ -521,7 +520,7 @@ export default function AdminAIChatPage() {
         } else {
           antdMessage.error("删除对话失败");
         }
-      } catch (e) {
+      } catch {
         antdMessage.error("删除对话失败");
       }
     };
@@ -543,7 +542,7 @@ export default function AdminAIChatPage() {
       } else {
         antdMessage.error("删除对话失败");
       }
-    } catch (e) {
+    } catch {
       antdMessage.error("删除对话失败");
     }
   };
@@ -580,59 +579,32 @@ export default function AdminAIChatPage() {
       } else {
         antdMessage.error("更新标题失败");
       }
-    } catch (e) {
+    } catch {
       antdMessage.error("更新标题失败");
     }
   };
 
   const menuFor = (c: Conversation) => ({
-  items: [
-  { key: "rename", label: "重命名", icon: <EditOutlined />, onClick: () => openRename(c) },
-  { key: "share", label: "分享", icon: <SendOutlined />, onClick: () => handleShareById(c.id) },
-  { key: "delete", label: "删除", icon: <DeleteOutlined />, danger: true, onClick: () => handleDeleteChatById(c.id) },
-  ],
+    items: [
+      { key: "rename", label: "重命名", icon: <EditOutlined />, onClick: () => openRename(c) },
+      { key: "delete", label: "删除", icon: <DeleteOutlined />, danger: true, onClick: () => handleDeleteChatById(c.id) },
+    ],
   });
 
-  // 分享：将当前会话消息导出为 Markdown 并复制到剪贴板
-  const buildShareMarkdown = (conv: Conversation, msgs: ChatMessage[]) => {
-    const title = conv.title || "对话";
-    const lines: string[] = [
-      `# ${title}`,
-      "",
-      ...msgs.map((m) => `**${m.role === "user" ? "我" : m.role === "assistant" ? "助手" : "系统"}**:\n\n${m.content || ""}`),
-    ];
-    return lines.join("\n\n");
-  };
-
-  const handleShare = async () => {
-    if (!activeId) return;
-    const conv = conversations.find((c) => c.id === activeId);
-    if (!conv) return;
-    const msgs = messages;
-    const md = buildShareMarkdown(conv, msgs);
-    try {
-      await navigator.clipboard.writeText(md);
-      antdMessage.success("已复制分享内容到剪贴板");
-    } catch (e) {
-      antdMessage.error("复制失败，请手动复制");
-    }
-  };
-
-  const handleShareById = async (convId: string) => {
-    const conv = conversations.find((c) => c.id === convId);
-    if (!conv) return;
-    const msgs = convId === activeId ? messages : loadMessages(convId);
-    const md = buildShareMarkdown(conv, msgs);
-    try {
-      await navigator.clipboard.writeText(md);
-      antdMessage.success("已复制分享内容到剪贴板");
-    } catch (e) {
-      antdMessage.error("复制失败，请手动复制");
-    }
-  };
+  const activeConversation = useMemo(
+    () => conversations.find((c) => c.id === activeId) || null,
+    [conversations, activeId]
+  );
+  const pageTitle = activeConversation?.title
+    ? `${activeConversation.title} - ${siteName}`
+    : `${siteName} · AI 聊天`;
 
   return (
-    <div className="ai-chat-page">
+    <>
+      <Head>
+        <title>{pageTitle}</title>
+      </Head>
+      <div className="ai-chat-page">
       {/* Sidebar */}
       <div className="ai-chat-sidebar">
         <div className="ai-chat-sidebar-header">
@@ -723,9 +695,14 @@ export default function AdminAIChatPage() {
         <div className="ai-chat-main-header">
           <div className="ai-chat-title">{conversations.find((x) => x.id === activeId)?.title || ""}</div>
           <div className="ai-chat-actions">
-            <Button onClick={handleShare} icon={<SendOutlined />} disabled={!activeId}>分享</Button>
-            <Button danger icon={<DeleteOutlined />} onClick={handleDeleteChat} disabled={!activeId}>
-              删除
+            <Button
+              danger
+              icon={<DeleteOutlined />}
+              onClick={handleDeleteChat}
+              disabled={!activeId}
+              className="ai-chat-delete-btn"
+            >
+              删除对话
             </Button>
           </div>
         </div>
@@ -741,34 +718,24 @@ export default function AdminAIChatPage() {
                   {messages.map((m, idx) => {
                     const isAssistant = m.role === "assistant";
                     const isLast = idx === messages.length - 1;
-                    const showCursor = isLastAssistantStreaming && isLast;
 
                     // 当处于流式阶段且当前是最后一条助手消息时，不渲染其气泡，改为在下方统一显示加载指示
                     if (isAssistant && isLastAssistantStreaming && isLast) {
                       return null;
                     }
 
-                    const onClickStop = false ? () => {} : undefined;
                     return (
                       <div key={m.id}
                       className={`ai-chat-msg ${isAssistant ? "assistant" : "user"}`}
                       >
                       <div className="bubble">
                         {isAssistant ? (
-                          <>
-                            <ReactMarkdown
-                              remarkPlugins={[remarkGfm] as any}
-                              rehypePlugins={[rehypeHighlight] as any}
-                              components={{
-                                code: ({ className, children, ...props }) => (
-                                  <code className={className} {...props}>{children}</code>
-                                ),
-                                p: ({ children }) => <p style={{ margin: "0 0 0.6em 0" }}>{children}</p>,
-                              }}
-                            >
-                              {m.content}
-                            </ReactMarkdown>
-                          </>
+                          <ReactMarkdown
+                            remarkPlugins={[remarkGfm] as any}
+                            components={markdownComponents as any}
+                          >
+                            {m.content}
+                          </ReactMarkdown>
                         ) : (
                           <div style={{ margin: 0, whiteSpace: "pre-wrap" }}>
                             {m.content}
@@ -834,6 +801,7 @@ export default function AdminAIChatPage() {
             </div>
           </div>
       </div>
+    </div>
 
       <Modal
         title="重命名对话"
@@ -846,6 +814,6 @@ export default function AdminAIChatPage() {
       >
         <Input value={renameValue} onChange={(e) => setRenameValue(e.target.value)} placeholder="输入新标题" />
       </Modal>
-    </div>
+    </>
   );
 }

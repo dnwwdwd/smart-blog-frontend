@@ -1,18 +1,23 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import type { UploadFile, UploadProps } from "antd";
+import dayjs from "dayjs";
 import {
+  Alert,
   Button,
   Drawer,
   Form,
   Input,
+  Modal,
+  Table,
   message,
   Select,
   Space,
   Tooltip,
   Upload,
 } from "antd";
+import type { TableProps } from "antd";
 
 import {
   FileImageOutlined,
@@ -24,7 +29,12 @@ import {
   TagOutlined,
   UploadOutlined,
 } from "@ant-design/icons";
-import { publishArticle } from "@/api/articleController";
+import {
+  getArticlePage,
+  getArticleVoById,
+  publishArticle,
+  updateArticle,
+} from "@/api/articleController";
 import { getColumnPage } from "@/api/columnController";
 import { getTagPage } from "@/api/tagController";
 import "./styles.css";
@@ -32,18 +42,10 @@ import MdEditor from "@/components/MdEditor";
 import { uploadImage } from "@/api/imageController";
 import { useRouter } from "next/navigation";
 
-interface ArticleData {
-  title: string;
-  content: string;
-  excerpt?: string;
-  readTime?: number;
-  coverImage?: string;
-  columnIds?: number[];
-  tags?: string[];
-  seoTitle?: string;
-  seoDescription?: string;
-  seoKeywords?: string;
-}
+const ArticleStatus = {
+  DRAFT: 0,
+  PUBLISHED: 1,
+} as const;
 
 const ArticleCreatePage: React.FC = () => {
   const router = useRouter();
@@ -55,14 +57,17 @@ const ArticleCreatePage: React.FC = () => {
   const [columns, setColumns] = useState<any[]>([]);
   const [tags, setTags] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  const [draftCount, setDraftCount] = useState(0);
+  const [draftModalVisible, setDraftModalVisible] = useState(false);
+  const [draftModalLoading, setDraftModalLoading] = useState(false);
+  const [drafts, setDrafts] = useState<API.ArticleVo[]>([]);
+  const [draftPagination, setDraftPagination] = useState({
+    current: 1,
+    pageSize: 5,
+    total: 0,
+  });
+  const [editingArticleId, setEditingArticleId] = useState<number>();
   const hasUnsavedChanges = useRef(false);
-
-  // 监听内容变化
-  useEffect(() => {
-    if (title || content) {
-      hasUnsavedChanges.current = true;
-    }
-  }, [title, content]);
 
   // 页面关闭确认
   useEffect(() => {
@@ -113,6 +118,171 @@ const ArticleCreatePage: React.FC = () => {
     loadTags();
   }, []);
 
+  const fetchDraftCount = useCallback(async () => {
+    try {
+      const res: any = await getArticlePage({
+        current: 1,
+        pageSize: 1,
+        status: ArticleStatus.DRAFT,
+      });
+      if (res.code === 0) {
+        setDraftCount(res.data?.total || 0);
+      }
+    } catch (error) {
+      console.error("加载草稿统计失败:", error);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchDraftCount();
+  }, [fetchDraftCount]);
+
+  const loadDrafts = async (page = 1, pageSize = draftPagination.pageSize) => {
+    setDraftModalLoading(true);
+    try {
+      const res: any = await getArticlePage({
+        current: page,
+        pageSize,
+        status: ArticleStatus.DRAFT,
+      });
+      if (res.code === 0) {
+        setDrafts(res.data?.records || []);
+        setDraftPagination({
+          current: res.data?.current || page,
+          pageSize: res.data?.size || pageSize,
+          total: res.data?.total || 0,
+        });
+        setDraftCount(res.data?.total || 0);
+      }
+    } catch (error) {
+      console.error("加载草稿列表失败:", error);
+      message.error("加载草稿列表失败，请稍后重试");
+    } finally {
+      setDraftModalLoading(false);
+    }
+  };
+
+  const handleOpenDraftModal = async () => {
+    setDraftModalVisible(true);
+    if (drafts.length === 0) {
+      await loadDrafts();
+    }
+  };
+
+  const parseToStringArray = (value: unknown): string[] => {
+    if (Array.isArray(value)) {
+      return (value as unknown[])
+        .map((item) => (typeof item === "string" ? item.trim() : ""))
+        .filter((item) => item);
+    }
+    if (typeof value === "string") {
+      return value
+        .split(",")
+        .map((item) => item.trim())
+        .filter((item) => item);
+    }
+    return [];
+  };
+
+  const handleEditDraft = async (articleId: number) => {
+    const hide = message.loading({
+      content: "正在加载草稿...",
+      key: "load-draft",
+      duration: 0,
+    });
+    let succeeded = false;
+    try {
+      const res: any = await getArticleVoById({ articleId });
+      if (res.code === 0 && res.data) {
+        const article = res.data;
+        setEditingArticleId(article.id);
+        setTitle(article.title || "");
+        setContent(article.content || "");
+        const columnIds =
+          Array.isArray(article.columns) && article.columns.length > 0
+            ? article.columns
+                .map((col) => col?.id)
+                .filter((id): id is number => typeof id === "number")
+            : undefined;
+        const tagsArray = parseToStringArray(article.tags);
+        const seoKeywords = parseToStringArray(article.seoKeywords);
+        form.setFieldsValue({
+          excerpt: article.excerpt || undefined,
+          columnIds: columnIds || [],
+          tags: tagsArray,
+          seoTitle: article.seoTitle || undefined,
+          seoDescription: article.seoDescription || undefined,
+          seoKeywords,
+          coverImage: article.coverImage || undefined,
+        });
+        if (article.coverImage) {
+          setFileList([
+            {
+              uid: "existing-cover",
+              name: "封面图",
+              status: "done",
+              url: article.coverImage,
+            } as UploadFile,
+          ]);
+        } else {
+          setFileList([]);
+        }
+        hasUnsavedChanges.current = false;
+        setDraftModalVisible(false);
+        message.success({
+          content: "草稿已加载，您可以继续编辑。",
+          key: "load-draft",
+        });
+        succeeded = true;
+      } else {
+        message.error(res.message || "加载草稿失败");
+      }
+    } catch (error) {
+      console.error("加载草稿详情失败:", error);
+      message.error("加载草稿详情失败，请稍后重试");
+    } finally {
+      if (!succeeded) {
+        hide();
+      }
+    }
+  };
+
+  const draftColumns: TableProps<API.ArticleVo>["columns"] = [
+    {
+      title: "标题",
+      dataIndex: "title",
+      key: "title",
+      ellipsis: true,
+      render: (value: string) => value || "-",
+    },
+    {
+      title: "最后更新",
+      dataIndex: "updateTime",
+      key: "updateTime",
+      width: 180,
+      render: (value: string) =>
+        value ? dayjs(value).format("YYYY-MM-DD HH:mm") : "-",
+    },
+    {
+      title: "操作",
+      key: "actions",
+      width: 120,
+      render: (_: unknown, record: API.ArticleVo) => (
+        <Button
+          type="link"
+          size="small"
+          onClick={() => {
+            if (record.id) {
+              handleEditDraft(record.id);
+            }
+          }}
+        >
+          编辑
+        </Button>
+      ),
+    },
+  ];
+
   // 上传配置
   const uploadProps: UploadProps = {
     name: "file",
@@ -147,6 +317,7 @@ const ArticleCreatePage: React.FC = () => {
         return f;
       });
       setFileList(newList);
+      hasUnsavedChanges.current = true;
 
       if (info.file.status === "done") {
         message.success(`图片上传成功`);
@@ -177,7 +348,51 @@ const ArticleCreatePage: React.FC = () => {
     },
     onRemove() {
       form.setFieldsValue({ coverImage: undefined });
+      hasUnsavedChanges.current = true;
     },
+  };
+
+  const buildArticlePayload = (status: number, formValues: any): API.ArticleDto => {
+    const coverImage = formValues.coverImage || form.getFieldValue("coverImage");
+    const normalizedCoverImage =
+      typeof coverImage === "string" && coverImage.trim().length > 0
+        ? coverImage.trim()
+        : undefined;
+    const columnIds = Array.isArray(formValues.columnIds)
+      ? formValues.columnIds.filter((id: number | null | undefined) => id !== null && id !== undefined)
+      : [];
+    const tags = Array.isArray(formValues.tags)
+      ? formValues.tags
+          .map((tag: string) => tag?.trim())
+          .filter((tag: string | undefined) => !!tag) as string[]
+      : [];
+    const seoKeywords = Array.isArray(formValues.seoKeywords)
+      ? formValues.seoKeywords
+          .map((keyword: string) => keyword?.trim())
+          .filter((keyword: string | undefined) => !!keyword) as string[]
+      : [];
+    const sanitized: API.ArticleDto = {
+      status,
+      title: title.trim() || undefined,
+      content: content.trim() || undefined,
+      excerpt: formValues.excerpt?.trim() || undefined,
+      coverImage: normalizedCoverImage,
+      columnIds: columnIds.length > 0 ? columnIds : undefined,
+      tags: tags.length > 0 ? tags : undefined,
+      seoTitle: formValues.seoTitle?.trim() || undefined,
+      seoDescription: formValues.seoDescription?.trim() || undefined,
+      seoKeywords: seoKeywords.length > 0 ? seoKeywords : undefined,
+      id: editingArticleId,
+    };
+    return sanitized;
+  };
+
+  const resetEditorState = () => {
+    setTitle("");
+    setContent("");
+    form.resetFields();
+    setFileList([]);
+    setEditingArticleId(undefined);
   };
 
   // 发布文章
@@ -190,36 +405,38 @@ const ArticleCreatePage: React.FC = () => {
       message.error("请输入文章内容");
       return;
     }
+    if (!form.getFieldValue("coverImage")) {
+      message.error("请上传文章封面");
+      return;
+    }
+    if (!values.columnIds || values.columnIds.length === 0) {
+      message.error("请至少选择一个专栏");
+      return;
+    }
+    if (!values.tags || values.tags.length === 0) {
+      message.error("请至少添加一个标签");
+      return;
+    }
 
     setLoading(true);
     try {
-      // @ts-ignore 缺少 API.ArticlePublishRequest 类型定义，构建期临时忽略
-      const articleData: API.ArticlePublishRequest = {
-        title: title.trim(),
-        content: content.trim(),
-        excerpt: values.excerpt?.trim(),
-        coverImage: form.getFieldValue("coverImage"),
-        columnIds: values.columnIds || [],
-        tags: values.tags || [],
-        seoTitle: values.seoTitle?.trim(),
-        seoDescription: values.seoDescription?.trim(),
-        seoKeywords: values.seoKeywords,
-        status: 1, // 立即发布
-      };
-
-      const res: any = await publishArticle(articleData);
+      const payload = buildArticlePayload(ArticleStatus.PUBLISHED, values);
+      const isEditing = typeof editingArticleId === "number";
+      const res: any = isEditing
+        ? await updateArticle(payload)
+        : await publishArticle(payload);
       if (res.code === 0) {
-        message.success("文章发布成功!");
+        message.success(isEditing ? "文章更新成功!" : "文章发布成功!");
         hasUnsavedChanges.current = false;
         setSettingsVisible(false);
-        // 清空表单
-        setTitle("");
-        setContent("");
-        form.resetFields();
-        setFileList([]);
-        // 仅在发布成功时跳转到详情页
-        if (res.data) {
-          router.replace(`/article/${res.data}`);
+        const targetId =
+          isEditing && editingArticleId
+            ? editingArticleId
+            : res.data;
+        resetEditorState();
+        await fetchDraftCount();
+        if (targetId) {
+          router.replace(`/article/${targetId}`);
         }
       } else {
         message.error(res.message || "发布失败");
@@ -234,7 +451,6 @@ const ArticleCreatePage: React.FC = () => {
 
   // 保存草稿（status = 0）
   const handleSaveDraft = async () => {
-    // 可以只做基础校验：至少填写了标题或内容之一
     if (!title.trim() && !content.trim()) {
       message.error("请至少填写标题或内容再保存草稿");
       return;
@@ -243,25 +459,21 @@ const ArticleCreatePage: React.FC = () => {
     setLoading(true);
     try {
       const values = form.getFieldsValue();
-      // @ts-ignore 缺少 API.ArticlePublishRequest 类型定义，构建期临时忽略
-      const articleData: API.ArticlePublishRequest = {
-        title: title.trim(),
-        content: content.trim(),
-        excerpt: values.excerpt?.trim(),
-        coverImage: form.getFieldValue("coverImage"),
-        columnIds: values.columnIds || [],
-        tags: values.tags || [],
-        seoTitle: values.seoTitle?.trim(),
-        seoDescription: values.seoDescription?.trim(),
-        seoKeywords: values.seoKeywords,
-        status: 0, // 保存为草稿
-      };
-
-      const res: any = await publishArticle(articleData);
+      const payload = buildArticlePayload(ArticleStatus.DRAFT, values);
+      const isEditing = typeof editingArticleId === "number";
+      const res: any = isEditing
+        ? await updateArticle(payload)
+        : await publishArticle(payload);
       if (res.code === 0) {
-        message.success("草稿已保存");
+        if (!isEditing && res.data) {
+          setEditingArticleId(res.data);
+        }
+        message.success(isEditing ? "草稿已更新" : "草稿已保存");
         hasUnsavedChanges.current = false;
-        // 草稿保存后保留当前编辑内容，方便继续编辑
+        await fetchDraftCount();
+        if (draftModalVisible) {
+          await loadDrafts(draftPagination.current, draftPagination.pageSize);
+        }
       } else {
         message.error(res.message || "保存草稿失败");
       }
@@ -275,6 +487,20 @@ const ArticleCreatePage: React.FC = () => {
 
   return (
     <div className="article-create-container">
+      {draftCount > 0 && (
+        <div className="draft-alert-wrapper">
+          <Alert
+            type="info"
+            showIcon
+            message={`你有 ${draftCount} 篇草稿待处理`}
+            action={
+              <Button type="link" onClick={handleOpenDraftModal} size="small">
+                查看草稿
+              </Button>
+            }
+          />
+        </div>
+      )}
       {/* 顶部工具栏 */}
       <div className="create-toolbar">
         <div className="toolbar-left">
@@ -282,7 +508,10 @@ const ArticleCreatePage: React.FC = () => {
             <Input
               placeholder="请输入文章标题..."
               value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              onChange={(e) => {
+                setTitle(e.target.value);
+                hasUnsavedChanges.current = true;
+              }}
               className="title-input"
               variant={"borderless"}
               size="large"
@@ -327,7 +556,15 @@ const ArticleCreatePage: React.FC = () => {
 
       {/* 编辑器区域 */}
       <div className="editor-container">
-        <MdEditor value={content} onChange={setContent} />
+        <div className="editor-shell">
+          <MdEditor
+            value={content}
+            onChange={(value) => {
+              setContent(value);
+              hasUnsavedChanges.current = true;
+            }}
+          />
+        </div>
       </div>
 
       {/* 发布设置抽屉 */}
@@ -364,6 +601,9 @@ const ArticleCreatePage: React.FC = () => {
           form={form}
           layout="vertical"
           onFinish={handlePublish}
+          onValuesChange={() => {
+            hasUnsavedChanges.current = true;
+          }}
           className="publish-form"
         >
           {/* 封面图片 */}
@@ -474,6 +714,31 @@ const ArticleCreatePage: React.FC = () => {
           </div>
         </Form>
       </Drawer>
+
+      <Modal
+        title="草稿列表"
+        open={draftModalVisible}
+        onCancel={() => setDraftModalVisible(false)}
+        footer={null}
+        width={720}
+        destroyOnClose
+      >
+        <Table
+          columns={draftColumns}
+          dataSource={drafts}
+          loading={draftModalLoading}
+          pagination={{
+            current: draftPagination.current,
+            pageSize: draftPagination.pageSize,
+            total: draftPagination.total,
+            showSizeChanger: true,
+            onChange: (page, pageSize) => {
+              loadDrafts(page, pageSize);
+            },
+          }}
+          rowKey="id"
+        />
+      </Modal>
     </div>
   );
 };

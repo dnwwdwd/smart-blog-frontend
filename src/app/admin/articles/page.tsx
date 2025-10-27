@@ -1,5 +1,6 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import type { Dayjs } from "dayjs";
 import type { UploadFile, UploadProps } from "antd";
 import {
   Button,
@@ -16,6 +17,7 @@ import {
   Tag,
   Tooltip,
   Upload,
+  DatePicker,
 } from "antd";
 import {
   DeleteOutlined,
@@ -41,6 +43,7 @@ import { uploadImage } from "@/api/imageController";
 
 const { TextArea } = Input;
 const { Option } = Select;
+const { RangePicker } = DatePicker;
 
 interface Article {
   key: string;
@@ -68,6 +71,9 @@ const ArticleManagement: React.FC = () => {
   const [form] = Form.useForm();
   const [searchText, setSearchText] = useState("");
   const [statusFilter, setStatusFilter] = useState<number>();
+  const [columnFilter, setColumnFilter] = useState<number>();
+  const [tagFilter, setTagFilter] = useState<number>();
+  const [publishRange, setPublishRange] = useState<[Dayjs, Dayjs] | null>(null);
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [columns, setColumns] = useState<any[]>([]);
   const [tags, setTags] = useState<any[]>([]);
@@ -75,6 +81,7 @@ const ArticleManagement: React.FC = () => {
   const [pageCurrent, setPageCurrent] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(10);
   const [total, setTotal] = useState<number>(0);
+  const filtersInitialized = useRef(false);
 
   // 上传配置
   const uploadProps: UploadProps = {
@@ -142,8 +149,21 @@ const ArticleManagement: React.FC = () => {
   };
 
   useEffect(() => {
-    getArticles(1, pageSize);
-  }, []);
+    (async () => {
+      await getArticles(1, pageSize);
+      filtersInitialized.current = true;
+    })();
+  }, [getArticles, pageSize]);
+
+  useEffect(() => {
+    if (!filtersInitialized.current) {
+      return;
+    }
+    const handler = setTimeout(() => {
+      getArticles(1, pageSize);
+    }, 400);
+    return () => clearTimeout(handler);
+  }, [getArticles, pageSize]);
 
   useEffect(() => {
     // 加载专栏与标签
@@ -157,37 +177,50 @@ const ArticleManagement: React.FC = () => {
         const tagRes: any = tagResRaw as any;
         if (colRes?.code === 0) setColumns(colRes.data?.records || []);
         if (tagRes?.code === 0) setTags(tagRes.data?.records || []);
-      } catch (e) {
-        // 静默失败
+      } catch (err) {
+        console.warn("加载专栏或标签失败", err);
       }
     })();
   }, []);
 
-  const getArticles = async (
-  current: number = pageCurrent,
-  size: number = pageSize
-  ) => {
-     setLoading(true);
-     try {
-      const params: any = {
-        current,
-        pageSize: size,
-        title: searchText,
-      };
-      if (typeof statusFilter !== "undefined") {
-        params.status = statusFilter;
-      }
+  const buildArticleRequest = useCallback((current: number, size: number): API.ArticleRequest => {
+    const payload: API.ArticleRequest = {
+      current,
+      pageSize: size,
+      keyword: searchText.trim() || undefined,
+    };
+    if (typeof statusFilter !== "undefined") {
+      payload.status = statusFilter;
+    }
+    if (typeof columnFilter !== "undefined") {
+      payload.columnId = columnFilter;
+    }
+    if (typeof tagFilter !== "undefined") {
+      payload.tagId = tagFilter;
+    }
+    if (publishRange && publishRange[0] && publishRange[1]) {
+      payload.publishStartTime = publishRange[0].startOf("day").valueOf();
+      payload.publishEndTime = publishRange[1].endOf("day").valueOf();
+    }
+    return payload;
+  }, [searchText, statusFilter, columnFilter, tagFilter, publishRange]);
+
+  const getArticles = useCallback(async (current: number, size: number) => {
+    setLoading(true);
+    try {
+      const params = buildArticleRequest(current, size);
       const res = (await getAllArticles(params)) as any;
       setArticles(res?.data?.records || []);
       setTotal(res?.data?.total || 0);
       setPageCurrent(current);
       setPageSize(size);
     } catch (error) {
-       message.error("获取文章列表失败");
-     } finally {
-       setLoading(false);
-     }
-   };
+      console.error("获取文章列表失败", error);
+      message.error("获取文章列表失败");
+    } finally {
+      setLoading(false);
+    }
+  }, [buildArticleRequest]);
 
   const handleEdit = (record: Article) => {
     setEditingArticle(record);
@@ -317,10 +350,19 @@ const ArticleManagement: React.FC = () => {
       setModalVisible(false);
       form.resetFields();
     } catch (error) {
+      console.error("保存文章失败", error);
       message.error("操作失败，请重试");
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleResetFilters = () => {
+    setSearchText("");
+    setStatusFilter(undefined);
+    setColumnFilter(undefined);
+    setTagFilter(undefined);
+    setPublishRange(null);
   };
 
   const getStatusText = (status: number) => {
@@ -404,7 +446,7 @@ const ArticleManagement: React.FC = () => {
       key: "excerpt",
       width: 180,
       ellipsis: true,
-      render: (text: string, record: Article) => (
+      render: (text: string) => (
         <Tooltip title={text}>{text}</Tooltip>
       ),
     },
@@ -524,25 +566,64 @@ const ArticleManagement: React.FC = () => {
         </div>
 
         <div className="search-filters">
-          <Space size="middle">
-            <Input
-              placeholder="搜索文章标题或作者"
+          <Space size="middle" wrap>
+            <Input.Search
+              placeholder="搜索文章标题 / 摘要"
               prefix={<SearchOutlined />}
               value={searchText}
               onChange={(e) => setSearchText(e.target.value)}
-              style={{ width: 300 }}
+              onSearch={() => getArticles(1, pageSize)}
+              allowClear
+              style={{ width: 280 }}
             />
             <Select
               placeholder="筛选状态"
               value={statusFilter}
-              onChange={setStatusFilter}
-              style={{ width: 120 }}
+              onChange={(value) => setStatusFilter(value)}
+              style={{ width: 140 }}
               allowClear
             >
               <Option value={0}>草稿</Option>
               <Option value={1}>已发布</Option>
               <Option value={2}>已归档</Option>
             </Select>
+            <Select
+              placeholder="所属专栏"
+              value={columnFilter}
+              onChange={(value) => setColumnFilter(value)}
+              allowClear
+              style={{ width: 180 }}
+              options={columns.map((col) => ({
+                label: col.name,
+                value: col.id,
+              }))}
+            />
+            <Select
+              placeholder="标签"
+              value={tagFilter}
+              onChange={(value) => setTagFilter(value)}
+              allowClear
+              style={{ width: 160 }}
+              options={tags.map((tag) => ({
+                label: tag.name,
+                value: tag.id,
+              }))}
+            />
+            <RangePicker
+              value={publishRange || undefined}
+              onChange={(values) => {
+                if (values && values[0] && values[1]) {
+                  setPublishRange([values[0], values[1]] as [Dayjs, Dayjs]);
+                } else {
+                  setPublishRange(null);
+                }
+              }}
+              allowClear
+            />
+            <Button onClick={() => getArticles(1, pageSize)}>立即查询</Button>
+            <Button onClick={handleResetFilters} type="link">
+              重置
+            </Button>
           </Space>
         </div>
 

@@ -47,3 +47,26 @@ export async function userRegister(
     ...(options || {}),
   });
 }
+
+/** 此处后端没有提供注释 GET /user/profile/public */
+export async function getPublicAuthorProfile(options?: { [key: string]: any }) {
+  return request<API.BaseResponsePublicUserVO>("/user/profile/public", {
+    method: "GET",
+    ...(options || {}),
+  });
+}
+
+/** 此处后端没有提供注释 PUT /user/profile */
+export async function updateCurrentUserProfile(
+  body: API.UserUpdateRequest,
+  options?: { [key: string]: any }
+) {
+  return request<API.BaseResponseUserUpdateResponse>("/user/profile", {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    data: body,
+    ...(options || {}),
+  });
+}

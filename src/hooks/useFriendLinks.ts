@@ -13,7 +13,7 @@ interface FriendLink {
   isSpecial?: boolean;
   statusLabel?: string;
   socialIcons?: {
-    type: "qq" | "wechat" | "heart" | "star";
+    type: "qq" | "wechat" | "heart" | "star" | "github" | "x" | "website" | "email";
     url?: string;
   }[];
 }
@@ -94,7 +94,7 @@ export const useFriendLinks = (
             statusLabel: item.statusLabel || "",
             socialIcons:
               item.socialLinks?.map((link: any) => ({
-                type: (link.iconType as "qq" | "wechat" | "heart" | "star") || "heart",
+                type: (link.iconType as "qq" | "wechat" | "heart" | "star" | "github" | "x" | "website" | "email") || "heart",
                 url: link.iconUrl,
               })) || [],
           })) || [];

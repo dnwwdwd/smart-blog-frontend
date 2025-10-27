@@ -12,6 +12,8 @@ import {
   TagsOutlined,
   UploadOutlined,
   CommentOutlined,
+  HeartOutlined,
+  UserOutlined,
 } from "@ant-design/icons";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
@@ -110,6 +112,11 @@ const AdminLayout: React.FC<Props> = ({ children }) => {
       label: <Link href="/admin/comments">评论管理</Link>,
     },
     {
+      key: '/admin/rewards',
+      icon: <HeartOutlined />,
+      label: <Link href="/admin/rewards">打赏审核</Link>,
+    },
+    {
       key: '/admin/friend-link',
       icon: <LinkOutlined />,
       label: <Link href="/admin/friend-link">友链管理</Link>,
@@ -118,6 +125,11 @@ const AdminLayout: React.FC<Props> = ({ children }) => {
       key: '/admin/ai-chat',
       icon: <OpenAIOutlined />,
       label: <Link href="/admin/ai-chat">AI 聊天</Link>,
+    },
+    {
+      key: '/admin/account',
+      icon: <UserOutlined />,
+      label: <Link href="/admin/account">账号设置</Link>,
     },
     {
       key: '/admin/settings',
@@ -130,7 +142,7 @@ const AdminLayout: React.FC<Props> = ({ children }) => {
     <>
       <div className="admin-logo">
         <Image
-          src="/assets/logo.png"
+          src="/assets/logo.svg"
           alt="Logo"
           width={28}
           height={28}

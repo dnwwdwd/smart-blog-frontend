@@ -1,7 +1,8 @@
 'use client';
 import React from 'react';
-import { StarOutlined, HeartOutlined, QqOutlined, WechatOutlined } from '@ant-design/icons';
+import { StarOutlined, HeartOutlined, QqOutlined, WechatOutlined, GithubOutlined, XOutlined, MailOutlined, LinkOutlined } from '@ant-design/icons';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import './styles.css';
 
 interface FriendLinkCardProps {
@@ -13,7 +14,7 @@ interface FriendLinkCardProps {
   isSpecial?: boolean;
   statusLabel?: string;
   socialIcons?: Array<{
-    type: 'qq' | 'wechat' | 'heart' | 'star';
+    type: 'qq' | 'wechat' | 'heart' | 'star' | 'github' | 'x' | 'website' | 'email';
     url?: string;
   }>;
 }
@@ -37,7 +38,12 @@ const FriendLinkCard: React.FC<FriendLinkCardProps> = ({
     }
   };
 
-  const handleCardClick = () => {
+  const handleCardClick = (event: React.MouseEvent) => {
+    if ((event.metaKey || event.ctrlKey) && url) {
+      event.stopPropagation();
+      window.open(url, "_blank");
+      return;
+    }
     router.push(`/link/${id}`);
   };
 
@@ -51,14 +57,24 @@ const FriendLinkCard: React.FC<FriendLinkCardProps> = ({
         return <HeartOutlined />;
       case 'star':
         return <StarOutlined />;
+      case 'github':
+        return <GithubOutlined />;
+      case 'x':
+        return <XOutlined />;
+      case 'email':
+        return <MailOutlined />;
+      case 'website':
+        return <LinkOutlined />;
       default:
         return <StarOutlined />;
     }
   };
 
+  const hasStatus = Boolean(statusLabel);
+
   return (
     <div 
-      className={`friend-link-card ${isSpecial ? 'special' : ''}`}
+      className={`friend-link-card ${isSpecial ? 'special' : ''} ${hasStatus ? 'has-status' : ''}`}
       onClick={handleCardClick}
       style={{ cursor: 'pointer' }}
     >
@@ -69,15 +85,10 @@ const FriendLinkCard: React.FC<FriendLinkCardProps> = ({
         </div>
       )}
       
-      {/* 右上角收藏图标 */}
-      <div className="corner-icon">
-        <StarOutlined />
-      </div>
-      
       {/* 头像区域 */}
       <div className="avatar-section">
         <div className="avatar-container">
-          <img src={avatar} alt={name} className="friend-avatar" />
+          <Image src={avatar} alt={name} width={72} height={72} className="friend-avatar" unoptimized />
         </div>
       </div>
       
