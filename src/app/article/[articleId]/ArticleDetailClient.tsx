@@ -1,7 +1,18 @@
 "use client";
 import React, { useCallback, useEffect, useState } from "react";
 import Head from "next/head";
-import { Alert, Card, Col, Divider, Empty, Row, Space, Spin, Tag } from "antd";
+import {
+  Alert,
+  Avatar,
+  Card,
+  Col,
+  Divider,
+  Empty,
+  Row,
+  Space,
+  Spin,
+  Tag,
+} from "antd";
 import {
   CalendarOutlined,
   ClockCircleOutlined,
@@ -60,14 +71,17 @@ export default function ArticleDetailClient({
     settings?.seoDescription ||
     settings?.siteDescription ||
     "精彩内容正在加载";
-  const authorName = authorProfile?.username || settings?.siteName || "站点作者";
+  const authorName =
+    authorProfile?.username || settings?.siteName || "站点作者";
   const authorAvatar =
     authorProfile?.userAvatar ||
     settings?.aboutImage ||
     settings?.siteLogo ||
     "/assets/avatar.svg";
   const authorBio =
-    authorProfile?.profile || settings?.siteDescription || "感谢阅读，欢迎交流。";
+    authorProfile?.profile ||
+    settings?.siteDescription ||
+    "感谢阅读，欢迎交流。";
 
   useEffect(() => {
     // 页面加载完成后调用finishPageTransition
