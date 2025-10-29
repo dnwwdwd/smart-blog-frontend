@@ -250,8 +250,17 @@ const AdminDashboard: React.FC = () => {
     angleField: "value",
     colorField: "name",
     radius: 0.8,
-    label: { type: "outer" },
-    interactions: [{ type: "element-active" }],
+    label: {
+      text: "name",
+      position: "outside",
+    },
+    legend: {
+      color: {
+        title: false,
+        position: "right",
+        rowPadding: 5,
+      },
+    },
   }), [tagDist]);
 
   const articleTrendConfig = useMemo(() => ({
@@ -280,7 +289,6 @@ const AdminDashboard: React.FC = () => {
         formatter: (val: number) => `周${DAY_LABELS[val]}`,
       },
     },
-    shape: "rect",
     tooltip: {
       fields: ["date", "count"],
       formatter: (item: any) => ({
@@ -290,6 +298,7 @@ const AdminDashboard: React.FC = () => {
     },
     yAxis: { grid: null },
     xAxis: { label: null, line: null },
+    sizeField: 1,
   }), [articleCalendarData]);
 
   return (

@@ -65,3 +65,11 @@ export async function listApprovedRewardMessages(
     }
   );
 }
+
+/** 获取打赏支付二维码配置 GET /reward/pay/config */
+export async function getRewardPayConfig(options?: { [key: string]: any }) {
+  return request<API.BaseResponseRewardPayConfigVo>("/reward/pay/config", {
+    method: "GET",
+    ...(options || {}),
+  });
+}

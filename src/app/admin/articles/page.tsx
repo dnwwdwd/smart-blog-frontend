@@ -1,10 +1,14 @@
 "use client";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import type { Dayjs } from "dayjs";
+import dayjs from "dayjs";
+import "dayjs/locale/zh-cn";
+import locale from "antd/locale/zh_CN";
 import type { UploadFile, UploadProps } from "antd";
 import {
   Button,
   Card,
+  ConfigProvider,
   Form,
   Image,
   Input,
@@ -19,6 +23,8 @@ import {
   Upload,
   DatePicker,
 } from "antd";
+
+dayjs.locale("zh-cn");
 import {
   DeleteOutlined,
   EditOutlined,
@@ -148,41 +154,6 @@ const ArticleManagement: React.FC = () => {
     },
   };
 
-  useEffect(() => {
-    (async () => {
-      await getArticles(1, pageSize);
-      filtersInitialized.current = true;
-    })();
-  }, [getArticles, pageSize]);
-
-  useEffect(() => {
-    if (!filtersInitialized.current) {
-      return;
-    }
-    const handler = setTimeout(() => {
-      getArticles(1, pageSize);
-    }, 400);
-    return () => clearTimeout(handler);
-  }, [getArticles, pageSize]);
-
-  useEffect(() => {
-    // 加载专栏与标签
-    (async () => {
-      try {
-        const [colResRaw, tagResRaw] = await Promise.all([
-          getColumnPage({ current: 1, pageSize: 100 }),
-          getTagPage({ current: 1, pageSize: 100 }),
-        ]);
-        const colRes: any = colResRaw as any;
-        const tagRes: any = tagResRaw as any;
-        if (colRes?.code === 0) setColumns(colRes.data?.records || []);
-        if (tagRes?.code === 0) setTags(tagRes.data?.records || []);
-      } catch (err) {
-        console.warn("加载专栏或标签失败", err);
-      }
-    })();
-  }, []);
-
   const buildArticleRequest = useCallback((current: number, size: number): API.ArticleRequest => {
     const payload: API.ArticleRequest = {
       current,
@@ -221,6 +192,41 @@ const ArticleManagement: React.FC = () => {
       setLoading(false);
     }
   }, [buildArticleRequest]);
+
+  useEffect(() => {
+    (async () => {
+      await getArticles(1, pageSize);
+      filtersInitialized.current = true;
+    })();
+  }, [getArticles, pageSize]);
+
+  useEffect(() => {
+    if (!filtersInitialized.current) {
+      return;
+    }
+    const handler = setTimeout(() => {
+      getArticles(1, pageSize);
+    }, 400);
+    return () => clearTimeout(handler);
+  }, [searchText, statusFilter, columnFilter, tagFilter, publishRange, getArticles, pageSize]);
+
+  useEffect(() => {
+    // 加载专栏与标签
+    (async () => {
+      try {
+        const [colResRaw, tagResRaw] = await Promise.all([
+          getColumnPage({ current: 1, pageSize: 100 }),
+          getTagPage({ current: 1, pageSize: 100 }),
+        ]);
+        const colRes: any = colResRaw as any;
+        const tagRes: any = tagResRaw as any;
+        if (colRes?.code === 0) setColumns(colRes.data?.records || []);
+        if (tagRes?.code === 0) setTags(tagRes.data?.records || []);
+      } catch (err) {
+        console.warn("加载专栏或标签失败", err);
+      }
+    })();
+  }, []);
 
   const handleEdit = (record: Article) => {
     setEditingArticle(record);
@@ -566,13 +572,12 @@ const ArticleManagement: React.FC = () => {
         </div>
 
         <div className="search-filters">
-          <Space size="middle" wrap>
+          <div className="filters-row">
             <Input.Search
               placeholder="搜索文章标题 / 摘要"
               prefix={<SearchOutlined />}
               value={searchText}
               onChange={(e) => setSearchText(e.target.value)}
-              onSearch={() => getArticles(1, pageSize)}
               allowClear
               style={{ width: 280 }}
             />
@@ -609,22 +614,25 @@ const ArticleManagement: React.FC = () => {
                 value: tag.id,
               }))}
             />
-            <RangePicker
-              value={publishRange || undefined}
-              onChange={(values) => {
-                if (values && values[0] && values[1]) {
-                  setPublishRange([values[0], values[1]] as [Dayjs, Dayjs]);
-                } else {
-                  setPublishRange(null);
-                }
-              }}
-              allowClear
-            />
-            <Button onClick={() => getArticles(1, pageSize)}>立即查询</Button>
-            <Button onClick={handleResetFilters} type="link">
-              重置
+            <ConfigProvider locale={locale}>
+              <RangePicker
+                value={publishRange || undefined}
+                onChange={(values) => {
+                  if (values && values[0] && values[1]) {
+                    setPublishRange([values[0], values[1]] as [Dayjs, Dayjs]);
+                  } else {
+                    setPublishRange(null);
+                  }
+                }}
+                placeholder={["开始日期", "结束日期"]}
+                allowClear
+                style={{ width: 240 }}
+              />
+            </ConfigProvider>
+            <Button onClick={handleResetFilters} type="default">
+              重置筛选
             </Button>
-          </Space>
+          </div>
         </div>
 
         <Table

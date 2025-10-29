@@ -142,7 +142,7 @@ const FrontNavigation: React.FC<FrontNavigationProps> = ({
                 <Dropdown
                   menu={{ items: userMenuItems }}
                   placement="bottomRight"
-                  trigger={['click']}
+                  trigger={['hover']}
                 >
                   <div className="user-info-container">
                     <Avatar

@@ -8,6 +8,7 @@ import {
   Col,
   Divider,
   Empty,
+  FloatButton,
   Row,
   Space,
   Spin,
@@ -18,6 +19,7 @@ import {
   ClockCircleOutlined,
   EyeOutlined,
   OpenAIOutlined,
+  VerticalAlignTopOutlined,
 } from "@ant-design/icons";
 import ReactMarkdown, { Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -426,6 +428,13 @@ export default function ArticleDetailClient({
           </Row>
         </div>
       </div>
+      <FloatButton.BackTop
+        visibilityHeight={240}
+        icon={<VerticalAlignTopOutlined />}
+        className="back-top-button"
+        type="default"
+        shape="circle"
+      />
     </>
   );
 }

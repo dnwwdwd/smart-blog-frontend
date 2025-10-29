@@ -4,7 +4,7 @@
   margin: 16px 0;
   border-radius: 8px;
   overflow: hidden;
-  background: #0d1117;
+  background: #0d1117 !important;
   border: 1px solid #30363d;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
@@ -12,6 +12,12 @@
 /* 消除潜在外边距合并和默认边框/背景影响 */
 .code-block-container, .code-block-container * {
   border-color: inherit;
+}
+
+/* 强制覆盖任何父容器可能添加的白色背景 */
+.code-block-container::before,
+.code-block-container::after {
+  display: none !important;
 }
 
 .code-block-header {
@@ -72,15 +78,15 @@
 }
 
 .code-block-content {
-  margin: 0; /* 关键：去除 pre 默认外边距 */
-  padding: 16px;
-  background: #0d1117; /* 与容器同步，避免出现对比白边 */
+  margin: 0 !important; /* 关键：去除 pre 默认外边距 */
+  padding: 16px !important;
+  background: #0d1117 !important; /* 与容器同步，避免出现对比白边 */
   overflow-x: auto; /* 水平滚动 */
   overflow-y: auto; /* 垂直滚动 */
   font-family: 'SFMono-Regular', 'Consolas', 'Liberation Mono', 'Menlo', monospace;
   font-size: 14px;
   line-height: 1.45;
-  border: none; /* 取消任何默认边框 */
+  border: none !important; /* 取消任何默认边框 */
   flex: 1; /* 占据剩余空间 */
   min-width: 0; /* 允许收缩 */
   white-space: pre; /* 保持代码格式 */

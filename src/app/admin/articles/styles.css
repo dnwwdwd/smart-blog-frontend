@@ -27,10 +27,17 @@
 
 .search-filters {
   margin-bottom: 24px;
-  padding: 16px;
+  padding: 20px;
   background: #fafafa;
-  border-radius: 6px;
+  border-radius: 8px;
   border: 1px solid #f0f0f0;
+}
+
+.filters-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
 }
 
 .article-modal .ant-modal-body {
@@ -175,18 +182,13 @@
   .search-filters {
     padding: 12px;
   }
-  
-  .search-filters .ant-space {
-    width: 100%;
+
+  .filters-row {
     flex-direction: column;
+    align-items: stretch;
   }
-  
-  .search-filters .ant-space-item {
-    width: 100%;
-  }
-  
-  .search-filters .ant-input,
-  .search-filters .ant-select {
+
+  .filters-row > * {
     width: 100% !important;
   }
   

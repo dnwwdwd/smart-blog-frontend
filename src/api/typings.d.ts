@@ -111,6 +111,12 @@ declare namespace API {
     message?: string;
   };
 
+  type BaseResponseRewardPayConfigVo = {
+    code?: number;
+    data?: RewardPayConfigVo;
+    message?: string;
+  };
+
   // 新增：后端返回 Long 列表
   type BaseResponseListLong = {
     code?: number;
@@ -294,6 +300,11 @@ declare namespace API {
     reviewRemark?: string;
     reviewTime?: string;
     createTime?: string;
+  };
+
+  type RewardPayConfigVo = {
+    wechatPayQrUrl?: string;
+    alipayQrUrl?: string;
   };
 
   type ColumnDto = {

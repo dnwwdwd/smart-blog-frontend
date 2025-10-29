@@ -7,6 +7,7 @@ import {
   Alert,
   Button,
   Drawer,
+  FloatButton,
   Form,
   Input,
   Modal,
@@ -28,6 +29,7 @@ import {
   SettingOutlined,
   TagOutlined,
   UploadOutlined,
+  VerticalAlignTopOutlined,
 } from "@ant-design/icons";
 import {
   getArticlePage,
@@ -68,6 +70,7 @@ const ArticleCreatePage: React.FC = () => {
   });
   const [editingArticleId, setEditingArticleId] = useState<number>();
   const hasUnsavedChanges = useRef(false);
+  const [draftAlertVisible, setDraftAlertVisible] = useState(true);
 
   // 页面关闭确认
   useEffect(() => {
@@ -352,24 +355,30 @@ const ArticleCreatePage: React.FC = () => {
     },
   };
 
-  const buildArticlePayload = (status: number, formValues: any): API.ArticleDto => {
-    const coverImage = formValues.coverImage || form.getFieldValue("coverImage");
+  const buildArticlePayload = (
+    status: number,
+    formValues: any
+  ): API.ArticleDto => {
+    const coverImage =
+      formValues.coverImage || form.getFieldValue("coverImage");
     const normalizedCoverImage =
       typeof coverImage === "string" && coverImage.trim().length > 0
         ? coverImage.trim()
         : undefined;
     const columnIds = Array.isArray(formValues.columnIds)
-      ? formValues.columnIds.filter((id: number | null | undefined) => id !== null && id !== undefined)
+      ? formValues.columnIds.filter(
+          (id: number | null | undefined) => id !== null && id !== undefined
+        )
       : [];
     const tags = Array.isArray(formValues.tags)
-      ? formValues.tags
+      ? (formValues.tags
           .map((tag: string) => tag?.trim())
-          .filter((tag: string | undefined) => !!tag) as string[]
+          .filter((tag: string | undefined) => !!tag) as string[])
       : [];
     const seoKeywords = Array.isArray(formValues.seoKeywords)
-      ? formValues.seoKeywords
+      ? (formValues.seoKeywords
           .map((keyword: string) => keyword?.trim())
-          .filter((keyword: string | undefined) => !!keyword) as string[]
+          .filter((keyword: string | undefined) => !!keyword) as string[])
       : [];
     const sanitized: API.ArticleDto = {
       status,
@@ -430,9 +439,7 @@ const ArticleCreatePage: React.FC = () => {
         hasUnsavedChanges.current = false;
         setSettingsVisible(false);
         const targetId =
-          isEditing && editingArticleId
-            ? editingArticleId
-            : res.data;
+          isEditing && editingArticleId ? editingArticleId : res.data;
         resetEditorState();
         await fetchDraftCount();
         if (targetId) {
@@ -487,18 +494,28 @@ const ArticleCreatePage: React.FC = () => {
 
   return (
     <div className="article-create-container">
-      {draftCount > 0 && (
-        <div className="draft-alert-wrapper">
-          <Alert
-            type="info"
-            showIcon
-            message={`你有 ${draftCount} 篇草稿待处理`}
-            action={
-              <Button type="link" onClick={handleOpenDraftModal} size="small">
-                查看草稿
-              </Button>
-            }
-          />
+      {draftCount > 0 && draftAlertVisible && (
+        <div className="draft-bubble">
+          <div className="draft-bubble-content">
+            <span className="draft-bubble-text">
+              你有 {draftCount} 篇草稿待处理
+            </span>
+            <Button
+              type="link"
+              onClick={handleOpenDraftModal}
+              size="small"
+              className="draft-bubble-btn"
+            >
+              查看草稿
+            </Button>
+            <button
+              className="draft-bubble-close"
+              onClick={() => setDraftAlertVisible(false)}
+              aria-label="关闭提示"
+            >
+              ×
+            </button>
+          </div>
         </div>
       )}
       {/* 顶部工具栏 */}
@@ -706,10 +723,7 @@ const ArticleCreatePage: React.FC = () => {
             </Form.Item>
 
             <Form.Item label="SEO 关键词" name="seoKeywords">
-              <Select
-                mode="tags"
-                placeholder="请选择或输入关键词"
-              />
+              <Select mode="tags" placeholder="请选择或输入关键词" />
             </Form.Item>
           </div>
         </Form>
@@ -721,7 +735,7 @@ const ArticleCreatePage: React.FC = () => {
         onCancel={() => setDraftModalVisible(false)}
         footer={null}
         width={720}
-        destroyOnClose
+        destroyOnHidden
       >
         <Table
           columns={draftColumns}
@@ -739,6 +753,13 @@ const ArticleCreatePage: React.FC = () => {
           rowKey="id"
         />
       </Modal>
+      <FloatButton.BackTop
+        visibilityHeight={200}
+        icon={<VerticalAlignTopOutlined />}
+        className="back-top-button"
+        type="default"
+        shape="circle"
+      />
     </div>
   );
 };

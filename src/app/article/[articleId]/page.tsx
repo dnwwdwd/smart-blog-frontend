@@ -5,7 +5,6 @@ import ArticleDetailClient from "./ArticleDetailClient";
 import { getArticleVoById } from "@/api/articleController";
 import "./styles.css";
 import "highlight.js/styles/github-dark.css";
-import { formatDate } from "@/utils";
 
 interface ArticlePageProps {
   params: Promise<{

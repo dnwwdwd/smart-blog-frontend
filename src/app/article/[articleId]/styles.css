@@ -191,6 +191,44 @@
   color: inherit;
 }
 
+/* 确保 CodeBlock 组件不受文章样式影响 */
+.article-detail-body .code-block-container {
+  background: #0d1117 !important;
+  padding: 0 !important;
+  margin: 16px 0 !important;
+}
+
+.back-top-button.ant-float-btn {
+  width: 48px;
+  height: 48px;
+  transition: transform 0.2s ease;
+}
+
+.back-top-button.ant-float-btn .ant-float-btn-body {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: #1890ff;
+  color: #ffffff;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.back-top-button.ant-float-btn:hover {
+  transform: translateY(-2px);
+}
+
+.article-detail-body .code-block-container * {
+  box-sizing: border-box;
+}
+
+.article-detail-body .code-block-content {
+  background: #0d1117 !important;
+  padding: 16px !important;
+}
+
 .article-detail-body img {
   max-width: 100%;
   height: auto;
