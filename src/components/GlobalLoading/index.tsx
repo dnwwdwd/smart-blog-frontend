@@ -138,7 +138,7 @@ const GlobalLoading: React.FC<GlobalLoadingProps> = ({
     <>
       <div className="gl-hero">
         <div className="gl-logo-wrap" aria-hidden>
-          <Image src={logoSrc} alt="Site logo" width={72} height={72} priority />
+          <Image src={logoSrc} alt="Site logo" width={72} height={72} priority unoptimized />
         </div>
         <div className="gl-title">{title}</div>
         <div className="gl-sub">{subtitle}</div>

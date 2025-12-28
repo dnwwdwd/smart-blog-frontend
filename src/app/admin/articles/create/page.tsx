@@ -24,7 +24,6 @@ import {
   FileImageOutlined,
   FolderOutlined,
   SaveOutlined,
-  SearchOutlined,
   SendOutlined,
   SettingOutlined,
   TagOutlined,
@@ -63,6 +62,7 @@ const ArticleCreatePage: React.FC = () => {
   const [draftModalVisible, setDraftModalVisible] = useState(false);
   const [draftModalLoading, setDraftModalLoading] = useState(false);
   const [drafts, setDrafts] = useState<API.ArticleVo[]>([]);
+  const [draftsInitialized, setDraftsInitialized] = useState(false);
   const [draftPagination, setDraftPagination] = useState({
     current: 1,
     pageSize: 5,
@@ -71,6 +71,9 @@ const ArticleCreatePage: React.FC = () => {
   const [editingArticleId, setEditingArticleId] = useState<number>();
   const hasUnsavedChanges = useRef(false);
   const [draftAlertVisible, setDraftAlertVisible] = useState(true);
+  const draftsLoadingRef = useRef(false);
+  const metaLoadedRef = useRef(false);
+  const initialDraftsLoadedRef = useRef(false);
 
   // 页面关闭确认
   useEffect(() => {
@@ -117,31 +120,24 @@ const ArticleCreatePage: React.FC = () => {
   };
 
   useEffect(() => {
+    if (metaLoadedRef.current) {
+      return;
+    }
+    metaLoadedRef.current = true;
     loadColumns();
     loadTags();
   }, []);
 
-  const fetchDraftCount = useCallback(async () => {
-    try {
-      const res: any = await getArticlePage({
-        current: 1,
-        pageSize: 1,
-        status: ArticleStatus.DRAFT,
-      });
-      if (res.code === 0) {
-        setDraftCount(res.data?.total || 0);
-      }
-    } catch (error) {
-      console.error("加载草稿统计失败:", error);
+  const loadDrafts = async (
+    page = 1,
+    pageSize = draftPagination.pageSize,
+    options?: { silent?: boolean }
+  ) => {
+    const silent = options?.silent;
+    if (!silent) {
+      setDraftModalLoading(true);
     }
-  }, []);
-
-  useEffect(() => {
-    fetchDraftCount();
-  }, [fetchDraftCount]);
-
-  const loadDrafts = async (page = 1, pageSize = draftPagination.pageSize) => {
-    setDraftModalLoading(true);
+    draftsLoadingRef.current = true;
     try {
       const res: any = await getArticlePage({
         current: page,
@@ -156,18 +152,32 @@ const ArticleCreatePage: React.FC = () => {
           total: res.data?.total || 0,
         });
         setDraftCount(res.data?.total || 0);
+        setDraftsInitialized(true);
       }
     } catch (error) {
       console.error("加载草稿列表失败:", error);
       message.error("加载草稿列表失败，请稍后重试");
     } finally {
-      setDraftModalLoading(false);
+      draftsLoadingRef.current = false;
+      if (!silent) {
+        setDraftModalLoading(false);
+      }
     }
   };
 
+  useEffect(() => {
+    if (initialDraftsLoadedRef.current) {
+      return;
+    }
+    initialDraftsLoadedRef.current = true;
+    // 初始化草稿信息（列表 + 统计），避免重复分页请求
+    void loadDrafts(1, draftPagination.pageSize, { silent: true });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const handleOpenDraftModal = async () => {
     setDraftModalVisible(true);
-    if (drafts.length === 0) {
+    if (!draftsInitialized && !draftsLoadingRef.current) {
       await loadDrafts();
     }
   };
@@ -208,14 +218,10 @@ const ArticleCreatePage: React.FC = () => {
                 .filter((id): id is number => typeof id === "number")
             : undefined;
         const tagsArray = parseToStringArray(article.tags);
-        const seoKeywords = parseToStringArray(article.seoKeywords);
         form.setFieldsValue({
           excerpt: article.excerpt || undefined,
           columnIds: columnIds || [],
           tags: tagsArray,
-          seoTitle: article.seoTitle || undefined,
-          seoDescription: article.seoDescription || undefined,
-          seoKeywords,
           coverImage: article.coverImage || undefined,
         });
         if (article.coverImage) {
@@ -375,11 +381,6 @@ const ArticleCreatePage: React.FC = () => {
           .map((tag: string) => tag?.trim())
           .filter((tag: string | undefined) => !!tag) as string[])
       : [];
-    const seoKeywords = Array.isArray(formValues.seoKeywords)
-      ? (formValues.seoKeywords
-          .map((keyword: string) => keyword?.trim())
-          .filter((keyword: string | undefined) => !!keyword) as string[])
-      : [];
     const sanitized: API.ArticleDto = {
       status,
       title: title.trim() || undefined,
@@ -388,9 +389,6 @@ const ArticleCreatePage: React.FC = () => {
       coverImage: normalizedCoverImage,
       columnIds: columnIds.length > 0 ? columnIds : undefined,
       tags: tags.length > 0 ? tags : undefined,
-      seoTitle: formValues.seoTitle?.trim() || undefined,
-      seoDescription: formValues.seoDescription?.trim() || undefined,
-      seoKeywords: seoKeywords.length > 0 ? seoKeywords : undefined,
       id: editingArticleId,
     };
     return sanitized;
@@ -418,14 +416,14 @@ const ArticleCreatePage: React.FC = () => {
       message.error("请上传文章封面");
       return;
     }
-    if (!values.columnIds || values.columnIds.length === 0) {
-      message.error("请至少选择一个专栏");
-      return;
-    }
-    if (!values.tags || values.tags.length === 0) {
-      message.error("请至少添加一个标签");
-      return;
-    }
+    // if (!values.columnIds || values.columnIds.length === 0) {
+    //   message.error("请至少选择一个专栏");
+    //   return;
+    // }
+    // if (!values.tags || values.tags.length === 0) {
+    //   message.error("请至少添加一个标签");
+    //   return;
+    // }
 
     setLoading(true);
     try {
@@ -441,7 +439,6 @@ const ArticleCreatePage: React.FC = () => {
         const targetId =
           isEditing && editingArticleId ? editingArticleId : res.data;
         resetEditorState();
-        await fetchDraftCount();
         if (targetId) {
           router.replace(`/article/${targetId}`);
         }
@@ -477,10 +474,11 @@ const ArticleCreatePage: React.FC = () => {
         }
         message.success(isEditing ? "草稿已更新" : "草稿已保存");
         hasUnsavedChanges.current = false;
-        await fetchDraftCount();
-        if (draftModalVisible) {
-          await loadDrafts(draftPagination.current, draftPagination.pageSize);
-        }
+        await loadDrafts(
+          draftPagination.current,
+          draftPagination.pageSize,
+          { silent: !draftModalVisible }
+        );
       } else {
         message.error(res.message || "保存草稿失败");
       }
@@ -699,33 +697,6 @@ const ArticleCreatePage: React.FC = () => {
             />
           </Form.Item>
 
-          {/* SEO设置 */}
-          <div className="seo-section">
-            <div className="section-title">
-              <SearchOutlined />
-              <span>SEO 优化</span>
-            </div>
-
-            <Form.Item label="SEO 标题" name="seoTitle">
-              <Input
-                placeholder="搜索引擎显示的标题（留空使用文章标题）"
-                maxLength={60}
-              />
-            </Form.Item>
-
-            <Form.Item label="SEO 描述" name="seoDescription">
-              <Input.TextArea
-                rows={3}
-                placeholder="搜索引擎显示的描述（留空使用文章摘要）"
-                maxLength={160}
-                showCount
-              />
-            </Form.Item>
-
-            <Form.Item label="SEO 关键词" name="seoKeywords">
-              <Select mode="tags" placeholder="请选择或输入关键词" />
-            </Form.Item>
-          </div>
         </Form>
       </Drawer>
 
@@ -736,22 +707,27 @@ const ArticleCreatePage: React.FC = () => {
         footer={null}
         width={720}
         destroyOnHidden
+        className="draft-modal"
+        rootClassName="draft-modal-root"
       >
-        <Table
-          columns={draftColumns}
-          dataSource={drafts}
-          loading={draftModalLoading}
-          pagination={{
-            current: draftPagination.current,
-            pageSize: draftPagination.pageSize,
-            total: draftPagination.total,
-            showSizeChanger: true,
-            onChange: (page, pageSize) => {
-              loadDrafts(page, pageSize);
-            },
-          }}
-          rowKey="id"
-        />
+        <div className="draft-modal-body">
+          <Table
+            columns={draftColumns}
+            dataSource={drafts}
+            loading={draftModalLoading}
+            pagination={{
+              current: draftPagination.current,
+              pageSize: draftPagination.pageSize,
+              total: draftPagination.total,
+              showSizeChanger: true,
+              onChange: (page, pageSize) => {
+                loadDrafts(page, pageSize);
+              },
+            }}
+            rowKey="id"
+            className="draft-table"
+          />
+        </div>
       </Modal>
       <FloatButton.BackTop
         visibilityHeight={200}

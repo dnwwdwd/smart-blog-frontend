@@ -36,11 +36,15 @@ const AdminLayout: React.FC<Props> = ({ children }) => {
   const pathname = usePathname();
   const router = useRouter();
   
-  const { isLoggedIn, checkLogin } = useAuthStore();
+  const { isLoggedIn, checkLogin, hasCheckedLogin } = useAuthStore();
   const fetchSiteSettings = useFetchSiteSettings();
   
   useEffect(() => {
     let ignore = false;
+    if (hasCheckedLogin) {
+      setChecking(false);
+      return;
+    }
     (async () => {
       try {
         await checkLogin();
@@ -51,7 +55,7 @@ const AdminLayout: React.FC<Props> = ({ children }) => {
     return () => {
       ignore = true;
     };
-  }, [checkLogin]);
+  }, [checkLogin, hasCheckedLogin]);
   
   useEffect(() => {
     if (checking) return;

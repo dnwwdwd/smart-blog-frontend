@@ -78,13 +78,23 @@ export async function image4(
 }
 
 /** 此处后端没有提供注释 POST /image/upload */
-export async function uploadImage(body: {}, options?: { [key: string]: any }) {
+export async function uploadImage(
+  body: FormData | { file: File },
+  options?: { [key: string]: any }
+) {
+  const data =
+    body instanceof FormData
+      ? body
+      : (() => {
+          const formData = new FormData();
+          if (body?.file) {
+            formData.append("file", body.file);
+          }
+          return formData;
+        })();
   return request<API.BaseResponseString>("/image/upload", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    data: body,
+    data,
     ...(options || {}),
   });
 }

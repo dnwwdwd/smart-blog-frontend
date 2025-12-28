@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Avatar,
   Button,
@@ -12,8 +12,12 @@ import {
   Row,
   Space,
   Typography,
+  Upload,
 } from "antd";
+import type { UploadProps } from "antd";
+import { UploadOutlined } from "@ant-design/icons";
 import TextArea from "antd/es/input/TextArea";
+import { uploadImage } from "@/api/imageController";
 import { updateCurrentUserProfile } from "@/api/userController";
 import { useCurrentUser, useAuthStore } from "@/stores/authStore";
 import { useRouter } from "next/navigation";
@@ -40,6 +44,43 @@ const AccountSettingsPage: React.FC = () => {
   const [profileForm] = Form.useForm<ProfileFormValues>();
   const [securityForm] = Form.useForm<SecurityFormValues>();
   const router = useRouter();
+  const [avatarUploading, setAvatarUploading] = useState(false);
+  const watchedAvatar = Form.useWatch("userAvatar", profileForm);
+  const avatarPreview =
+    watchedAvatar || currentUser?.userAvatar || "/assets/avatar.svg";
+
+  const avatarUploadProps = useMemo<UploadProps>(() => {
+    return {
+      showUploadList: false,
+      accept: "image/*",
+      customRequest: async (options) => {
+        const { file, onError, onSuccess } = options;
+        setAvatarUploading(true);
+        const formData = new FormData();
+        formData.append("file", file as File);
+        try {
+          const res: any = await uploadImage(formData);
+          if (res?.code === 0) {
+            onSuccess?.(res, file);
+            const url = res.data;
+            if (url) {
+              profileForm.setFieldsValue({ userAvatar: url });
+              message.info("头像上传成功，请点击“保存资料”后生效");
+            }
+          } else {
+            const errMsg = res?.message || "上传失败";
+            onError?.(new Error(errMsg));
+            message.error(errMsg);
+          }
+        } catch (error: any) {
+          onError?.(error);
+          message.error(error?.message || "上传失败，请重试");
+        } finally {
+          setAvatarUploading(false);
+        }
+      },
+    };
+  }, [profileForm]);
 
   useEffect(() => {
     profileForm.setFieldsValue({
@@ -50,6 +91,7 @@ const AccountSettingsPage: React.FC = () => {
     securityForm.setFieldsValue({
       userAccount: currentUser?.userAccount ?? "",
     });
+    securityForm.resetFields(["currentPassword", "newPassword", "confirmNewPassword"]);
   }, [currentUser, profileForm, securityForm]);
 
   const handleProfileSubmit = async (values: ProfileFormValues) => {
@@ -123,7 +165,7 @@ const AccountSettingsPage: React.FC = () => {
               <div className="account-profile-header">
                 <Avatar
                   size={72}
-                  src={currentUser?.userAvatar || "/assets/avatar.svg"}
+                  src={avatarPreview}
                   alt={currentUser?.username || "用户头像"}
                 />
                 <div>
@@ -165,6 +207,19 @@ const AccountSettingsPage: React.FC = () => {
                 >
                   <Input placeholder="https://example.com/avatar.png" />
                 </Form.Item>
+                <div className="avatar-upload-actions">
+                  <Upload {...avatarUploadProps}>
+                    <Button
+                      icon={<UploadOutlined />}
+                      loading={avatarUploading}
+                    >
+                      上传头像
+                    </Button>
+                  </Upload>
+                  <Text type="secondary" className="avatar-upload-tip">
+                    上传成功后请点击“保存资料”以生效
+                  </Text>
+                </div>
                 <Form.Item label="个人简介" name="profile">
                   <TextArea rows={4} placeholder="向读者介绍一下自己，支持换行" />
                 </Form.Item>
@@ -199,16 +254,6 @@ const AccountSettingsPage: React.FC = () => {
                 <Input placeholder="请输入新的登录账号" />
               </Form.Item>
               <Form.Item
-                label="当前密码"
-                name="currentPassword"
-                rules={[
-                  { required: true, message: "修改账号或密码前，请输入当前密码" },
-                  { min: 6, message: "密码至少 6 个字符" },
-                ]}
-              >
-                <Input.Password placeholder="请输入当前密码" />
-              </Form.Item>
-              <Form.Item
                 label="新密码"
                 name="newPassword"
                 rules={[
@@ -217,7 +262,10 @@ const AccountSettingsPage: React.FC = () => {
                 ]}
                 hasFeedback
               >
-                <Input.Password placeholder="不修改可留空" />
+                <Input.Password
+                  placeholder="不修改可留空"
+                  autoComplete="new-password"
+                />
               </Form.Item>
               <Form.Item
                 label="确认新密码"
@@ -235,7 +283,10 @@ const AccountSettingsPage: React.FC = () => {
                   }),
                 ]}
               >
-                <Input.Password placeholder="再次输入新密码" />
+                <Input.Password
+                  placeholder="再次输入新密码"
+                  autoComplete="new-password"
+                />
               </Form.Item>
               <Form.Item>
                 <Button type="primary" htmlType="submit" block>

@@ -9,6 +9,7 @@ import { userLogin } from "@/api/userController";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/stores/authStore";
 import myAxios from "@/libs/request";
+import AppIncon from "@/components/AppIncon";
 
 interface LoginForm {
   userAccount: string;
@@ -25,7 +26,7 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      const res = await userLogin(values) as any;
+      const res = (await userLogin(values)) as any;
       console.log("login: " + JSON.stringify(res));
       if (res.code == 0) {
         // 保存用户信息到全局状态
@@ -59,7 +60,7 @@ export default function LoginPage() {
           <div className="login-header">
             <div className="logo-section">
               <div className="logo-icon">
-                <LoginOutlined />
+                <AppIncon />
               </div>
               <Title level={2} className="login-title">
                 系统登录
@@ -122,9 +123,7 @@ export default function LoginPage() {
             </Form.Item>
           </Form>
 
-          <div className="login-footer">
-            <span className="demo-info">演示账号：admin / admin123</span>
-          </div>
+          <div className="login-footer"></div>
         </Card>
       </div>
     </div>

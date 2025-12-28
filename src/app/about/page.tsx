@@ -66,7 +66,7 @@ export default function AboutPage() {
   ].filter(Boolean) as { label: string; href: string }[];
 
   // 访客视角头像：优先用关于页图片，其次站点 Logo，最后本地 svg
-  const avatarSrc = settings?.aboutImage || settings?.siteLogo || "/assets/avatar.svg";
+  const avatarSrc = settings?.aboutImage || "/assets/avatar.svg";
 
   return (
     <div className="about-page">

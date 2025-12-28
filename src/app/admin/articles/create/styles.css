@@ -199,6 +199,76 @@
   min-height: 0 !important;
 }
 
+.draft-modal-root .ant-modal-mask {
+  background: rgba(15, 23, 42, 0.25);
+  backdrop-filter: blur(2px);
+}
+
+.draft-modal .ant-modal-content {
+  border-radius: 24px;
+  border: 1px solid rgba(59, 130, 246, 0.12);
+  padding: 0;
+  background: #ffffff;
+  box-shadow: none;
+  overflow: hidden;
+}
+
+.draft-modal .ant-modal-header {
+  border-bottom: none;
+  padding: 24px 32px 8px;
+  background: transparent;
+}
+
+.draft-modal .ant-modal-body {
+  padding: 0 32px 32px;
+}
+
+.draft-modal .ant-modal-header {
+  border-bottom: none;
+  padding: 24px 32px 8px;
+  background: transparent;
+}
+
+.draft-modal .ant-modal-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.draft-modal .ant-modal-body {
+  padding: 0 32px 32px;
+}
+
+.draft-modal-body {
+  border-radius: 18px;
+  background: #ffffff;
+  padding: 16px;
+  box-shadow: inset 0 1px 0 rgba(15, 23, 42, 0.04);
+}
+
+.draft-modal .ant-table {
+  background: transparent;
+}
+
+.draft-modal .ant-table-thead > tr > th {
+  background: rgba(59, 130, 246, 0.08);
+  border-bottom: none;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.draft-modal .ant-table-tbody > tr > td {
+  border-bottom-color: rgba(15, 23, 42, 0.05);
+}
+
+.draft-modal .ant-table-pagination {
+  margin-top: 16px;
+}
+
+.draft-modal .ant-pagination-item-active {
+  border-color: var(--blue-500);
+}
+
 .back-top-button.ant-float-btn {
   width: 48px;
   height: 48px;
@@ -209,8 +279,6 @@
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background-color: #1677ff;
-  color: #ffffff;
   font-size: 20px;
   display: flex;
   align-items: center;
