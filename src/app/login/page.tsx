@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { Button, Card, Form, Input, message } from "antd";
-import { LockOutlined, LoginOutlined, UserOutlined } from "@ant-design/icons";
+import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import "./styles.css";
 import Title from "antd/es/typography/Title";
 import "@ant-design/v5-patch-for-react-19";

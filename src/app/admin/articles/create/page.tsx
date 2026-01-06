@@ -412,10 +412,6 @@ const ArticleCreatePage: React.FC = () => {
       message.error("请输入文章内容");
       return;
     }
-    if (!form.getFieldValue("coverImage")) {
-      message.error("请上传文章封面");
-      return;
-    }
     // if (!values.columnIds || values.columnIds.length === 0) {
     //   message.error("请至少选择一个专栏");
     //   return;
@@ -425,6 +421,12 @@ const ArticleCreatePage: React.FC = () => {
     //   return;
     // }
 
+    const publishMessageKey = "article-publish";
+    message.loading({
+      content: "文章正在发布中，请耐心等待",
+      key: publishMessageKey,
+      duration: 0,
+    });
     setLoading(true);
     try {
       const payload = buildArticlePayload(ArticleStatus.PUBLISHED, values);
@@ -432,22 +434,27 @@ const ArticleCreatePage: React.FC = () => {
       const res: any = isEditing
         ? await updateArticle(payload)
         : await publishArticle(payload);
-      if (res.code === 0) {
-        message.success(isEditing ? "文章更新成功!" : "文章发布成功!");
-        hasUnsavedChanges.current = false;
-        setSettingsVisible(false);
-        const targetId =
-          isEditing && editingArticleId ? editingArticleId : res.data;
-        resetEditorState();
-        if (targetId) {
-          router.replace(`/article/${targetId}`);
-        }
-      } else {
-        message.error(res.message || "发布失败");
-      }
+      // if (res.code === 0) {
+      //   message.success({
+      //     content: isEditing ? "文章更新成功!" : "文章发布成功!",
+      //     key: publishMessageKey,
+      //   });
+      //   hasUnsavedChanges.current = false;
+      //   setSettingsVisible(false);
+      //   resetEditorState();
+      //   router.replace("/admin/articles/create");
+      // } else {
+      //   message.error({
+      //     content: res.message || "发布失败",
+      //     key: publishMessageKey,
+      //   });
+      // }
     } catch (error) {
       console.error("发布失败:", error);
-      message.error("发布失败，请重试");
+      message.error({
+        content: "发布失败，请重试",
+        key: publishMessageKey,
+      });
     } finally {
       setLoading(false);
     }

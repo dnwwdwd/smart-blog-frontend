@@ -399,33 +399,36 @@ const ArticleManagement: React.FC = () => {
       dataIndex: "coverImage",
       key: "coverImage",
       width: 80,
-      render: (coverImage: string) =>
-        coverImage ? (
+      render: (coverImage?: string) => {
+        const normalized = coverImage?.trim();
+        if (!normalized) {
+          return (
+            <div
+              style={{
+                width: 40,
+                height: 40,
+                borderRadius: 4,
+                background: "#f0f0f0",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                color: "#999",
+                fontSize: 12,
+              }}
+            >
+              无
+            </div>
+          );
+        }
+        return (
           <Image
-            src={coverImage}
+            src={normalized}
             alt="封面"
-            style={{ width: 40, height: 40 }}
-            fallback="暂无图片"
-            onError={() => {
-              // 图片加载失败时显示"暂无图片"
-              return false;
-            }}
+            width={40}
+            height={40}
           />
-        ) : (
-          <div
-            style={{
-              width: 40,
-              height: 40,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              backgroundColor: "#f0f0f0",
-              color: "#999",
-            }}
-          >
-            暂无图片
-          </div>
-        ),
+        );
+      },
     },
     {
       title: "标题",
@@ -541,8 +544,9 @@ const ArticleManagement: React.FC = () => {
           <Popconfirm
             title="确定要删除这篇文章吗？"
             onConfirm={() => {
+              console.log(record)
               // 确保传入有效的ID
-              if (record.id && record.id > 0) {
+              if (record.id) {
                 handleDelete(record.id);
               } else {
                 message.error("无效的文章ID");
@@ -719,7 +723,6 @@ const ArticleManagement: React.FC = () => {
           <Form.Item
             name="excerpt"
             label="文章摘要"
-            rules={[{ required: true, message: "请输入文章摘要" }]}
           >
             <TextArea
               rows={3}

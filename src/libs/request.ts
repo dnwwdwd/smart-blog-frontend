@@ -12,7 +12,7 @@ const serverBaseURL = apiServerBaseUrl;
 
 const myAxios = axios.create({
   baseURL: isServer ? serverBaseURL : clientBaseURL,
-  timeout: 10000,
+  timeout: 15000,
   withCredentials: true,
 });
 
